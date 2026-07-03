@@ -23,17 +23,36 @@
         margin-top: 28px !important;
       }
       .mission-card {
-        padding: 30px 34px !important;
+        width: 100% !important;
+        min-height: 0 !important;
+        height: auto !important;
+        padding: 26px 32px !important;
         border-radius: 30px !important;
       }
       .mission-card .eyebrow {
-        margin-bottom: 12px !important;
+        margin-bottom: 10px !important;
       }
       .mission {
-        font-size: clamp(24px, 2.4vw, 34px) !important;
+        font-size: clamp(22px, 2vw, 30px) !important;
         line-height: 1.18 !important;
-        letter-spacing: -0.045em !important;
-        max-width: 980px !important;
+        letter-spacing: -0.035em !important;
+        max-width: none !important;
+      }
+      .summary-grid {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 24px !important;
+        margin: 24px 0 0 !important;
+      }
+      .summary-card {
+        min-height: 0 !important;
+        height: auto !important;
+        padding: 26px 28px !important;
+        border-radius: 26px !important;
+        font-size: clamp(18px, 1.35vw, 24px) !important;
+        line-height: 1.48 !important;
+        letter-spacing: -0.02em !important;
       }
       .recommendation-head {
         display: grid !important;
@@ -106,6 +125,9 @@
         .page-title h1 {
           font-size: clamp(30px, 4vw, 46px) !important;
         }
+        .summary-grid {
+          grid-template-columns: 1fr !important;
+        }
         .recommendation-head {
           grid-template-columns: 1fr !important;
           align-items: start !important;
@@ -135,7 +157,10 @@
           font-size: clamp(32px, 10vw, 48px) !important;
         }
         .mission {
-          font-size: 24px !important;
+          font-size: 22px !important;
+        }
+        .summary-card {
+          font-size: 18px !important;
         }
       }
     </style>
@@ -224,6 +249,6 @@
       <div class="empty-card">暂无内容。</div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui9"></script>
+    <script src="assets/app.js?v=20260703-ui10"></script>
   </body>
 </html>
