@@ -15,8 +15,6 @@ Collection source: GitHub only
 Evaluation standard: V1.4 GitHub / open-source project standard
 ```
 
-Non-GitHub collection has been removed from the production scope. The system does not collect from Bilibili, Douyin, Xiaohongshu, YouTube, X, Product Hunt, Reddit, news sites, official product sites, or creator platforms.
-
 ## What this repository does
 
 1. Stores daily GitHub-only radar reports.
@@ -29,8 +27,6 @@ The system keeps two daily artifacts:
 
 - Dashboard JSON: `data/daily/YYYY-MM-DD.json`
 - Report page: `reports/html/YYYY-MM-DD.html`
-
-There is no non-GitHub watchlist in production.
 
 ## Source policy
 
@@ -45,19 +41,6 @@ Allowed GitHub sources include:
 - GitHub issues / pull requests when useful
 - GitHub stars / forks / recent activity
 - GitHub demo links or documentation links found inside repository metadata or README files
-
-Not used as collection sources:
-
-- Bilibili
-- Douyin
-- Xiaohongshu
-- YouTube
-- X
-- Product Hunt
-- Reddit
-- News websites
-- Official non-GitHub product pages as primary discovery sources
-- Non-GitHub creator-platform watchlists
 
 External links found inside a GitHub repository can be recorded as supporting context, but they do not change the collection source. The candidate must originate from GitHub.
 
@@ -208,15 +191,3 @@ Update manifest
 ↓
 Dashboard reads manifest + daily JSON
 ```
-
-## Explicitly out of scope
-
-The following are not part of the current production scope:
-
-- Non-GitHub product discovery
-- Bilibili / Douyin / Xiaohongshu collection
-- YouTube / X creator-signal collection
-- Product Hunt / Reddit community collection
-- News collection
-- Non-GitHub watchlists
-- V1.5 / V1.5.1 non-GitHub standards
