@@ -134,34 +134,68 @@ function statusButtons(project) {
     .join("")}</div>`;
 }
 
-function projectCard(project, options = {}) {
-  const key = project.key || projectKey(project);
-  const links = [
+function projectLinks(project) {
+  return [
     project.github ? `<a href="${escapeAttr(project.github)}" target="_blank" rel="noreferrer">GitHub</a>` : "",
     project.website ? `<a href="${escapeAttr(project.website)}" target="_blank" rel="noreferrer">Website</a>` : "",
     project.docs ? `<a href="${escapeAttr(project.docs)}" target="_blank" rel="noreferrer">Docs</a>` : "",
   ]
     .filter(Boolean)
     .join("");
+}
+
+function projectCard(project, options = {}) {
+  const key = project.key || projectKey(project);
+  const links = projectLinks(project);
 
   return `<article class="project-card" data-key="${escapeAttr(key)}">
     <div class="project-top">
-      <div>
+      <div class="project-heading">
         ${project.rank ? `<span class="rank">#${project.rank}</span>` : ""}
-        <h3>${escapeHtml(project.name || "Untitled Project")}</h3>
-        <div class="chips">${chipList(categoriesFor(project))}</div>
+        <div>
+          <h3>${escapeHtml(project.name || "Untitled Project")}</h3>
+          <div class="chips">${chipList(categoriesFor(project))}</div>
+        </div>
       </div>
       ${project.score !== undefined ? `<div class="score">${project.score}</div>` : ""}
     </div>
     ${options.library ? `<p class="muted">出现 ${project.appearances} 次 · 首次 ${project.firstSeen} · 最近 ${project.lastSeen}</p>` : ""}
     ${project.why_today ? `<p>${escapeHtml(project.why_today)}</p>` : ""}
     ${listItems(project.core_data)}
-    ${project.today_action ? `<p><strong>今日行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
+    ${project.today_action ? `<p class="action-line"><strong>今日行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
     ${fitGrid(project.fit)}
     ${project.business_model?.length ? `<div class="chips">${chipList(project.business_model)}</div>` : ""}
     ${links ? `<div class="links">${links}</div>` : ""}
     ${statusButtons({ ...project, key })}
   </article>`;
+}
+
+function topProjectCard(project) {
+  if (!project) {
+    return `<p class="muted">日报写入后，这里会显示今日最值得优先查看的项目。</p>`;
+  }
+  const links = projectLinks(project);
+  return `<div class="top-project-title">
+      <div>
+        <p class="eyebrow">Top Opportunity</p>
+        <h3>${escapeHtml(project.name || "Untitled Project")}</h3>
+      </div>
+      ${project.score !== undefined ? `<div class="score">${project.score}</div>` : ""}
+    </div>
+    <p class="muted">${escapeHtml(project.why_today || project.today_action || "今日优先关注项目")}</p>
+    ${project.today_action ? `<p class="action-line"><strong>今日行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
+    ${links ? `<div class="links">${links}</div>` : ""}`;
+}
+
+function findTopProject(report) {
+  const projects = report?.projects || [];
+  if (!projects.length) return null;
+  return [...projects].sort((a, b) => {
+    const rankA = Number.isFinite(Number(a.rank)) ? Number(a.rank) : 999;
+    const rankB = Number.isFinite(Number(b.rank)) ? Number(b.rank) : 999;
+    if (rankA !== rankB) return rankA - rankB;
+    return Number(b.score || 0) - Number(a.score || 0);
+  })[0];
 }
 
 function renderToday(report) {
@@ -170,8 +204,8 @@ function renderToday(report) {
   $("#projectCount").textContent = report?.projects?.length || 0;
   $("#todayTitle").textContent = report ? `${report.title || "AI Opportunity Radar"} ${report.version || ""}` : "今日日报";
   $("#todayTheme").textContent = report?.theme || "暂无日报。";
-  $("#heroCopy").textContent = report?.today_mission || "等待日报数据写入后，这里会自动显示最新机会雷达。";
   $("#todayMission").textContent = report?.today_mission || "ChatGPT 计划任务写入数据后会自动展示。";
+  $("#topProject").innerHTML = topProjectCard(findTopProject(report));
 
   const latestDay = appState.manifest.days.find((day) => day.date === appState.manifest.latest);
   const reportLink = $("#todayHtml");
