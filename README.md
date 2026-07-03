@@ -4,9 +4,18 @@ This repository is the data warehouse and static Dashboard for **AI Opportunity 
 
 It has three jobs:
 
-1. Relay station: ChatGPT scheduled tasks write daily report artifacts here.
+1. Relay station: ChatGPT scheduled tasks write daily report data here.
 2. Lightweight database: the Dashboard reads `data/manifest.json` and `data/daily/*.json`.
 3. Public display site: GitHub Pages hosts the Dashboard from `index.html`.
+
+## Current Design
+
+The system now keeps only two daily artifacts:
+
+- Dashboard JSON: `data/daily/YYYY-MM-DD.json`
+- Report HTML: `reports/html/YYYY-MM-DD.html`
+
+PDF output has been removed. The HTML file is the official daily report, and the UI should call it **日报** rather than **HTML 日报**.
 
 ## What Writes Here
 
@@ -20,13 +29,54 @@ The expected manifest shape is:
 
 ```json
 {
-  "latest": "2026-07-02",
+  "latest": "2026-07-03",
   "days": [
     {
-      "date": "2026-07-02",
-      "file": "data/daily/2026-07-02.json",
-      "html": "reports/html/2026-07-02.html",
-      "pdf": "reports/pdf/2026-07-02.pdf"
+      "date": "2026-07-03",
+      "file": "data/daily/2026-07-03.json",
+      "html": "reports/html/2026-07-03.html"
+    }
+  ]
+}
+```
+
+Do not add a `pdf` field to `data/manifest.json`.
+
+## Daily JSON Shape
+
+Each daily JSON file should follow this structure:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "version": "V1.2",
+  "title": "AI Opportunity Radar",
+  "theme": "今日主题",
+  "market_score": 8.8,
+  "today_mission": "今天最重要的行动",
+  "summary": ["摘要1", "摘要2", "摘要3"],
+  "projects": [
+    {
+      "id": "project-slug",
+      "rank": 1,
+      "name": "Project Name",
+      "category": ["Agent", "GitHub"],
+      "score": 9.0,
+      "github": "https://github.com/example/project",
+      "website": "",
+      "docs": "",
+      "why_today": "为什么今天值得关注",
+      "core_data": ["Stars: ...", "Forks: ...", "Updated: ..."],
+      "use_cases": ["真实使用案例1", "真实使用案例2"],
+      "business_model": ["SaaS", "API", "Enterprise"],
+      "china_competitors": "国内竞品或替代方案",
+      "fit": {
+        "Opportunity Radar": 5,
+        "AI Video": 4,
+        "Photography": 3,
+        "Vibe Coding": 4
+      },
+      "today_action": "今天具体应该做什么"
     }
   ]
 }
@@ -42,9 +92,8 @@ The Dashboard is fully static:
 
 It reads report data directly from the repository and supports:
 
-- today's report
+- today’s report
 - historical reports
-- PDF archive
 - project library
 - project appearance count
 - first seen date
@@ -55,29 +104,26 @@ It reads report data directly from the repository and supports:
 
 Status labels are stored in the browser's `localStorage`. They are not written back to GitHub.
 
-## PDF Generation
+## Report HTML
 
-GitHub Actions watches `reports/html/*.html`.
-
-When a new HTML report is pushed, `.github/workflows/build-pdf.yml` runs:
-
-```bash
-node scripts/html_to_pdf.mjs
-```
-
-The script converts:
+Daily reports are stored here:
 
 ```text
 reports/html/YYYY-MM-DD.html
 ```
 
-into:
+These HTML files are the official daily reports. They should use the V1 visual structure:
 
-```text
-reports/pdf/YYYY-MM-DD.pdf
-```
+- Cover
+- Executive Summary
+- 5 ranked project pages
+- Daily Tool
+- Daily Video
+- Daily Reading
+- Tomorrow Watchlist
+- Today’s Mission
 
-Existing PDFs are skipped to avoid duplicate work.
+Recommended style: black/white/gray with a small amount of blue emphasis, similar to Linear / Notion / Apple Keynote.
 
 ## GitHub Pages
 
@@ -87,14 +133,28 @@ GitHub Pages should be configured as:
 - Branch: `main`
 - Folder: `/root`
 
-The Dashboard URL will look like:
+Dashboard URL:
 
 ```text
-https://YOUR_GITHUB_USERNAME.github.io/ai-opportunity-radar-data/
+https://paxora.github.io/ai-opportunity-radar-data/
 ```
 
 ## Scope
 
 This repository does not call the OpenAI API.
 
-Codex does not perform collection, analysis, or report generation here. Codex only sets up the repository infrastructure, Dashboard, file structure, GitHub Actions workflow, and GitHub Pages configuration.
+ChatGPT scheduled tasks perform collection, judgment, and report generation. Codex only sets up and maintains repository infrastructure when needed.
+
+The current production flow is:
+
+```text
+ChatGPT scheduled task
+↓
+Generate daily JSON + report HTML
+↓
+Write to GitHub repository
+↓
+Dashboard reads manifest + daily JSON
+↓
+User opens the report from Dashboard
+```
