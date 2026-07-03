@@ -10,7 +10,6 @@ const appState = {
   reports: new Map(),
   allProjects: [],
   library: [],
-  availablePaths: new Map(),
   search: "",
   category: "",
   status: "",
@@ -21,36 +20,8 @@ const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
 async function fetchJson(path) {
   const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Failed to load ${path}`);
-  }
+  if (!response.ok) throw new Error(`Failed to load ${path}`);
   return response.json();
-}
-
-async function pathExists(path) {
-  if (!path) return false;
-  if (appState.availablePaths.has(path)) {
-    return appState.availablePaths.get(path);
-  }
-
-  let exists = false;
-  try {
-    const response = await fetch(path, { method: "HEAD", cache: "no-store" });
-    exists = response.ok;
-  } catch (error) {
-    exists = false;
-  }
-
-  appState.availablePaths.set(path, exists);
-  return exists;
-}
-
-async function updateReportFileAvailability() {
-  await Promise.all(
-    (appState.manifest.days || []).map(async (day) => {
-      day.pdfAvailable = await pathExists(day.pdf);
-    }),
-  );
 }
 
 function projectKey(project) {
@@ -203,12 +174,13 @@ function renderToday(report) {
   $("#todayMission").textContent = report?.today_mission || "ChatGPT 计划任务写入数据后会自动展示。";
 
   const latestDay = appState.manifest.days.find((day) => day.date === appState.manifest.latest);
-  const htmlLink = $("#todayHtml");
+  const reportLink = $("#todayHtml");
   if (latestDay?.html) {
-    htmlLink.href = latestDay.html;
-    htmlLink.hidden = false;
+    reportLink.href = latestDay.html;
+    reportLink.textContent = "打开日报";
+    reportLink.hidden = false;
   } else {
-    htmlLink.hidden = true;
+    reportLink.hidden = true;
   }
 
   const summaries = report?.summary || [];
@@ -236,26 +208,8 @@ function renderHistory() {
             </div>
             <div class="history-actions">
               ${day.file ? `<a href="${escapeAttr(day.file)}" target="_blank" rel="noreferrer">JSON</a>` : ""}
-              ${day.html ? `<a href="${escapeAttr(day.html)}" target="_blank" rel="noreferrer">HTML</a>` : ""}
-              ${day.pdfAvailable ? `<a href="${escapeAttr(day.pdf)}" target="_blank" rel="noreferrer">PDF</a>` : ""}
+              ${day.html ? `<a href="${escapeAttr(day.html)}" target="_blank" rel="noreferrer">日报</a>` : ""}
             </div>
-          </div>`,
-        )
-        .join("")
-    : emptyHtml();
-}
-
-function renderArchive() {
-  const pdfs = (appState.manifest.days || []).filter((day) => day.pdfAvailable);
-  $("#archiveGrid").innerHTML = pdfs.length
-    ? pdfs
-        .map(
-          (day) => `<div class="archive-card">
-            <div>
-              <strong>${escapeHtml(day.date)}</strong>
-              <p class="muted">PDF report</p>
-            </div>
-            <a class="button" href="${escapeAttr(day.pdf)}" target="_blank" rel="noreferrer">打开 PDF</a>
           </div>`,
         )
         .join("")
@@ -343,20 +297,17 @@ async function init() {
       appState.manifest.latest = appState.manifest.days[0].date;
     }
 
-    await updateReportFileAvailability();
     buildLibrary();
     updateCategoryFilter();
     renderToday(appState.reports.get(appState.manifest.latest));
     renderProjects();
     renderHistory();
-    renderArchive();
     renderLibrary();
   } catch (error) {
     console.warn(error);
     renderToday(null);
     $("#todayProjects").innerHTML = emptyHtml();
     $("#historyList").innerHTML = emptyHtml();
-    $("#archiveGrid").innerHTML = emptyHtml();
     $("#libraryProjects").innerHTML = emptyHtml();
   }
 }
