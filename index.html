@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Opportunity Radar</title>
-    <link rel="stylesheet" href="assets/style.css?v=20260703-ui6" />
+    <link rel="stylesheet" href="assets/style.css?v=20260703-ui7" />
     <style>
       .page-title h1 {
         white-space: nowrap !important;
@@ -12,16 +12,20 @@
         letter-spacing: -0.075em !important;
       }
       .recommendation-head {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 24px;
-        margin: 48px 0 22px;
+        display: grid !important;
+        grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr) auto !important;
+        align-items: end !important;
+        gap: 18px !important;
+        margin: 48px 0 22px !important;
+      }
+      .recommendation-head .toolbar {
+        margin: 0 !important;
       }
       .carousel-controls {
         display: flex;
         gap: 10px;
         align-items: center;
+        justify-content: flex-end;
       }
       .carousel-button {
         width: 46px;
@@ -40,16 +44,19 @@
         cursor: default;
       }
       #todayProjects.recommended-rail {
+        width: 100% !important;
+        max-width: 100% !important;
         display: grid !important;
         grid-auto-flow: column !important;
-        grid-auto-columns: calc((100% - 22px) / 2) !important;
+        grid-auto-columns: calc((100% - 24px) / 2) !important;
         grid-template-columns: none !important;
-        gap: 22px !important;
+        gap: 24px !important;
         overflow-x: hidden !important;
         overflow-y: visible !important;
         scroll-snap-type: x mandatory !important;
         scroll-behavior: smooth !important;
-        padding: 4px 4px 24px !important;
+        padding: 4px 0 28px !important;
+        margin: 0 !important;
         scrollbar-width: none !important;
       }
       #todayProjects.recommended-rail::-webkit-scrollbar {
@@ -59,18 +66,15 @@
         min-width: 0 !important;
         width: 100% !important;
         scroll-snap-align: start !important;
+        padding: 28px !important;
       }
-      .section-note {
-        margin: 0;
-        color: #86868b;
-        font-size: 16px;
-        line-height: 1.5;
+      @media (max-width: 1100px) {
+        .recommendation-head {
+          grid-template-columns: 1fr !important;
+          align-items: start !important;
+        }
       }
       @media (max-width: 900px) {
-        .recommendation-head {
-          align-items: flex-start;
-          flex-direction: column;
-        }
         #todayProjects.recommended-rail {
           grid-auto-columns: 86vw !important;
           overflow-x: hidden !important;
@@ -145,20 +149,6 @@
             <div>
               <p class="eyebrow">今日信号</p>
               <h2>今日推荐</h2>
-              <p class="section-note">每次显示两个项目，使用右侧按钮切换。</p>
-            </div>
-            <div class="carousel-controls" aria-label="今日推荐切换">
-              <button class="carousel-button" id="recommendPrev" type="button" aria-label="上一组">‹</button>
-              <button class="carousel-button" id="recommendNext" type="button" aria-label="下一组">›</button>
-            </div>
-          </section>
-
-          <div class="cards recommended-rail" id="todayProjects"></div>
-
-          <section class="workspace-head">
-            <div>
-              <p class="eyebrow">筛选</p>
-              <h2>查找项目</h2>
             </div>
             <div class="toolbar">
               <label class="search">
@@ -182,7 +172,13 @@
                 </select>
               </label>
             </div>
+            <div class="carousel-controls" aria-label="今日推荐切换">
+              <button class="carousel-button" id="recommendPrev" type="button" aria-label="上一组">‹</button>
+              <button class="carousel-button" id="recommendNext" type="button" aria-label="下一组">›</button>
+            </div>
           </section>
+
+          <div class="cards recommended-rail" id="todayProjects"></div>
         </section>
 
         <section class="panel" id="history">
@@ -216,6 +212,6 @@
       </div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui6"></script>
+    <script src="assets/app.js?v=20260703-ui7"></script>
   </body>
 </html>
