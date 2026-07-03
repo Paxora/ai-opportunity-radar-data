@@ -1,97 +1,10 @@
 # AI Opportunity Radar Data
 
-## 中文说明
-
-这个仓库是 **AI Opportunity Radar** 的数据仓库和静态 Dashboard。
-
-它承担三件事：
-
-1. **日报中转站**：ChatGPT 计划任务每天把日报数据写入这里。
-2. **轻量数据库**：Dashboard 读取 `data/manifest.json` 和 `data/daily/*.json`。
-3. **展示站点**：GitHub Pages 通过 `index.html` 托管 Dashboard。
-
-当前系统只保留两类每日产物：
-
-- Dashboard JSON：`data/daily/YYYY-MM-DD.json`
-- 正式日报页面：`reports/html/YYYY-MM-DD.html`
-
-PDF 流程已经移除。`reports/html/YYYY-MM-DD.html` 就是正式日报，界面和文案统一称为 **日报**，不再称为 **HTML 日报**。
-
-### 每天写入的文件
-
-ChatGPT 计划任务每天需要更新：
-
-```text
- data/daily/YYYY-MM-DD.json
- reports/html/YYYY-MM-DD.html
- data/manifest.json
-```
-
-`manifest.json` 示例：
-
-```json
-{
-  "latest": "2026-07-03",
-  "days": [
-    {
-      "date": "2026-07-03",
-      "file": "data/daily/2026-07-03.json",
-      "html": "reports/html/2026-07-03.html"
-    }
-  ]
-}
-```
-
-不要在 `manifest.json` 里添加 `pdf` 字段。
-
-### Dashboard 功能
-
-Dashboard 是纯静态页面，不需要后端，主要由以下文件组成：
-
-- `index.html`
-- `assets/style.css`
-- `assets/app.js`
-
-它支持：
-
-- 查看今日日报
-- 查看历史日报
-- 打开日报页面
-- 查看项目库
-- 项目出现次数统计
-- 首次出现日期
-- 最近出现日期
-- 分类筛选
-- 搜索
-- 本地状态标记：收藏、测试中、已完成、已放弃
-
-状态标记保存在浏览器 `localStorage`，不会写回 GitHub。
-
-### 当前生产流程
-
-```text
-ChatGPT 计划任务
-↓
-生成日报 JSON + 日报 HTML
-↓
-写入 GitHub 仓库
-↓
-Dashboard 读取 manifest + daily JSON
-↓
-用户在 Dashboard 打开日报
-```
-
-这个仓库不调用 OpenAI API。ChatGPT 计划任务负责采集、判断和生成日报；Codex 只在需要时维护仓库基础设施。
-
-Dashboard 地址：
-
-```text
-https://paxora.github.io/ai-opportunity-radar-data/
-```
-
----
-
-## English Description
+<p>
+  <a href="./README.md"><strong>English</strong></a>
+  ·
+  <a href="./README.zh-CN.md">简体中文</a>
+</p>
 
 This repository is the data warehouse and static Dashboard for **AI Opportunity Radar**.
 
@@ -185,7 +98,7 @@ The Dashboard is fully static:
 
 It reads report data directly from the repository and supports:
 
-- today’s report
+- today's report
 - historical reports
 - project library
 - project appearance count
