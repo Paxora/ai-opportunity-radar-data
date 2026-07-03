@@ -5,6 +5,40 @@ const stateLabels = {
   dropped: "已放弃",
 };
 
+const zhMap = {
+  "MCP": "MCP",
+  "GitHub": "GitHub",
+  "Agent Tooling": "智能体工具",
+  "Browser Agent": "浏览器智能体",
+  "Automation": "自动化",
+  "Workflow": "工作流",
+  "Open Source SaaS": "开源 SaaS",
+  "AI Video": "AI 视频",
+  "Avatar": "数字人",
+  "Open Source": "开源",
+  "AI App": "AI 应用",
+  "Developer Tool": "开发工具",
+  "Frontend": "前端",
+  "Developer infrastructure": "开发者基础设施",
+  "Enterprise workflow": "企业工作流",
+  "GitHub ecosystem": "GitHub 生态",
+  "Developer tool": "开发工具",
+  "Agent infrastructure": "智能体基础设施",
+  "Enterprise automation": "企业自动化",
+  "Open-source core": "开源核心",
+  "Cloud SaaS": "云端 SaaS",
+  "Enterprise automation": "企业自动化",
+  "Video generation tool": "视频生成工具",
+  "Avatar SaaS": "数字人 SaaS",
+  "Content production service": "内容生产服务",
+  "Open-source SDK": "开源 SDK",
+  "Cloud deployment": "云端部署",
+  "AI application platform": "AI 应用平台",
+  "Opportunity Radar": "机会雷达",
+  "Photography": "摄影",
+  "Vibe Coding": "Vibe Coding",
+};
+
 const appState = {
   manifest: { latest: null, days: [] },
   reports: new Map(),
@@ -17,6 +51,7 @@ const appState = {
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+const zh = (value) => zhMap[value] || value;
 
 async function fetchJson(path) {
   const response = await fetch(path, { cache: "no-store" });
@@ -83,7 +118,7 @@ function updateCategoryFilter() {
   [...categories].sort().forEach((category) => {
     const option = document.createElement("option");
     option.value = category;
-    option.textContent = category;
+    option.textContent = zh(category);
     select.appendChild(option);
   });
 }
@@ -92,7 +127,7 @@ function matchesFilters(project) {
   const query = appState.search.trim().toLowerCase();
   const text = [
     project.name,
-    categoriesFor(project).join(" "),
+    categoriesFor(project).map(zh).join(" "),
     project.why_today,
     project.today_action,
     project.china_competitors,
@@ -108,7 +143,7 @@ function matchesFilters(project) {
 }
 
 function chipList(items) {
-  return (items || []).map((item) => `<span class="chip">${escapeHtml(item)}</span>`).join("");
+  return (items || []).map((item) => `<span class="chip">${escapeHtml(zh(item))}</span>`).join("");
 }
 
 function listItems(items) {
@@ -119,7 +154,7 @@ function listItems(items) {
 function fitGrid(fit) {
   if (!fit || typeof fit !== "object") return "";
   return `<div class="fit-grid">${Object.entries(fit)
-    .map(([name, value]) => `<div class="fit-item"><span>${escapeHtml(name)}</span><strong>${value}</strong></div>`)
+    .map(([name, value]) => `<div class="fit-item"><span>${escapeHtml(zh(name))}</span><strong>${value}</strong></div>`)
     .join("")}</div>`;
 }
 
@@ -129,19 +164,13 @@ function statusButtons(project) {
   return `<div class="statuses">${Object.entries(stateLabels)
     .map(([value, label]) => {
       const active = current === value ? " is-active" : "";
-      return `<button class="status-button${active}" data-key="${escapeAttr(key)}" data-status="${value}">${label}</button>`;
+      return `<button type="button" class="status-button${active}" data-key="${escapeAttr(key)}" data-status="${value}">${label}</button>`;
     })
     .join("")}</div>`;
 }
 
 function projectLinks(project) {
-  return [
-    project.github ? `<a href="${escapeAttr(project.github)}" target="_blank" rel="noreferrer">GitHub</a>` : "",
-    project.website ? `<a href="${escapeAttr(project.website)}" target="_blank" rel="noreferrer">Website</a>` : "",
-    project.docs ? `<a href="${escapeAttr(project.docs)}" target="_blank" rel="noreferrer">Docs</a>` : "",
-  ]
-    .filter(Boolean)
-    .join("");
+  return project.github ? `<a href="${escapeAttr(project.github)}" target="_blank" rel="noreferrer">GitHub</a>` : "";
 }
 
 function projectCard(project, options = {}) {
@@ -202,7 +231,7 @@ function renderToday(report) {
   $("#latestDate").textContent = report?.date || "--";
   $("#marketScore").textContent = report?.market_score ?? "--";
   $("#projectCount").textContent = report?.projects?.length || 0;
-  $("#todayTitle").textContent = report ? "今日重点信号" : "今日重点信号";
+  $("#todayTitle").textContent = "今日重点信号";
   $("#todayTheme").textContent = report?.theme || "暂无日报。";
   $("#todayMission").textContent = report?.today_mission || "ChatGPT 计划任务写入数据后会自动展示。";
   $("#topProject").innerHTML = topProjectCard(findTopProject(report));
@@ -227,7 +256,6 @@ function renderProjects() {
   const latestReport = appState.reports.get(appState.manifest.latest);
   const projects = (latestReport?.projects || []).filter(matchesFilters);
   $("#todayProjects").innerHTML = projects.length ? projects.map((project) => projectCard(project)).join("") : emptyHtml();
-  bindStatusButtons();
 }
 
 function renderHistory() {
@@ -255,13 +283,6 @@ function renderLibrary() {
   $("#libraryProjects").innerHTML = projects.length
     ? projects.map((project) => projectCard(project, { library: true })).join("")
     : emptyHtml();
-  bindStatusButtons();
-}
-
-function bindStatusButtons() {
-  $$(".status-button").forEach((button) => {
-    button.addEventListener("click", () => saveStatus(button.dataset.key, button.dataset.status));
-  });
 }
 
 function bindEvents() {
@@ -272,6 +293,12 @@ function bindEvents() {
       tab.classList.add("is-active");
       $(`#${tab.dataset.tab}`).classList.add("is-active");
     });
+  });
+
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(".status-button");
+    if (!button) return;
+    saveStatus(button.dataset.key, button.dataset.status);
   });
 
   $("#searchInput").addEventListener("input", (event) => {
