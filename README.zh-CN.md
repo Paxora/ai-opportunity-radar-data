@@ -16,12 +16,12 @@
 
 ## 当前设计
 
-当前系统只保留两类每日产物：
+当前系统保留两类每日产物：
 
 - Dashboard JSON：`data/daily/YYYY-MM-DD.json`
 - 正式日报页面：`reports/html/YYYY-MM-DD.html`
 
-PDF 流程已经移除。`reports/html/YYYY-MM-DD.html` 就是正式日报，界面和文案统一称为 **日报**，不再称为 **HTML 日报**。
+`reports/html/YYYY-MM-DD.html` 就是正式日报，界面和文案统一称为 **日报**，不再称为 **HTML 日报**。
 
 ## 每天写入的文件
 
@@ -47,8 +47,6 @@ data/manifest.json
   ]
 }
 ```
-
-不要在 `manifest.json` 里添加 `pdf` 字段。
 
 ## Daily JSON 格式
 
@@ -121,7 +119,7 @@ Dashboard 是纯静态页面，不需要后端，主要由以下文件组成：
 reports/html/YYYY-MM-DD.html
 ```
 
-这些 HTML 文件就是正式日报，应使用 V1 视觉结构：
+这些文件就是正式日报，应使用 V1 视觉结构：
 
 - 封面
 - Executive Summary
@@ -159,7 +157,7 @@ ChatGPT 计划任务负责采集、判断和生成日报；Codex 只在需要时
 ```text
 ChatGPT 计划任务
 ↓
-生成日报 JSON + 日报 HTML
+生成日报 JSON + 日报页面
 ↓
 写入 GitHub 仓库
 ↓
