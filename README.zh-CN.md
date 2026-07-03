@@ -15,8 +15,6 @@
 评价标准：V1.4 GitHub / open-source project standard
 ```
 
-生产流程中已经移除非 GitHub 采集。系统不采集 B站、抖音、小红书、YouTube、X、Product Hunt、Reddit、新闻站、官方产品站或创作者平台。
-
 ## 这个仓库负责什么
 
 1. 存放每日 GitHub-only 雷达日报。
@@ -29,8 +27,6 @@
 
 - Dashboard JSON：`data/daily/YYYY-MM-DD.json`
 - 正式日报页面：`reports/html/YYYY-MM-DD.html`
-
-生产环境不再保留非 GitHub Watchlist。
 
 ## 采集来源规则
 
@@ -45,19 +41,6 @@
 - GitHub issues / pull requests，如有必要
 - GitHub stars / forks / recent activity
 - GitHub 仓库元数据或 README 中出现的 demo / docs / website 链接
-
-不作为采集来源：
-
-- B站
-- 抖音
-- 小红书
-- YouTube
-- X
-- Product Hunt
-- Reddit
-- 新闻网站
-- 非 GitHub 官方产品页作为主要发现来源
-- 非 GitHub 创作者平台 Watchlist
 
 如果 GitHub 仓库里包含外部 demo、官网或文档链接，可以作为支持信息记录，但候选项目必须来源于 GitHub。
 
@@ -208,15 +191,3 @@ ChatGPT 计划任务
 ↓
 Dashboard 读取 manifest + daily JSON
 ```
-
-## 明确不在当前范围内
-
-以下内容不属于当前生产范围：
-
-- 非 GitHub 产品发现
-- B站 / 抖音 / 小红书采集
-- YouTube / X 创作者信号采集
-- Product Hunt / Reddit 社区采集
-- 新闻采集
-- 非 GitHub Watchlist
-- V1.5 / V1.5.1 非 GitHub 标准
