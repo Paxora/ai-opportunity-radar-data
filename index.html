@@ -6,185 +6,52 @@
     <title>Open-source AI Opportunity</title>
     <link rel="stylesheet" href="assets/style.css?v=20260703-ui7" />
     <style>
-      .page-title {
-        max-width: 100% !important;
-      }
-      .page-title h1 {
-        max-width: 100% !important;
-        white-space: nowrap !important;
-        overflow-wrap: normal !important;
-        word-break: normal !important;
-        font-size: clamp(40px, 5vw, 76px) !important;
-        line-height: .98 !important;
-        letter-spacing: -0.065em !important;
-      }
-      .mission-layout {
-        display: block !important;
-        margin-top: 28px !important;
-      }
-      .mission-card {
-        width: 100% !important;
-        min-height: 0 !important;
-        height: auto !important;
-        padding: 26px 32px !important;
-        border-radius: 30px !important;
-      }
-      .mission-card .eyebrow {
-        margin-bottom: 10px !important;
-      }
-      .mission {
-        font-size: clamp(22px, 2vw, 30px) !important;
-        line-height: 1.18 !important;
-        letter-spacing: -0.035em !important;
-        max-width: none !important;
-      }
-      .summary-grid {
-        width: 100% !important;
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 24px !important;
-        margin: 24px 0 0 !important;
-      }
-      .summary-card {
-        min-height: 0 !important;
-        height: auto !important;
-        padding: 26px 28px !important;
-        border-radius: 26px !important;
-        font-size: clamp(18px, 1.35vw, 24px) !important;
-        line-height: 1.48 !important;
-        letter-spacing: -0.02em !important;
-      }
-      .recommendation-head {
-        display: grid !important;
-        grid-template-columns: minmax(260px, 1fr) minmax(520px, auto) !important;
-        align-items: end !important;
-        gap: 18px !important;
-        margin: 42px 0 22px !important;
-      }
-      .recommendation-head .toolbar {
-        margin: 0 !important;
-        justify-self: end !important;
-        justify-content: flex-end !important;
-      }
-      .recommendation-carousel {
-        position: relative !important;
-        width: 100% !important;
-      }
-      .carousel-button {
-        position: absolute !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        z-index: 5 !important;
-        width: 48px;
-        height: 48px;
-        border: 0;
-        border-radius: 999px;
-        background: #1d1d1f;
-        color: #fff;
-        font-size: 24px;
-        font-weight: 800;
-        cursor: pointer;
-        box-shadow: 0 16px 36px rgba(0,0,0,.18);
-      }
-      .carousel-button.prev {
-        left: -24px !important;
-      }
-      .carousel-button.next {
-        right: -24px !important;
-      }
-      .carousel-button:disabled {
-        opacity: .28;
-        cursor: default;
-      }
-      #todayProjects.recommended-rail {
-        width: 100% !important;
-        max-width: 100% !important;
-        display: grid !important;
-        grid-auto-flow: column !important;
-        grid-auto-columns: calc((100% - 24px) / 2) !important;
-        grid-template-columns: none !important;
-        gap: 24px !important;
-        overflow-x: hidden !important;
-        overflow-y: visible !important;
-        scroll-snap-type: x mandatory !important;
-        scroll-behavior: smooth !important;
-        padding: 4px 0 28px !important;
-        margin: 0 !important;
-        scrollbar-width: none !important;
-      }
-      #todayProjects.recommended-rail::-webkit-scrollbar {
-        display: none !important;
-      }
-      #todayProjects.recommended-rail .project-card {
-        min-width: 0 !important;
-        width: 100% !important;
-        scroll-snap-align: start !important;
-        padding: 28px !important;
-      }
-      @media (max-width: 1100px) {
-        .page-title h1 {
-          font-size: clamp(36px, 5vw, 56px) !important;
-        }
-        .summary-grid {
-          grid-template-columns: 1fr !important;
-        }
-        .recommendation-head {
-          grid-template-columns: 1fr !important;
-          align-items: start !important;
-        }
-        .recommendation-head .toolbar {
-          justify-self: stretch !important;
-          justify-content: flex-start !important;
-        }
-        .carousel-button.prev {
-          left: 8px !important;
-        }
-        .carousel-button.next {
-          right: 8px !important;
-        }
-      }
-      @media (max-width: 900px) {
-        .page-title h1 {
-          white-space: normal !important;
-        }
-        #todayProjects.recommended-rail {
-          grid-auto-columns: 86vw !important;
-          overflow-x: hidden !important;
-        }
-      }
-      @media (max-width: 700px) {
-        .page-title h1 {
-          font-size: clamp(36px, 12vw, 56px) !important;
-        }
-        .mission {
-          font-size: 22px !important;
-        }
-        .summary-card {
-          font-size: 18px !important;
-        }
-      }
+      .page-title { max-width: 100% !important; }
+      .page-title h1 { max-width: 100% !important; white-space: nowrap !important; overflow-wrap: normal !important; word-break: normal !important; font-size: clamp(40px, 5vw, 76px) !important; line-height: .98 !important; letter-spacing: -0.065em !important; }
+      .mission-layout { display: block !important; margin-top: 28px !important; }
+      .mission-card { width: 100% !important; min-height: 0 !important; height: auto !important; padding: 26px 32px !important; border-radius: 30px !important; }
+      .mission-card .eyebrow { margin-bottom: 10px !important; }
+      .mission { font-size: clamp(22px, 2vw, 30px) !important; line-height: 1.18 !important; letter-spacing: -0.035em !important; max-width: none !important; }
+      .summary-grid { width: 100% !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 24px !important; margin: 24px 0 0 !important; }
+      .summary-card { min-height: 0 !important; height: auto !important; padding: 26px 28px !important; border-radius: 26px !important; font-size: clamp(18px, 1.35vw, 24px) !important; line-height: 1.48 !important; letter-spacing: -0.02em !important; }
+      .recommendation-head { display: grid !important; grid-template-columns: minmax(260px, 1fr) minmax(520px, auto) !important; align-items: end !important; gap: 18px !important; margin: 42px 0 22px !important; }
+      .recommendation-head .toolbar { margin: 0 !important; justify-self: end !important; justify-content: flex-end !important; }
+      .recommendation-carousel { position: relative !important; width: 100% !important; }
+      .carousel-button { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 5 !important; width: 48px; height: 48px; border: 0; border-radius: 999px; background: #1d1d1f; color: #fff; font-size: 24px; font-weight: 800; cursor: pointer; box-shadow: 0 16px 36px rgba(0,0,0,.18); }
+      .carousel-button.prev { left: -24px !important; }
+      .carousel-button.next { right: -24px !important; }
+      .carousel-button:disabled { opacity: .28; cursor: default; }
+      #todayProjects.recommended-rail { width: 100% !important; max-width: 100% !important; display: grid !important; grid-auto-flow: column !important; grid-auto-columns: calc((100% - 24px) / 2) !important; grid-template-columns: none !important; gap: 24px !important; overflow-x: hidden !important; overflow-y: visible !important; scroll-snap-type: x mandatory !important; scroll-behavior: smooth !important; padding: 4px 0 28px !important; margin: 0 !important; scrollbar-width: none !important; }
+      #todayProjects.recommended-rail::-webkit-scrollbar { display: none !important; }
+      #todayProjects.recommended-rail .project-card { min-width: 0 !important; width: 100% !important; scroll-snap-align: start !important; padding: 28px !important; }
+      .scheme-flow { background:#f5f5f7; border:1px solid #e5e5ea; border-radius:18px; padding:12px 14px; margin:14px 0; }
+      .scheme-flow p { margin:6px 0; }
+      .project-card ul { margin:10px 0 14px 18px; padding:0; color:#424245; }
+      @media (max-width: 1100px) { .page-title h1 { font-size: clamp(36px, 5vw, 56px) !important; } .summary-grid { grid-template-columns: 1fr !important; } .recommendation-head { grid-template-columns: 1fr !important; align-items: start !important; } .recommendation-head .toolbar { justify-self: stretch !important; justify-content: flex-start !important; } .carousel-button.prev { left: 8px !important; } .carousel-button.next { right: 8px !important; } }
+      @media (max-width: 900px) { .page-title h1 { white-space: normal !important; } #todayProjects.recommended-rail { grid-auto-columns: 86vw !important; overflow-x: hidden !important; } }
+      @media (max-width: 700px) { .page-title h1 { font-size: clamp(36px, 12vw, 56px) !important; } .mission { font-size: 22px !important; } .summary-card { font-size: 18px !important; } }
     </style>
   </head>
   <body>
     <div class="page-glow" aria-hidden="true"></div>
     <div class="shell">
       <header class="page-title">
-        <p class="eyebrow">GitHub-only · V1.4</p>
+        <p class="eyebrow">Value-first · V1.5</p>
         <h1>Open-source AI Opportunity</h1>
-        <p class="page-subtitle">每日只从 GitHub 筛选值得关注的开源 AI 项目、工具和机会信号。</p>
+        <p class="page-subtitle">不是工具榜，而是从 GitHub-first 信号里提炼有价值的落地方案、工作流和机会判断。</p>
       </header>
 
       <nav class="tabs" aria-label="Dashboard sections">
         <button class="tab is-active" data-tab="today">今日工作台</button>
         <button class="tab" data-tab="history">历史日报</button>
-        <button class="tab" data-tab="library">项目库</button>
+        <button class="tab" data-tab="library">方案库</button>
       </nav>
 
       <main>
         <section class="panel is-active" id="today">
           <section class="mission-layout">
             <article class="mission-card">
-              <p class="eyebrow">今日行动</p>
+              <p class="eyebrow">今日验证</p>
               <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
             </article>
           </section>
@@ -193,13 +60,13 @@
 
           <section class="recommendation-head">
             <div>
-              <p class="eyebrow">GitHub 信号</p>
-              <h2>今日推荐</h2>
+              <p class="eyebrow">Opportunity Schemes</p>
+              <h2>今日机会方案</h2>
             </div>
             <div class="toolbar">
               <label class="search">
                 <span>搜索</span>
-                <input id="searchInput" type="search" placeholder="项目名、分类、行动..." />
+                <input id="searchInput" type="search" placeholder="方案、工具、场景、行动..." />
               </label>
               <label class="select">
                 <span>分类</span>
@@ -236,9 +103,9 @@
 
         <section class="panel" id="library">
           <section class="section-heading">
-            <p class="eyebrow">Project Library</p>
-            <h2>项目库</h2>
-            <p>按 GitHub 项目维度汇总历史出现次数、首次出现和最近出现。</p>
+            <p class="eyebrow">Scheme Library</p>
+            <h2>方案库</h2>
+            <p>按机会方案维度汇总历史出现次数、来源工具、首次出现和最近出现。</p>
           </section>
           <section class="library-grid" id="libraryProjects"></section>
         </section>
@@ -249,6 +116,6 @@
       <div class="empty-card">暂无内容。</div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui15"></script>
+    <script src="assets/app.js?v=20260703-ui16"></script>
   </body>
 </html>
