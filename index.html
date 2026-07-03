@@ -4,25 +4,60 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Opportunity Radar</title>
-    <link rel="stylesheet" href="assets/style.css?v=20260703-ui5" />
+    <link rel="stylesheet" href="assets/style.css?v=20260703-ui6" />
     <style>
       .page-title h1 {
         white-space: nowrap !important;
         font-size: clamp(42px, 6.2vw, 86px) !important;
         letter-spacing: -0.075em !important;
       }
+      .recommendation-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin: 48px 0 22px;
+      }
+      .carousel-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .carousel-button {
+        width: 46px;
+        height: 46px;
+        border: 0;
+        border-radius: 999px;
+        background: #1d1d1f;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 16px 36px rgba(0,0,0,.14);
+      }
+      .carousel-button:disabled {
+        opacity: .28;
+        cursor: default;
+      }
       #todayProjects.recommended-rail {
-        display: flex !important;
+        display: grid !important;
+        grid-auto-flow: column !important;
+        grid-auto-columns: calc((100% - 22px) / 2) !important;
         grid-template-columns: none !important;
         gap: 22px !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
         scroll-snap-type: x mandatory !important;
+        scroll-behavior: smooth !important;
         padding: 4px 4px 24px !important;
-        scrollbar-width: thin;
+        scrollbar-width: none !important;
+      }
+      #todayProjects.recommended-rail::-webkit-scrollbar {
+        display: none !important;
       }
       #todayProjects.recommended-rail .project-card {
-        flex: 0 0 min(540px, 86vw) !important;
+        min-width: 0 !important;
+        width: 100% !important;
         scroll-snap-align: start !important;
       }
       .section-note {
@@ -30,6 +65,16 @@
         color: #86868b;
         font-size: 16px;
         line-height: 1.5;
+      }
+      @media (max-width: 900px) {
+        .recommendation-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        #todayProjects.recommended-rail {
+          grid-auto-columns: 86vw !important;
+          overflow-x: hidden !important;
+        }
       }
       @media (max-width: 700px) {
         .page-title h1 {
@@ -96,11 +141,24 @@
 
           <section class="summary-grid" id="summaryList"></section>
 
-          <section class="workspace-head">
+          <section class="recommendation-head">
             <div>
               <p class="eyebrow">今日信号</p>
               <h2>今日推荐</h2>
-              <p class="section-note">横向滑动查看今天最值得优先关注的项目。</p>
+              <p class="section-note">每次显示两个项目，使用右侧按钮切换。</p>
+            </div>
+            <div class="carousel-controls" aria-label="今日推荐切换">
+              <button class="carousel-button" id="recommendPrev" type="button" aria-label="上一组">‹</button>
+              <button class="carousel-button" id="recommendNext" type="button" aria-label="下一组">›</button>
+            </div>
+          </section>
+
+          <div class="cards recommended-rail" id="todayProjects"></div>
+
+          <section class="workspace-head">
+            <div>
+              <p class="eyebrow">筛选</p>
+              <h2>查找项目</h2>
             </div>
             <div class="toolbar">
               <label class="search">
@@ -125,8 +183,6 @@
               </label>
             </div>
           </section>
-
-          <div class="cards recommended-rail" id="todayProjects"></div>
         </section>
 
         <section class="panel" id="history">
@@ -160,6 +216,6 @@
       </div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui5"></script>
+    <script src="assets/app.js?v=20260703-ui6"></script>
   </body>
 </html>
