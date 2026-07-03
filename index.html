@@ -6,38 +6,55 @@
     <title>Open-source AI Opportunity Project Radar</title>
     <link rel="stylesheet" href="assets/style.css?v=20260703-ui7" />
     <style>
+      .page-title {
+        max-width: 1180px !important;
+      }
       .page-title h1 {
-        white-space: nowrap !important;
-        font-size: clamp(42px, 6.2vw, 86px) !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+        font-size: clamp(42px, 5vw, 74px) !important;
+        line-height: .95 !important;
         letter-spacing: -0.075em !important;
       }
       .recommendation-head {
         display: grid !important;
-        grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr) auto !important;
+        grid-template-columns: minmax(260px, 1fr) minmax(520px, auto) !important;
         align-items: end !important;
         gap: 18px !important;
         margin: 48px 0 22px !important;
       }
       .recommendation-head .toolbar {
         margin: 0 !important;
+        justify-self: end !important;
+        justify-content: flex-end !important;
       }
-      .carousel-controls {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: flex-end;
+      .recommendation-carousel {
+        position: relative !important;
+        width: 100% !important;
       }
       .carousel-button {
-        width: 46px;
-        height: 46px;
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 5 !important;
+        width: 48px;
+        height: 48px;
         border: 0;
         border-radius: 999px;
         background: #1d1d1f;
         color: #fff;
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 800;
         cursor: pointer;
-        box-shadow: 0 16px 36px rgba(0,0,0,.14);
+        box-shadow: 0 16px 36px rgba(0,0,0,.18);
+      }
+      .carousel-button.prev {
+        left: -24px !important;
+      }
+      .carousel-button.next {
+        right: -24px !important;
       }
       .carousel-button:disabled {
         opacity: .28;
@@ -73,6 +90,16 @@
           grid-template-columns: 1fr !important;
           align-items: start !important;
         }
+        .recommendation-head .toolbar {
+          justify-self: stretch !important;
+          justify-content: flex-start !important;
+        }
+        .carousel-button.prev {
+          left: 8px !important;
+        }
+        .carousel-button.next {
+          right: 8px !important;
+        }
       }
       @media (max-width: 900px) {
         #todayProjects.recommended-rail {
@@ -82,8 +109,7 @@
       }
       @media (max-width: 700px) {
         .page-title h1 {
-          white-space: normal !important;
-          font-size: clamp(36px, 12vw, 58px) !important;
+          font-size: clamp(34px, 11vw, 54px) !important;
         }
       }
     </style>
@@ -165,19 +191,19 @@
                 <span>状态</span>
                 <select id="statusFilter">
                   <option value="">全部状态</option>
-                  <option value="starred">已收藏</option>
+                  <option value="favorite">已收藏</option>
                   <option value="testing">测试中</option>
                   <option value="done">已完成</option>
                   <option value="dropped">已放弃</option>
                 </select>
               </label>
             </div>
-            <div class="carousel-controls" aria-label="今日推荐切换">
-              <button class="carousel-button" id="carouselPrev" type="button" aria-label="上一组">‹</button>
-              <button class="carousel-button" id="carouselNext" type="button" aria-label="下一组">›</button>
-            </div>
           </section>
-          <section class="project-grid recommended-rail" id="todayProjects"></section>
+          <div class="recommendation-carousel">
+            <button class="carousel-button prev" id="recommendPrev" type="button" aria-label="上一组">‹</button>
+            <section class="project-grid recommended-rail" id="todayProjects"></section>
+            <button class="carousel-button next" id="recommendNext" type="button" aria-label="下一组">›</button>
+          </div>
         </section>
 
         <section class="panel" id="history">
@@ -194,11 +220,15 @@
             <h2>项目库</h2>
             <p>按 GitHub 项目维度汇总历史出现次数、首次出现和最近出现。</p>
           </section>
-          <section class="library-grid" id="libraryGrid"></section>
+          <section class="library-grid" id="libraryProjects"></section>
         </section>
       </main>
     </div>
 
-    <script src="assets/app.js?v=20260703-ui7"></script>
+    <template id="emptyTemplate">
+      <div class="empty-card">暂无内容。</div>
+    </template>
+
+    <script src="assets/app.js?v=20260703-ui8"></script>
   </body>
 </html>
