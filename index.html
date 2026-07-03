@@ -7,23 +7,40 @@
     <link rel="stylesheet" href="assets/style.css?v=20260703-ui7" />
     <style>
       .page-title {
-        max-width: 1180px !important;
+        max-width: 100% !important;
       }
       .page-title h1 {
         max-width: 100% !important;
-        white-space: normal !important;
+        white-space: nowrap !important;
         overflow-wrap: normal !important;
         word-break: normal !important;
-        font-size: clamp(42px, 5vw, 74px) !important;
-        line-height: .95 !important;
-        letter-spacing: -0.075em !important;
+        font-size: clamp(34px, 3.6vw, 54px) !important;
+        line-height: .98 !important;
+        letter-spacing: -0.065em !important;
+      }
+      .mission-layout {
+        display: block !important;
+        margin-top: 28px !important;
+      }
+      .mission-card {
+        padding: 30px 34px !important;
+        border-radius: 30px !important;
+      }
+      .mission-card .eyebrow {
+        margin-bottom: 12px !important;
+      }
+      .mission {
+        font-size: clamp(24px, 2.4vw, 34px) !important;
+        line-height: 1.18 !important;
+        letter-spacing: -0.045em !important;
+        max-width: 980px !important;
       }
       .recommendation-head {
         display: grid !important;
         grid-template-columns: minmax(260px, 1fr) minmax(520px, auto) !important;
         align-items: end !important;
         gap: 18px !important;
-        margin: 48px 0 22px !important;
+        margin: 42px 0 22px !important;
       }
       .recommendation-head .toolbar {
         margin: 0 !important;
@@ -86,6 +103,9 @@
         padding: 28px !important;
       }
       @media (max-width: 1100px) {
+        .page-title h1 {
+          font-size: clamp(30px, 4vw, 46px) !important;
+        }
         .recommendation-head {
           grid-template-columns: 1fr !important;
           align-items: start !important;
@@ -102,6 +122,9 @@
         }
       }
       @media (max-width: 900px) {
+        .page-title h1 {
+          white-space: normal !important;
+        }
         #todayProjects.recommended-rail {
           grid-auto-columns: 86vw !important;
           overflow-x: hidden !important;
@@ -109,7 +132,10 @@
       }
       @media (max-width: 700px) {
         .page-title h1 {
-          font-size: clamp(34px, 11vw, 54px) !important;
+          font-size: clamp(32px, 10vw, 48px) !important;
+        }
+        .mission {
+          font-size: 24px !important;
         }
       }
     </style>
@@ -131,42 +157,11 @@
 
       <main>
         <section class="panel is-active" id="today">
-          <section class="hero-apple compact-hero">
-            <div class="hero-copy-block">
-              <p class="eyebrow" id="latestDate">--</p>
-              <h2 id="todayTitle">今日重点信号</h2>
-              <p class="hero-copy" id="todayTheme">暂无日报。</p>
-              <a class="button button-dark hero-report-button" id="todayHtml" href="#" hidden>打开日报</a>
-            </div>
-            <div class="hero-visual" aria-label="Today signal overview">
-              <div class="orb orb-blue"></div>
-              <div class="orb orb-purple"></div>
-              <div class="glass-device">
-                <div class="device-topline"></div>
-                <div class="device-main-score">
-                  <span>机会热度</span>
-                  <strong id="marketScore">--</strong>
-                </div>
-                <div class="device-stats">
-                  <div>
-                    <span>项目数量</span>
-                    <strong id="projectCount">0</strong>
-                  </div>
-                  <div>
-                    <span>状态</span>
-                    <strong>Live</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
           <section class="mission-layout">
             <article class="mission-card">
               <p class="eyebrow">今日行动</p>
               <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
             </article>
-            <article class="top-project" id="topProject"></article>
           </section>
 
           <section class="summary-grid" id="summaryList"></section>
@@ -229,6 +224,6 @@
       <div class="empty-card">暂无内容。</div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui8"></script>
+    <script src="assets/app.js?v=20260703-ui9"></script>
   </body>
 </html>
