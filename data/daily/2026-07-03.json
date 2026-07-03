@@ -2,9 +2,9 @@
   "date": "2026-07-03",
   "version": "V1.2",
   "title": "AI Opportunity Radar",
-  "theme": "验证 ChatGPT → GitHub → Dashboard → PDF 自动化链路",
+  "theme": "验证 ChatGPT → GitHub → Dashboard 自动化链路",
   "market_score": 8.7,
-  "today_mission": "今天只验证一件事：日报 JSON 和 HTML 能否写入 GitHub，并由 Dashboard 读取、GitHub Actions 自动生成 PDF。",
+  "today_mission": "今天只验证一件事：日报 JSON 和日报页面能否写入 GitHub，并由 Dashboard 稳定读取。",
   "summary": [
     "今天的测试重点不是重新做采集器，而是确认计划任务方案能完成数据沉淀。",
     "GitHub 事实数据由 GitHub connector/API 打底，联网搜索补充外部背景，ChatGPT 负责判断。",
@@ -28,7 +28,7 @@
       "business_model": ["Developer infrastructure", "Enterprise workflow", "GitHub ecosystem"],
       "china_competitors": "国内代码托管平台也会做类似 AI 插件能力，但在全球开源项目雷达里 GitHub 仍是核心数据源。",
       "fit": {"Opportunity Radar": 5, "AI Video": 1, "Photography": 1, "Vibe Coding": 5},
-      "today_action": "只验证写入权限：创建 daily JSON、HTML，并更新 manifest；不要扩展新功能。"
+      "today_action": "只验证写入权限：创建 daily JSON、日报页面，并更新 manifest；不要扩展新功能。"
     },
     {
       "id": "microsoft-playwright-mcp",
@@ -39,9 +39,9 @@
       "github": "https://github.com/microsoft/playwright-mcp",
       "website": "https://playwright.dev/",
       "docs": "https://playwright.dev/docs/intro",
-      "why_today": "它适合后续做 Dashboard smoke test：自动打开 GitHub Pages，检查 latest date、项目卡片和 PDF 链接。",
+      "why_today": "它适合后续做 Dashboard smoke test：自动打开 GitHub Pages，检查 latest date、项目卡片和日报链接。",
       "core_data": ["GitHub connector confirmed repo: microsoft/playwright-mcp", "Visibility: public", "Role: browser automation exposed through MCP"],
-      "use_cases": ["自动检查 Dashboard 是否更新", "自动验证 PDF 链接是否存在"],
+      "use_cases": ["自动检查 Dashboard 是否更新", "自动验证日报页面是否可以打开"],
       "business_model": ["Developer tool", "Agent infrastructure", "Enterprise automation"],
       "china_competitors": "国内可对标浏览器 Agent、RPA+LLM 和低代码自动化工具，但 Playwright 生态成熟度更高。",
       "fit": {"Opportunity Radar": 5, "AI Video": 2, "Photography": 1, "Vibe Coding": 5},
@@ -58,7 +58,7 @@
       "docs": "https://www.activepieces.com/docs",
       "why_today": "它是开源自动化平台，可作为以后通知、同步和二次分发的候选工具，但今天不是主线。",
       "core_data": ["GitHub connector confirmed repo: activepieces/activepieces", "Visibility: public", "Role: open-source automation platform"],
-      "use_cases": ["把 GitHub Actions 成功/失败推送到通知渠道", "把高分项目同步到 Notion/Obsidian"],
+      "use_cases": ["把 GitHub 写入结果推送到通知渠道", "把高分项目同步到 Notion/Obsidian"],
       "business_model": ["Open-source core", "Cloud SaaS", "Enterprise automation"],
       "china_competitors": "可对标 n8n、Zapier、Make、集简云、飞书多维表格自动化。",
       "fit": {"Opportunity Radar": 4, "AI Video": 2, "Photography": 2, "Vibe Coding": 4},
