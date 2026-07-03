@@ -1,0 +1,41 @@
+name: Build PDF reports
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "reports/html/*.html"
+      - "scripts/html_to_pdf.mjs"
+      - ".github/workflows/build-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install --save-dev playwright
+          npx playwright install --with-deps chromium
+
+      - name: Convert HTML reports to PDF
+        run: node scripts/html_to_pdf.mjs
+
+      - name: Commit generated PDFs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Build PDF reports"
+          file_pattern: "reports/pdf/*.pdf"
