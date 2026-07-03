@@ -1,4 +1,4 @@
-# AI Opportunity Radar Data
+# Open-source AI Opportunity Project Radar Data
 
 <p>
   <a href="./README.md">English</a>
@@ -6,211 +6,170 @@
   <a href="./README.zh-CN.md"><strong>简体中文</strong></a>
 </p>
 
-这个仓库是 **AI Opportunity Radar** 的数据仓库和静态 Dashboard。
+这个仓库是 **Open-source AI Opportunity Project Radar** 的数据仓库和静态 Dashboard。
 
-它承担三件事：
+当前雷达只保留一个明确范围：
 
-1. **日报中转站**：ChatGPT 计划任务每天把日报数据写入这里。
-2. **轻量数据库**：Dashboard 读取 `data/manifest.json` 和 `data/daily/*.json`。
-3. **展示站点**：GitHub Pages 通过 `index.html` 托管 Dashboard。
+```text
+采集来源：GitHub only
+评价标准：V1.4 GitHub / open-source project standard
+```
 
-## 当前设计
+生产流程中已经移除非 GitHub 采集。系统不采集 B站、抖音、小红书、YouTube、X、Product Hunt、Reddit、新闻站、官方产品站或创作者平台。
 
-当前系统保留两类每日产物：
+## 这个仓库负责什么
+
+1. 存放每日 GitHub-only 雷达日报。
+2. 存放静态 Dashboard 读取的轻量 JSON 数据。
+3. 通过 GitHub Pages 托管 Dashboard。
+
+## 每日产物
+
+系统每天只保留两类产物：
 
 - Dashboard JSON：`data/daily/YYYY-MM-DD.json`
 - 正式日报页面：`reports/html/YYYY-MM-DD.html`
 
-长期追踪文件：
+生产环境不再保留非 GitHub Watchlist。
 
-- 非 GitHub Watchlist：`data/watchlist.json`
+## 采集来源规则
 
-## 内容规则总览
+唯一采集来源是 GitHub。
 
-系统采用双轨规则：
+允许的 GitHub 来源包括：
 
-```text
-V1.4：GitHub / 开源项目信号标准
-V1.5.1：GitHub 以外的产品、平台、创作者工具、生态链信号标准
-```
+- GitHub repository search
+- GitHub repository metadata
+- GitHub README
+- GitHub releases
+- GitHub issues / pull requests，如有必要
+- GitHub stars / forks / recent activity
+- GitHub 仓库元数据或 README 中出现的 demo / docs / website 链接
 
-V1.4 不被 V1.5.1 替代。GitHub / 开源内容继续按 V1.4 判断；非 GitHub 产品和平台按 V1.5.1 判断。
+不作为采集来源：
+
+- B站
+- 抖音
+- 小红书
+- YouTube
+- X
+- Product Hunt
+- Reddit
+- 新闻网站
+- 非 GitHub 官方产品页作为主要发现来源
+- 非 GitHub 创作者平台 Watchlist
+
+如果 GitHub 仓库里包含外部 demo、官网或文档链接，可以作为支持信息记录，但候选项目必须来源于 GitHub。
 
 ## V1.4：GitHub / 开源项目标准
 
-适用范围：
+V1.4 是当前唯一启用的评价标准。
 
-- 开源项目
+它的目标不是做 AI 新闻摘要，而是筛选今天值得关注、测试、clone、交给 Codex、或变成实际工作流的开源 AI 项目。
+
+### 适用范围
+
+V1.4 适用于：
+
+- 开源 AI 项目
 - MCP 工具
 - Agent 框架
 - ComfyUI 插件 / 工作流
-- 开源视频模型
+- 开源视频 / 图像模型
 - 自动化工具开源仓库
 - Vibe Coding / Codex 相关工具
+- 能改进雷达系统本身的工具
+
+### 候选项目需要采集的数据
 
 每个 GitHub 候选尽量记录：
 
-- `stars`、`forks`、`star_growth`
-- `last_updated`、`archived`
-- `recent_activity`、release、issues / PR
-- `readme_quality`
-- demo / 官网 / 示例视频
-- 是否贴合 AI 视频、摄影、内容生产、Vibe Coding、机会雷达
+- `stars`
+- `forks`
+- `star_growth`，如果无法可靠获取，需要明确写出不可用
+- `last_updated`
+- `archived`
+- `recent_activity`
+- releases
+- issues / pull requests
+- README 质量
+- demo / website / screenshots / sample videos
+- 文档质量
+- 是否贴合 AI 视频、摄影、内容生产、Vibe Coding、Codex、MCP、Agent 工作流或雷达系统本身
 
-进入 Top 必须满足：
+### Top 入选要求
+
+GitHub 项目进入 Top 必须同时满足：
 
 1. 至少 2 条硬数据信号。
 2. 至少 1 条个人相关信号。
-3. 至少 1 条 15-30 分钟内可执行的 `today_action`。
+3. 至少 1 条明确的 15-30 分钟 `today_action`。
 
-## V1.5.1：非 GitHub 与生态链标准
+### 评分模型
 
-V1.5.1 只解决 GitHub 以外内容：
+| 维度 | 权重 | 含义 |
+| --- | ---: | --- |
+| `data_score` | 20% | stars、forks、star growth、社区关注 |
+| `activity_score` | 20% | 最近更新、commits、releases、issues / PR |
+| `personal_fit_score` | 25% | 是否贴合 AI 视频、摄影、内容生产、雷达、Vibe Coding |
+| `business_score` | 20% | 是否可能变成 SaaS、模板、服务、工作流、内容产品或垂直方案 |
+| `action_score` | 15% | 今天是否有具体可执行动作 |
 
-- AI 视频产品：Seedance、可灵、即梦、Vidu、PixVerse、Runway、Pika、Veo、Sora、Luma、Hailuo 等
-- AIGC 创作平台：TapNow、Liblib.TV / LibTV、吐司、Krea、Civitai、OpenArt、Midjourney、Ideogram、Recraft、Canva、Firefly 等
-- Agent / 自动化平台：Coze、Dify、n8n、FastGPT、Flowise、Langflow、Activepieces、Zapier、Make、Gumloop 等
-- 创作者工具 / 工作流：无限画布、图生图、局部重绘、扩图、海报生成、分镜、AI 摄影、AI 短视频工作流
+综合分低于 8.0 的项目不进入 Top。
 
-核心流程：
-
-```text
-候选发现 → 类型识别 → 多源验证 → 上下游合并 → 按类型评分 → Top / 观察 / 淘汰
-```
-
-## V1.5.1 硬规则
-
-### 1. Top 必须保留 GitHub
-
-每日 Top 必须至少包含：
-
-```text
-至少 2 个 GitHub / 开源项目
-```
-
-除非当天真的没有合格 GitHub 项目。如果少于 2 个，必须在 `rejected_candidates` 里解释原因。
-
-### 2. 知名产品不能直接入选
-
-Seedance、n8n、Coze、Dify、Krea、Runway、Sora 这类知名产品，不能只因为“本身很强”进入 Top。
-
-必须有具体新信号：
-
-- 新封装
-- 新工作流
-- 新创作者案例
-- 新技术发布
-- 新开源仓库
-- 新产品入口
-- 新的可执行测试路径
-
-### 3. 做上下游合并，不重复拆项目
-
-遇到同一条能力链时，要合并判断。
-
-例如：
-
-```text
-Seedance 2.0 = 底层模型 / 能力源
-LibTV / Dreamina / 豆包 / Krea / ComfyUI Seedance Node = 产品入口或工作流封装
-创作者案例 = 真实使用验证
-```
-
-日报里不要重复写成几个独立机会，而是写成：
-
-```text
-Seedance 生态机会链：底层模型 → 产品封装 → 工作流 → 今日测试动作
-```
-
-### 4. 每个 Top 必须有深度判断
-
-每个 Top 必须回答：
-
-1. 它不是众所周知信息的地方在哪里？
-2. 今天的新信号是什么？
-3. 它和摄影 / 视频 / 内容生产 / 机会雷达有什么关系？
-4. 它和其他工具的上下游关系是什么？
-5. 今天 15-30 分钟具体测什么？
-
-答不出来，不进 Top。
-
-### 5. 不硬凑 Top 5
-
-宁愿输出 3-4 个高质量项目，也不要用弱项目凑满 5 个。
-
-## 多源验证
-
-非 GitHub 候选至少要有 2 类证据，才允许进入 Top。
-
-| 证据类型 | 说明 |
-| --- | --- |
-| `official` 官方证据 | 官网、官方公告、changelog、官方账号、产品入口 |
-| `creator` 创作者证据 | B站、抖音、小红书、YouTube、案例视频、教程、作品流 |
-| `community` 社区证据 | X、Reddit、Product Hunt、Discord、评论区讨论 |
-| `technical` 技术证据 | GitHub、Hugging Face、ModelScope、arXiv、Papers with Code、公开模型或技术文档 |
-
-新闻源只作为背景，不作为核心证据。
-
-## Watchlist
-
-`data/watchlist.json` 是非 GitHub 内容的固定追踪名单。
-
-以后用户指出漏项时，先加入 Watchlist，再按 V1.5.1 规则长期追踪。
+没有明确 `today_action` 的项目不进入 Top。
 
 ## Daily JSON 格式
 
-每日 JSON 应支持：
+每日 JSON 使用 V1.4：
 
 ```json
 {
   "date": "YYYY-MM-DD",
-  "version": "V1.5.1",
-  "title": "AI Opportunity Radar",
-  "theme": "今日主题",
+  "version": "V1.4",
+  "title": "Open-source AI Opportunity Project Radar",
+  "theme": "Daily GitHub open-source opportunity signals",
   "market_score": 8.6,
   "today_mission": "今天最值得做的一件事",
   "summary": [],
   "projects": [],
-  "ecosystem_chains": [],
-  "watchlist_observations": [],
   "rejected_candidates": []
 }
 ```
 
-字段说明：
+### 项目字段建议
 
-- `projects`：今日 Top 项目。GitHub 项目按 V1.4，非 GitHub 项目按 V1.5.1。
-- `ecosystem_chains`：上下游机会链，例如 Seedance → LibTV / Krea / ComfyUI → 创作者案例 → 今日动作。
-- `watchlist_observations`：发现了信号，但证据不足或行动价值不够。
-- `rejected_candidates`：发现了但未入选，并说明原因。
-
-每个 Top 项目建议包含：
+每个项目建议包含：
 
 ```json
 {
-  "source_type": "github_open_source / aigc_creation_platform / ecosystem_chain",
-  "non_obvious_signal": "不是常识的地方",
-  "relation": {
-    "base_model": "底层模型，如果适用",
-    "product_wrapper": "产品入口，如果适用",
-    "workflow_layer": "工作流层，如果适用",
-    "creator_case": "案例层，如果适用"
+  "id": "project-id",
+  "rank": 1,
+  "name": "Project name",
+  "source_type": "github_open_source",
+  "category": [],
+  "score": 8.8,
+  "scores": {
+    "data_score": 0,
+    "activity_score": 0,
+    "personal_fit_score": 0,
+    "business_score": 0,
+    "action_score": 0
   },
-  "evidence_pack": {
-    "official": "官方证据",
-    "creator": "创作者证据",
-    "community": "社区证据",
-    "technical": "技术证据",
-    "evidence_count": 2,
-    "confidence": "A / B / C"
-  },
-  "today_action": "今天 15-30 分钟做什么"
+  "github": "https://github.com/owner/repo",
+  "why_today": "为什么今天值得看",
+  "evidence": [],
+  "opportunity": "它暗示的机会",
+  "risk": "主要风险或限制",
+  "today_action": "今天 15-30 分钟做什么",
+  "action_type": "test / clone / inspect / assign_to_codex / watch",
+  "timebox": "15-30 minutes"
 }
 ```
 
-## 每天写入的文件
+## 计划任务每天写入的文件
 
-ChatGPT 计划任务每天需要更新：
+计划任务只需要更新：
 
 ```text
 data/daily/YYYY-MM-DD.json
@@ -220,7 +179,7 @@ data/manifest.json
 
 ## Dashboard
 
-Dashboard 是纯静态页面，不需要后端，主要由以下文件组成：
+Dashboard 是纯静态页面：
 
 - `index.html`
 - `assets/style.css`
@@ -232,30 +191,32 @@ Dashboard 地址：
 https://paxora.github.io/ai-opportunity-radar-data/
 ```
 
-## 范围说明
-
-这个仓库不调用 OpenAI API。
-
-ChatGPT 计划任务负责采集、判断和生成日报；Codex 只在需要时维护仓库基础设施。
-
-当前生产流程：
+## 当前生产流程
 
 ```text
 ChatGPT 计划任务
 ↓
-读取 data/watchlist.json
+只采集 GitHub 候选项目
 ↓
-GitHub / 开源候选按 V1.4 判断
+用 V1.4 评价候选项目
 ↓
-非 GitHub 产品 / 平台 / 创作者工具按 V1.5.1 判断
+生成 Top GitHub / open-source projects + rejected candidates
 ↓
-合并上下游生态链
+写入每日 JSON 和 HTML 日报
 ↓
-生成 Top 项目 + 生态链 + 观察池 + 淘汰项
-↓
-生成日报 JSON + 日报页面
-↓
-写入 GitHub 仓库
+更新 manifest
 ↓
 Dashboard 读取 manifest + daily JSON
 ```
+
+## 明确不在当前范围内
+
+以下内容不属于当前生产范围：
+
+- 非 GitHub 产品发现
+- B站 / 抖音 / 小红书采集
+- YouTube / X 创作者信号采集
+- Product Hunt / Reddit 社区采集
+- 新闻采集
+- 非 GitHub Watchlist
+- V1.5 / V1.5.1 非 GitHub 标准
