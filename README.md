@@ -1,4 +1,4 @@
-# Open-source AI Opportunity Project Radar Data
+# Open-source AI Opportunity Data
 
 <p>
   <a href="./README.md"><strong>English</strong></a>
@@ -6,9 +6,9 @@
   <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
-This repository is the data warehouse and static dashboard for **Open-source AI Opportunity Project Radar**.
+This repository is the data warehouse and static dashboard for **Open-source AI Opportunity**.
 
-The radar has one clear scope:
+The project has one clear scope:
 
 ```text
 Collection source: GitHub only
@@ -17,7 +17,7 @@ Evaluation standard: V1.4 GitHub / open-source project standard
 
 ## What this repository does
 
-1. Stores daily GitHub-only radar reports.
+1. Stores daily GitHub-only opportunity reports.
 2. Stores lightweight JSON data for the static dashboard.
 3. Hosts the dashboard through GitHub Pages.
 
@@ -61,7 +61,7 @@ V1.4 applies to:
 - Open-source video or image models
 - Automation-tool repositories
 - Vibe Coding / Codex-related tools
-- Tools that can improve the radar itself
+- Tools that can improve the system itself
 
 ### Candidate data to collect
 
@@ -78,7 +78,7 @@ Each GitHub candidate should collect as many of these fields as possible:
 - README quality
 - demo / website / screenshots / sample videos
 - documentation quality
-- relevance to AI video, photography, content production, Vibe Coding, Codex, MCP, Agent workflows, or the radar system itself
+- relevance to AI video, photography, content production, Vibe Coding, Codex, MCP, Agent workflows, or the system itself
 
 ### Top selection requirements
 
@@ -94,7 +94,7 @@ A GitHub item can enter the Top list only when it has:
 | --- | ---: | --- |
 | `data_score` | 20% | stars, forks, star growth, community attention |
 | `activity_score` | 20% | recent updates, commits, releases, issues / PRs |
-| `personal_fit_score` | 25% | relevance to AI video, photography, content production, radar, Vibe Coding |
+| `personal_fit_score` | 25% | relevance to AI video, photography, content production, Vibe Coding |
 | `business_score` | 20% | potential to become SaaS, template, service, workflow, content product, or vertical solution |
 | `action_score` | 15% | whether there is a concrete action that can be done today |
 
@@ -110,7 +110,7 @@ Each daily JSON file should use V1.4:
 {
   "date": "YYYY-MM-DD",
   "version": "V1.4",
-  "title": "Open-source AI Opportunity Project Radar",
+  "title": "Open-source AI Opportunity",
   "theme": "Daily GitHub open-source opportunity signals",
   "market_score": 8.6,
   "today_mission": "The most useful action today",
