@@ -2,13 +2,13 @@
   "date": "2026-07-03",
   "version": "V1.5-value-first",
   "title": "Open-source AI Opportunity",
-  "theme": "有价值内容优先：从工具里提炼落地方案和工作流",
+  "theme": "有价值内容优先：从工具里提炼落地方案和可执行 Codex 提示词",
   "market_score": 9.0,
-  "today_mission": "今天不要测试某个工具本身；从 Top 5 里选 1 个机会方案，让 Codex 把它拆成 input → process → output 的最小工作流。",
+  "today_mission": "从 Top 5 里选 1 条，把卡片里的“可直接发给 Codex 的提示词”复制给 Codex。不要再自己理解 input/process/output。",
   "summary": [
     "本次按 V1.5 重跑：工具不能直接进 Top，必须被转化为具体落地方案、工作流和机会判断。",
-    "GitHub stars、README、案例和社区热度只作为信号；最终排序看价值判断、可落地程度和今天能否验证。",
-    "ComfyUI、n8n、Dify 这类大工具不再作为结论，而是作为承载方案的工具层。"
+    "卡片不再展示 input / process / output，而是直接给出可复制给 Codex 的提示词。",
+    "GitHub stars、README、案例和社区热度只作为信号；最终排序看价值判断、可落地程度和提示词是否能直接执行。"
   ],
   "projects": [
     {
@@ -24,24 +24,14 @@
         "practical_workflow_score": 5,
         "direction_fit_score": 5,
         "signal_score": 5,
-        "today_action_score": 4
+        "today_action_score": 5
       },
       "github": "https://github.com/n8n-io/n8n",
       "value_insight": "n8n 的价值不是“自动化工具本身”，而是可以把你每天重复刷信息源、复制链接、让 AI 初筛这件事变成稳定候选池。",
       "problem_solved": "减少手动刷 GitHub、Product Hunt、Reddit、X、YouTube / bilibili 案例的时间，让机会线索先自动进入候选库。",
-      "workflow": {
-        "input": "GitHub Search / RSS / Product Hunt / Reddit / YouTube 搜索结果",
-        "process": "定时抓取 → 去重 → AI 摘要 → 按 V1.5 打标签 → 输出候选 JSON",
-        "output": "每天 5-10 条可供进一步判断的机会候选"
-      },
       "mainstream_comparison": "Zapier 也能做简单自动化，但 n8n 的价值在于自托管、可控、可接代码节点、适合后续和 Codex / 本地脚本结合。",
-      "today_action": "让 Codex 画出最小 n8n 流程：GitHub Search → AI Summary → JSON 输出；先不真正部署，只判断字段和节点是否闭环。",
-      "success_criteria": [
-        "能定义清楚输入源、去重规则和输出 JSON 字段",
-        "能产出 5 条候选机会，而不是工具介绍",
-        "每条候选都包含 value_insight / workflow / today_action",
-        "后续可以接入当前 data/daily 结构"
-      ],
+      "codex_prompt": "你现在是我的自动化产品经理和技术方案设计助手。\n\n目标：设计一个最小版 n8n 工作流，用来给 Open-source AI Opportunity 自动收集 AI 机会线索。\n\n请不要介绍 n8n 是什么，直接输出可执行方案。\n\n请按下面结构输出：\n1. 这个工作流要解决的具体问题\n2. 最小版只接 1 个信息源时，优先选择 GitHub Search 还是 RSS，并说明原因\n3. n8n 节点设计：每一步用什么节点、输入什么、输出什么\n4. 去重规则：怎么避免同一个项目重复进入候选池\n5. AI 摘要字段：每条候选必须输出哪些字段，至少包含 name、source_url、value_insight、problem_solved、today_action、reject_reason\n6. 最终 JSON 示例：给我 1 条完整候选 JSON\n7. 不部署的情况下，今天 30 分钟怎么验证这个流程是否闭环\n\n限制：\n- 不要做大而全系统\n- 不要推荐额外工具\n- 只做 GitHub Search → AI Summary → JSON 输出这个最小闭环\n- 输出要能让我下一步直接交给 Codex 开发。",
+      "today_action": "复制上面的 Codex 提示词，先让 Codex 画出最小 n8n 流程，不要真的部署。",
       "next_opportunity": "如果跑通，它可以变成 Open-source AI Opportunity 的自动采集层。",
       "evidence": [
         "n8n README 写明它是 workflow automation platform。",
@@ -61,24 +51,14 @@
         "practical_workflow_score": 5,
         "direction_fit_score": 4,
         "signal_score": 5,
-        "today_action_score": 4
+        "today_action_score": 5
       },
       "github": "https://github.com/Comfy-Org/ComfyUI",
       "value_insight": "今天的机会不是“用 ComfyUI 出片”，而是收集高质量 ComfyUI 工作流，拆解成可复用模板资产。",
       "problem_solved": "解决“看到别人炫图但不知道怎么复用”的问题，把别人的 workflow 拆成输入、节点、模型、参数、输出和可替换部分。",
-      "workflow": {
-        "input": "公开 ComfyUI workflow / template / example workflow / 教程中附带的 JSON",
-        "process": "筛选高质量案例 → Codex 拆节点 → 标注输入输出 → 抽象成模板结构 → 记录适用场景",
-        "output": "可复用的工作流模板库，例如产品图动态化、海报生成、图生视频、批量风格化"
-      },
       "mainstream_comparison": "直接出图或出视频时，闭源模型可能更快更强；ComfyUI 的独特价值是工作流拆解、复现、自定义和长期模板资产。",
-      "today_action": "让 Codex 设计一个 workflow 采集表：来源链接、适用场景、输入、核心节点、依赖模型、输出、可复用价值、跑通难度。",
-      "success_criteria": [
-        "能把 workflow 从效果展示转成结构化模板",
-        "能明确哪些节点是核心、哪些可以替换",
-        "能判断是否有商业复用场景",
-        "能形成后续自动收集和人工验证的字段标准"
-      ],
+      "codex_prompt": "你现在是我的 AIGC 工作流研究助理。\n\n目标：不是让我学习 ComfyUI，也不是让我直接用 ComfyUI 出片，而是设计一套“高质量 ComfyUI 工作流收集与拆解标准”，把别人的 workflow 变成可复用模板资产。\n\n请不要介绍 ComfyUI 是什么，直接输出方法。\n\n请按下面结构输出：\n1. 什么样的 ComfyUI workflow 才算高质量，给出 7 条筛选标准\n2. 哪些 workflow 应该淘汰，例如只有炫图、没有 JSON、依赖不清晰等\n3. 设计一个 workflow 采集表，字段必须包括：来源链接、适用场景、输入素材、核心节点、依赖模型、输出结果、可替换部分、商业复用价值、跑通难度\n4. 以“产品图动态化短视频”为例，示范填写 1 条采集记录\n5. 给我一个 30 分钟验证流程：今天如何先收集 3 个 workflow，并判断是否值得继续研究\n6. 最终输出一个 Markdown 表格模板，方便我以后复制使用\n\n限制：\n- 不要推荐 ComfyUI 本身\n- 不要写泛泛的 AIGC 介绍\n- 重点是“如何收集、筛选、拆解、沉淀成模板”。",
+      "today_action": "复制上面的 Codex 提示词，让 Codex 先产出 workflow 采集表和筛选标准。",
       "next_opportunity": "如果形成模板库，后续可以变成工作流研究库、商业视觉流程模板、或你自己的 AIGC workflow radar。",
       "evidence": [
         "ComfyUI README 把它定位为 modular AI engine for content creation。",
@@ -98,24 +78,14 @@
         "practical_workflow_score": 4,
         "direction_fit_score": 4,
         "signal_score": 5,
-        "today_action_score": 4
+        "today_action_score": 5
       },
       "github": "https://github.com/langgenius/dify",
       "value_insight": "Dify 的价值不是“又一个 LLM 平台”，而是能快速验证一个垂直知识库产品原型：上传资料、设计问答流程、测试用户是否真的需要。",
       "problem_solved": "把零散资料、经验、FAQ、项目文档转成一个可对话的产品原型，降低从想法到可演示 demo 的成本。",
-      "workflow": {
-        "input": "一组垂直资料：FAQ、操作手册、项目文档、服务流程、客户问题",
-        "process": "导入知识库 → 设计检索增强问答 → 配置提示词 → 测试 20 个真实问题 → 记录失败点",
-        "output": "一个可以演示的垂直问答助手原型"
-      },
       "mainstream_comparison": "ChatGPT 自定义 GPT 也能做轻量知识问答；Dify 的价值是更适合部署、流程编排、RAG、模型管理和产品化验证。",
-      "today_action": "让 Codex 选一个垂直场景，列出 20 个真实问题和 Dify 原型字段：资料、问题、答案标准、失败原因。",
-      "success_criteria": [
-        "能定义一个具体垂直场景，而不是泛知识库",
-        "能列出 20 个真实问题",
-        "能判断哪些问题需要 RAG，哪些只需要规则或提示词",
-        "能形成可演示 demo 的页面结构"
-      ],
+      "codex_prompt": "你现在是我的 AI 产品原型设计助手。\n\n目标：不要介绍 Dify，而是帮我判断“垂直知识库问答助手”这个方案是否值得做。\n\n请直接输出一个最小原型方案。\n\n请按下面结构输出：\n1. 选择一个最适合我当前情况的垂直场景，例如摄影客户 FAQ、项目资料问答、AI 工具知识库，说明为什么选它\n2. 这个原型要解决的真实问题是什么\n3. 需要准备哪些资料，给出资料清单\n4. 设计 20 个真实用户问题，用来测试这个知识库是否有价值\n5. 每个问题应该用什么标准判断回答是否合格\n6. 哪些问题适合知识库 RAG，哪些问题只适合人工或规则\n7. 如果 30 分钟内只做最小验证，应该怎么做\n8. 验证成功后，这个原型下一步能变成什么服务或产品\n\n限制：\n- 不要写 Dify 的功能介绍\n- 不要写大而全方案\n- 重点是用一个具体场景验证它有没有价值。",
+      "today_action": "复制上面的 Codex 提示词，让 Codex 先选一个具体场景并列出 20 个测试问题。",
       "next_opportunity": "如果验证成功，可以发展成垂直 FAQ 助手、项目资料问答助手、客户咨询助手或内部知识库产品。",
       "evidence": [
         "Dify README 写明它是 open-source LLM app development platform。",
@@ -135,24 +105,14 @@
         "practical_workflow_score": 5,
         "direction_fit_score": 4,
         "signal_score": 4,
-        "today_action_score": 4
+        "today_action_score": 5
       },
       "github": "https://github.com/krillinai/KrillinAI",
       "value_insight": "KrillinAI 的价值不是“视频工具”，而是把视频下载、转写、翻译、配音、字幕和封面变成一条内容本地化流水线。",
       "problem_solved": "解决一个视频跨平台、跨语言复用时的重复劳动：字幕、翻译、配音、封面、横竖屏适配。",
-      "workflow": {
-        "input": "一个原始视频或视频链接",
-        "process": "下载 / 导入 → Whisper 转写 → LLM 翻译 → TTS 配音 → 字幕排版 → 封面生成 → 横竖屏输出",
-        "output": "适合 YouTube / TikTok / B站 / 小红书 / 抖音等平台的多语言视频版本"
-      },
       "mainstream_comparison": "剪映和平台内工具更适合手工剪辑；KrillinAI 的价值是可被 Agent / CLI 编排，更适合批量和自动化。",
-      "today_action": "让 Codex 读取 README 的 pipeline 描述，画出一张视频本地化流程图，并标注哪些步骤可以自动化。",
-      "success_criteria": [
-        "能把完整视频处理链路拆清楚",
-        "能识别哪些环节可以自动、哪些需要人工审核",
-        "能判断是否适合批量处理",
-        "能形成一个可复用 SOP"
-      ],
+      "codex_prompt": "你现在是我的视频工作流拆解助手。\n\n目标：不要介绍 KrillinAI，而是判断“视频翻译配音和多平台分发工作流”是否有实际机会价值。\n\n请按下面结构输出：\n1. 这个方案适合解决什么真实问题\n2. 从一个原始视频到多语言版本，中间需要哪些步骤\n3. 哪些步骤可以自动化，哪些步骤必须人工审核\n4. 如果用 KrillinAI 做，最小测试应该选什么样的视频，时长、语言、内容类型分别是什么\n5. 30 分钟内不安装软件的情况下，如何先判断这个方案是否值得继续\n6. 如果后续跑通，它能变成什么服务、SOP 或自动化模块\n7. 给出一个最小测试清单，我可以逐项打勾\n\n限制：\n- 不要写工具介绍\n- 不要泛泛讲视频出海\n- 重点是拆出一条可验证的视频本地化流程。",
+      "today_action": "复制上面的 Codex 提示词，让 Codex 先拆出视频本地化最小测试清单。",
       "next_opportunity": "如果跑通，可以变成视频本地化服务、内容出海流程、批量字幕配音自动化模块。",
       "evidence": [
         "KrillinAI README 写明它覆盖 video download、speech transcription、subtitle translation、TTS dubbing、cover generation。",
@@ -172,24 +132,14 @@
         "practical_workflow_score": 4,
         "direction_fit_score": 5,
         "signal_score": 4,
-        "today_action_score": 4
+        "today_action_score": 5
       },
       "github": "https://github.com/pydantic/pydantic-ai",
       "value_insight": "Pydantic AI 不应该被推荐成普通 Agent 框架；它在这里的价值是给机会雷达做稳定的结构化评分器，减少每次日报口径飘移。",
       "problem_solved": "解决日报判断标准不稳定的问题：同一个项目今天被说成工具，明天被说成机会，字段和评分不一致。",
-      "workflow": {
-        "input": "候选项目 JSON：README 摘要、GitHub 信号、使用案例、工具类型",
-        "process": "用固定 schema 输出 value_insight、workflow、today_action、scores、reject_reason",
-        "output": "符合 V1.5 字段结构的机会方案候选"
-      },
       "mainstream_comparison": "直接让 ChatGPT 写日报更快；Pydantic AI 的价值是把输出结构固定下来，适合长期自动化和质量控制。",
-      "today_action": "让 Codex 写一个 schema 草案：OpportunityScheme，包括 name、source_project、value_insight、workflow、success_criteria、reject_reason。",
-      "success_criteria": [
-        "schema 能覆盖 V1.5 关键字段",
-        "能强制区分工具介绍和机会方案",
-        "能输出 reject_reason",
-        "能直接写入 daily JSON"
-      ],
+      "codex_prompt": "你现在是我的数据结构和评审标准设计助手。\n\n目标：不要介绍 Pydantic AI，而是帮我设计 Open-source AI Opportunity 的 V1.5 结构化评分 schema。\n\n请按下面结构输出：\n1. 为什么当前日报容易从“机会方案”退化成“工具介绍”\n2. 设计一个 OpportunityScheme 数据结构，字段必须包括 name、source_project、value_insight、problem_solved、mainstream_comparison、codex_prompt、next_opportunity、reject_reason\n3. 每个字段用一句话解释用途\n4. 给出 1 条合格样例和 1 条不合格样例\n5. 设计 reject_reason 的判断规则：什么时候必须拒绝一个工具\n6. 给出一个 JSON Schema 草案\n7. 说明这个 schema 如何接入当前 data/daily/YYYY-MM-DD.json\n\n限制：\n- 不要写 Agent 框架介绍\n- 不要写代码实现细节\n- 重点是让日报稳定输出“机会方案”，而不是工具榜。",
+      "today_action": "复制上面的 Codex 提示词，让 Codex 先设计 V1.5 的 OpportunityScheme schema。",
       "next_opportunity": "如果跑通，可以成为 Open-source AI Opportunity 的结构化评审层。",
       "evidence": [
         "该项目和你的系统建设需求强相关。",
@@ -212,7 +162,7 @@
     },
     {
       "name": "Microsoft Agent Framework",
-      "reason": "工程信号强，但本次没有形成足够具体的落地方案和最小验证动作，暂不进 Top。"
+      "reason": "工程信号强，但本次没有形成足够具体的落地方案和可直接发给 Codex 的提示词，暂不进 Top。"
     },
     {
       "name": "OpenAI Agents SDK Python",
