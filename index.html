@@ -4,7 +4,40 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Opportunity Radar</title>
-    <link rel="stylesheet" href="assets/style.css?v=20260703-ui3" />
+    <link rel="stylesheet" href="assets/style.css?v=20260703-ui4" />
+    <style>
+      .page-title h1 {
+        white-space: nowrap !important;
+        font-size: clamp(42px, 6.2vw, 86px) !important;
+        letter-spacing: -0.075em !important;
+      }
+      #todayProjects.recommended-rail {
+        display: flex !important;
+        grid-template-columns: none !important;
+        gap: 22px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        padding: 4px 4px 24px !important;
+        scrollbar-width: thin;
+      }
+      #todayProjects.recommended-rail .project-card {
+        flex: 0 0 min(540px, 86vw) !important;
+        scroll-snap-align: start !important;
+      }
+      .section-note {
+        margin: 0;
+        color: #86868b;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      @media (max-width: 700px) {
+        .page-title h1 {
+          white-space: normal !important;
+          font-size: clamp(36px, 12vw, 58px) !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="page-glow" aria-hidden="true"></div>
@@ -127,6 +160,6 @@
       </div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui3"></script>
+    <script src="assets/app.js?v=20260703-ui4"></script>
   </body>
 </html>
