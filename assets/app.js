@@ -6,19 +6,19 @@ const stateLabels = {
 };
 
 const zhMap = {
-  "MCP": "MCP",
-  "GitHub": "GitHub",
+  MCP: "MCP",
+  GitHub: "GitHub",
   "Agent Tooling": "智能体工具",
   "Browser Agent": "浏览器智能体",
-  "Automation": "自动化",
-  "Workflow": "工作流",
+  Automation: "自动化",
+  Workflow: "工作流",
   "Open Source SaaS": "开源 SaaS",
   "AI Video": "AI 视频",
-  "Avatar": "数字人",
+  Avatar: "数字人",
   "Open Source": "开源",
   "AI App": "AI 应用",
   "Developer Tool": "开发工具",
-  "Frontend": "前端",
+  Frontend: "前端",
   "Developer infrastructure": "开发者基础设施",
   "Enterprise workflow": "企业工作流",
   "GitHub ecosystem": "GitHub 生态",
@@ -27,7 +27,6 @@ const zhMap = {
   "Enterprise automation": "企业自动化",
   "Open-source core": "开源核心",
   "Cloud SaaS": "云端 SaaS",
-  "Enterprise automation": "企业自动化",
   "Video generation tool": "视频生成工具",
   "Avatar SaaS": "数字人 SaaS",
   "Content production service": "内容生产服务",
@@ -35,7 +34,7 @@ const zhMap = {
   "Cloud deployment": "云端部署",
   "AI application platform": "AI 应用平台",
   "Opportunity Radar": "机会雷达",
-  "Photography": "摄影",
+  Photography: "摄影",
   "Vibe Coding": "Vibe Coding",
 };
 
@@ -227,6 +226,25 @@ function findTopProject(report) {
   })[0];
 }
 
+function updateCarouselButtons() {
+  const rail = $("#todayProjects");
+  const prev = $("#recommendPrev");
+  const next = $("#recommendNext");
+  if (!rail || !prev || !next) return;
+
+  const maxScroll = rail.scrollWidth - rail.clientWidth - 2;
+  prev.disabled = rail.scrollLeft <= 2;
+  next.disabled = rail.scrollLeft >= maxScroll;
+}
+
+function scrollRecommendations(direction) {
+  const rail = $("#todayProjects");
+  if (!rail) return;
+  const step = rail.clientWidth;
+  rail.scrollBy({ left: direction * step, behavior: "smooth" });
+  window.setTimeout(updateCarouselButtons, 360);
+}
+
 function renderToday(report) {
   $("#latestDate").textContent = report?.date || "--";
   $("#marketScore").textContent = report?.market_score ?? "--";
@@ -256,6 +274,9 @@ function renderProjects() {
   const latestReport = appState.reports.get(appState.manifest.latest);
   const projects = (latestReport?.projects || []).filter(matchesFilters);
   $("#todayProjects").innerHTML = projects.length ? projects.map((project) => projectCard(project)).join("") : emptyHtml();
+  const rail = $("#todayProjects");
+  if (rail) rail.scrollLeft = 0;
+  window.setTimeout(updateCarouselButtons, 0);
 }
 
 function renderHistory() {
@@ -292,14 +313,33 @@ function bindEvents() {
       $$(".panel").forEach((item) => item.classList.remove("is-active"));
       tab.classList.add("is-active");
       $(`#${tab.dataset.tab}`).classList.add("is-active");
+      updateCarouselButtons();
     });
   });
 
   document.addEventListener("click", (event) => {
-    const button = event.target.closest(".status-button");
-    if (!button) return;
-    saveStatus(button.dataset.key, button.dataset.status);
+    const statusButton = event.target.closest(".status-button");
+    if (statusButton) {
+      saveStatus(statusButton.dataset.key, statusButton.dataset.status);
+      return;
+    }
+
+    const prev = event.target.closest("#recommendPrev");
+    if (prev) {
+      scrollRecommendations(-1);
+      return;
+    }
+
+    const next = event.target.closest("#recommendNext");
+    if (next) {
+      scrollRecommendations(1);
+    }
   });
+
+  const rail = $("#todayProjects");
+  if (rail) rail.addEventListener("scroll", updateCarouselButtons, { passive: true });
+
+  window.addEventListener("resize", updateCarouselButtons);
 
   $("#searchInput").addEventListener("input", (event) => {
     appState.search = event.target.value;
@@ -370,6 +410,7 @@ async function init() {
     $("#todayProjects").innerHTML = emptyHtml();
     $("#historyList").innerHTML = emptyHtml();
     $("#libraryProjects").innerHTML = emptyHtml();
+    updateCarouselButtons();
   }
 }
 
