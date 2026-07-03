@@ -1,4 +1,4 @@
-# Open-source AI Opportunity Project Radar Data
+# Open-source AI Opportunity Data
 
 <p>
   <a href="./README.md">English</a>
@@ -6,9 +6,9 @@
   <a href="./README.zh-CN.md"><strong>简体中文</strong></a>
 </p>
 
-这个仓库是 **Open-source AI Opportunity Project Radar** 的数据仓库和静态 Dashboard。
+这个仓库是 **Open-source AI Opportunity** 的数据仓库和静态 Dashboard。
 
-当前雷达只保留一个明确范围：
+当前项目只保留一个明确范围：
 
 ```text
 采集来源：GitHub only
@@ -17,7 +17,7 @@
 
 ## 这个仓库负责什么
 
-1. 存放每日 GitHub-only 雷达日报。
+1. 存放每日 GitHub-only 机会日报。
 2. 存放静态 Dashboard 读取的轻量 JSON 数据。
 3. 通过 GitHub Pages 托管 Dashboard。
 
@@ -61,7 +61,7 @@ V1.4 适用于：
 - 开源视频 / 图像模型
 - 自动化工具开源仓库
 - Vibe Coding / Codex 相关工具
-- 能改进雷达系统本身的工具
+- 能改进系统本身的工具
 
 ### 候选项目需要采集的数据
 
@@ -78,7 +78,7 @@ V1.4 适用于：
 - README 质量
 - demo / website / screenshots / sample videos
 - 文档质量
-- 是否贴合 AI 视频、摄影、内容生产、Vibe Coding、Codex、MCP、Agent 工作流或雷达系统本身
+- 是否贴合 AI 视频、摄影、内容生产、Vibe Coding、Codex、MCP、Agent 工作流或系统本身
 
 ### Top 入选要求
 
@@ -94,7 +94,7 @@ GitHub 项目进入 Top 必须同时满足：
 | --- | ---: | --- |
 | `data_score` | 20% | stars、forks、star growth、社区关注 |
 | `activity_score` | 20% | 最近更新、commits、releases、issues / PR |
-| `personal_fit_score` | 25% | 是否贴合 AI 视频、摄影、内容生产、雷达、Vibe Coding |
+| `personal_fit_score` | 25% | 是否贴合 AI 视频、摄影、内容生产、Vibe Coding |
 | `business_score` | 20% | 是否可能变成 SaaS、模板、服务、工作流、内容产品或垂直方案 |
 | `action_score` | 15% | 今天是否有具体可执行动作 |
 
@@ -110,7 +110,7 @@ GitHub 项目进入 Top 必须同时满足：
 {
   "date": "YYYY-MM-DD",
   "version": "V1.4",
-  "title": "Open-source AI Opportunity Project Radar",
+  "title": "Open-source AI Opportunity",
   "theme": "Daily GitHub open-source opportunity signals",
   "market_score": 8.6,
   "today_mission": "今天最值得做的一件事",
