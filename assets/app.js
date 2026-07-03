@@ -9,7 +9,7 @@ function statusOf(k){return localStorage.getItem("radar-status:"+k)||""}
 function setStatus(k,v){if(!v||statusOf(k)===v)localStorage.removeItem("radar-status:"+k);else localStorage.setItem("radar-status:"+k,v);renderProjects();renderLibrary()}
 function cats(p){return Array.isArray(p.category)?p.category:[]}
 function chips(items){return(items||[]).map(x=>`<span class="chip">${esc(zh(x))}</span>`).join("")}
-function videoQuery(p){return encodeURIComponent(`${p.name||"AI project"} tutorial case study user review`)}
+function videoQuery(p){return encodeURIComponent(p.name||"AI project")}
 function videoLinks(p){if(Array.isArray(p.video_links)&&p.video_links.length){return p.video_links.map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noreferrer">${esc(x.label||x.platform||"案例")}</a>`).join("")}const q=videoQuery(p);return `<a href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noreferrer">YouTube</a><a href="https://search.bilibili.com/all?keyword=${q}" target="_blank" rel="noreferrer">bilibili</a>`}
 function links(p){const gh=p.github?`<a href="${esc(p.github)}" target="_blank" rel="noreferrer">GitHub</a>`:"";return gh+videoLinks(p)}
 function statusButtons(p){const k=p.key||keyOf(p);const cur=statusOf(k);return `<div class="statuses">${Object.entries(stateLabels).map(([v,l])=>`<button type="button" class="status-button${cur===v?" is-active":""}" data-key="${esc(k)}" data-status="${v}">${l}</button>`).join("")}</div>`}
