@@ -1,0 +1,227 @@
+{
+  "date": "2026-07-03",
+  "version": "V1.4-direction-fit-test",
+  "title": "Open-source AI Opportunity",
+  "theme": "先看 GitHub 热度，再按 AI 视频 / 摄影 / 内容生产方向筛选",
+  "market_score": 8.8,
+  "today_mission": "今天优先从 ComfyUI-LTXVideo、JoyAI-Image、AI Short Video Factory 里选 1 个，让 Codex 花 30 分钟判断它能不能进入你的 AI 视频 / 图像 / 内容生产工作流。",
+  "summary": [
+    "本次测试按新规则重跑：先用 GitHub stars/forks/近期更新等硬数据找热门项目，再按你的方向筛选。",
+    "Top 5 优先 AI 视频、AI 图像、短视频自动化、内容生产工具；Agent 框架降级，不再主导日报。",
+    "本次未把 Microsoft Agent Framework、Pydantic AI 放进 Top，因为它们更偏系统工程，不是你的内容生产主线。"
+  ],
+  "projects": [
+    {
+      "id": "comfyui",
+      "rank": 1,
+      "name": "ComfyUI",
+      "source_type": "github_open_source",
+      "category": ["AI image", "AI video", "AIGC workflow", "Content workflow", "ComfyUI"],
+      "direction_tier": "A",
+      "score": 9.3,
+      "scores": {
+        "github_heat_score": 5,
+        "activity_score": 5,
+        "direction_fit_score": 5,
+        "opportunity_score": 5,
+        "action_score": 4
+      },
+      "verdict": "最贴合你方向的开源 AIGC 工作流底座",
+      "one_liner": "ComfyUI 是面向视觉创作者的节点式 AI 创作引擎，能把图像、视频、3D、音频等模型串成可复用工作流。",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "why_today": "它直接覆盖 AI 图像、AI 视频、工作流、内容生产，是你摄影 / 视频 / AIGC 方向最核心的 GitHub 项目之一。",
+      "evidence": [
+        "GitHub 搜索命中 stars:>1000 且 pushed:>2026-06-01，仓库未 archived。",
+        "README 明确写着它是 content creation 的 modular AI engine。",
+        "README 提到支持 images、videos、3D、audio，并支持 Nano Banana、Seedance 等模型入口。",
+        "README 提供 Desktop、Cloud、workflow templates、examples。"
+      ],
+      "opportunity": "可以作为你后续 AI 摄影、AI 视频、商业视觉工作流的长期基础设施。",
+      "risk": "功能太大，今天不要泛泛研究；只看和 AI 视频 / 图像工作流有关的入口。",
+      "today_action": "让 Codex 读取 README，列出 ComfyUI 对你最有用的 5 个入口：图像、视频、模板、Desktop、API。",
+      "action_type": "inspect",
+      "timebox": "30 分钟",
+      "selection_basis": {
+        "github_heat": "matched GitHub search stars:>1000",
+        "activity": "matched pushed:>2026-06-01",
+        "archived": false,
+        "direction_fit": "AI 图像 / AI 视频 / AIGC 工作流强相关",
+        "readme_quality": "high"
+      }
+    },
+    {
+      "id": "comfyui-ltxvideo",
+      "rank": 2,
+      "name": "ComfyUI-LTXVideo",
+      "source_type": "github_open_source",
+      "category": ["AI video", "ComfyUI", "Image to video", "Text to video", "Workflow"],
+      "direction_tier": "A",
+      "score": 9.0,
+      "scores": {
+        "github_heat_score": 4,
+        "activity_score": 5,
+        "direction_fit_score": 5,
+        "opportunity_score": 5,
+        "action_score": 4
+      },
+      "verdict": "最贴近 AI 视频实操的 ComfyUI 项目",
+      "one_liner": "这是 LTX-2 视频生成模型的 ComfyUI 节点和工作流集合，直接面向文生视频、图生视频、视频到视频等场景。",
+      "github": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "why_today": "它不是泛 Agent 框架，而是可以直接落到 AI 视频工作流里的项目，和你的职业方向更近。",
+      "evidence": [
+        "GitHub 搜索命中 ComfyUI video stars:>500 且 pushed:>2026-06-01，仓库未 archived。",
+        "README 写明这是扩展 ComfyUI 的 LTX-2 video generation custom nodes。",
+        "README 提供 LTX-2.3 的 text/image to video、motion tracking、lipdub、upscaling 等工作流。",
+        "README 提供 demo、Hugging Face model、paper、example workflows。"
+      ],
+      "opportunity": "可以作为你测试 AI 视频生成工作流的样板，尤其是图生视频、运动追踪、Lipdub、上采样。",
+      "risk": "硬件门槛较高，README 提到 32GB+ VRAM 和大量模型缓存；先让 Codex 看工作流，不要马上安装。",
+      "today_action": "让 Codex 读取 example_workflows 目录，挑 1 个 image-to-video 工作流，解释每个节点大概负责什么。",
+      "action_type": "assign_to_codex",
+      "timebox": "30 分钟",
+      "selection_basis": {
+        "github_heat": "matched GitHub search stars:>500",
+        "activity": "matched pushed:>2026-06-01",
+        "archived": false,
+        "direction_fit": "AI 视频 / 图生视频 / ComfyUI 工作流强相关",
+        "readme_quality": "high"
+      }
+    },
+    {
+      "id": "joyai-image",
+      "rank": 3,
+      "name": "JoyAI-Image",
+      "source_type": "github_open_source",
+      "category": ["AI image", "Image editing", "Spatial editing", "ComfyUI", "AIGC"],
+      "direction_tier": "A",
+      "score": 8.8,
+      "scores": {
+        "github_heat_score": 4,
+        "activity_score": 5,
+        "direction_fit_score": 5,
+        "opportunity_score": 4,
+        "action_score": 4
+      },
+      "verdict": "值得关注的 AI 图像编辑 / 空间编辑模型",
+      "one_liner": "JoyAI-Image 关注图像理解、生成和指令式图像编辑，尤其是空间关系、视角变化和可控编辑。",
+      "github": "https://github.com/jd-opensource/JoyAI-Image",
+      "why_today": "它和摄影、商业视觉、AI 修图更相关，不是通用开发框架。",
+      "evidence": [
+        "GitHub 搜索命中 AI image generation stars:>2000 且 pushed:>2026-06-01，仓库未 archived。",
+        "README 2026.06.23 发布 JoyAI-Image-Edit-Plus。",
+        "README 提供 Hugging Face、ModelScope、Demo、ComfyUI 支持。",
+        "README 描述能力包括 image editing、multi-image editing、spatial editing、multi-view generation。"
+      ],
+      "opportunity": "可以用于研究 AI 修图、商业视觉编辑、空间一致性、多图一致性这类摄影相关能力。",
+      "risk": "模型能力是否适合真实商业修图还需要样张测试；今天先看 Demo 和 ComfyUI 接入。",
+      "today_action": "让 Codex 读取 README，整理 JoyAI-Image 对摄影修图最相关的 3 个能力：多图编辑、空间编辑、ComfyUI 接入。",
+      "action_type": "inspect",
+      "timebox": "25 分钟",
+      "selection_basis": {
+        "github_heat": "matched GitHub search stars:>2000",
+        "activity": "matched pushed:>2026-06-01 and README news in 2026.06",
+        "archived": false,
+        "direction_fit": "AI 图像 / 图像编辑 / 摄影修图强相关",
+        "readme_quality": "high"
+      }
+    },
+    {
+      "id": "short-video-factory",
+      "rank": 4,
+      "name": "AI Short Video Factory",
+      "source_type": "github_open_source",
+      "category": ["Short video", "Content workflow", "Automation", "Desktop app"],
+      "direction_tier": "A",
+      "score": 8.6,
+      "scores": {
+        "github_heat_score": 4,
+        "activity_score": 4,
+        "direction_fit_score": 5,
+        "opportunity_score": 4,
+        "action_score": 5
+      },
+      "verdict": "最贴近短视频交付流程的开源桌面应用",
+      "one_liner": "它把文案、配音、剪辑、字幕和批量处理放到一个桌面工具里，更像真实内容生产流程，而不是单个模型。",
+      "github": "https://github.com/YILS-LIN/short-video-factory",
+      "why_today": "它和你的短视频 / 商业内容交付方向强相关，而且今天可以直接让 Codex 拆流程。",
+      "evidence": [
+        "GitHub 搜索命中 AI video generation stars:>1000 且 pushed:>2026-06-01，仓库未 archived。",
+        "README 写明用于产品营销与泛内容短视频。",
+        "README 列出 AI 文案生成、语音合成、视频剪辑、字幕特效、批量处理。",
+        "README 提供 release 下载和官方文档。"
+      ],
+      "opportunity": "可以研究如何把脚本、素材、配音、字幕、剪辑和批量导出串成短视频生产线。",
+      "risk": "是否能替代剪映或现有工具要看导出质量和模板控制；今天先不安装。",
+      "today_action": "让 Codex 读取 README，画一张“商业短视频自动化流程图”：输入、文案、TTS、剪辑、字幕、导出。",
+      "action_type": "assign_to_codex",
+      "timebox": "25 分钟",
+      "selection_basis": {
+        "github_heat": "matched GitHub search stars:>1000",
+        "activity": "matched pushed:>2026-06-01",
+        "archived": false,
+        "direction_fit": "短视频自动化 / 内容生产强相关",
+        "readme_quality": "high"
+      }
+    },
+    {
+      "id": "krillinai",
+      "rank": 5,
+      "name": "KrillinAI",
+      "source_type": "github_open_source",
+      "category": ["Video localization", "Dubbing", "Subtitle", "Content workflow", "Agent skills"],
+      "direction_tier": "A/B",
+      "score": 8.4,
+      "scores": {
+        "github_heat_score": 4,
+        "activity_score": 4,
+        "direction_fit_score": 4,
+        "opportunity_score": 4,
+        "action_score": 4
+      },
+      "verdict": "适合关注视频翻译、配音和多平台内容本地化",
+      "one_liner": "KrillinAI 覆盖视频下载、字幕识别、翻译、TTS 配音、封面生成和横竖屏处理，还给 Agent 提供可调用的 Skills。",
+      "github": "https://github.com/krillinai/KrillinAI",
+      "why_today": "它不是视频生成模型，但和视频内容生产、字幕、配音、多平台分发很相关。",
+      "evidence": [
+        "GitHub 搜索命中 AI video generation stars:>1000 且 pushed:>2026-06-01，仓库未 archived。",
+        "README 写明它是 Video Translation & Dubbing Tool for Humans / Agents。",
+        "README 列出视频下载、语音转写、字幕翻译、TTS 配音、封面生成、横竖屏处理。",
+        "README 提到 skills/ 目录可供 AI Agents 调用。"
+      ],
+      "opportunity": "可以作为视频本地化和多平台发布流程参考，尤其适合内容出海、配音、字幕和封面生成。",
+      "risk": "它更偏视频后处理和本地化，不是 AI 生成主线；作为 Top 5 第五位观察。",
+      "today_action": "让 Codex 读取 README 的 pipeline 和 Skills 描述，列出它能不能接入你的短视频生产流程。",
+      "action_type": "inspect",
+      "timebox": "20 分钟",
+      "selection_basis": {
+        "github_heat": "matched GitHub search stars:>1000",
+        "activity": "matched pushed:>2026-06-01",
+        "archived": false,
+        "direction_fit": "视频后处理 / 配音 / 字幕 / 内容本地化相关",
+        "readme_quality": "high"
+      }
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "Microsoft Agent Framework",
+      "reason": "GitHub 数据和工程完整度不错，但方向主要是 Agent 工程化。按新规则属于 B 级系统改进项目，本次不进入 Top。"
+    },
+    {
+      "name": "Pydantic AI",
+      "reason": "适合做结构化 Agent 原型，但和 AI 视频、摄影、内容生产不是强相关。本次降级为系统改进候选。"
+    },
+    {
+      "name": "OpenAI Agents SDK Python",
+      "reason": "对 Codex / Agent 有参考价值，但不是内容生产主线。本次不让 Agent 框架主导日报。"
+    },
+    {
+      "name": "Open-Generative-AI",
+      "reason": "资料集合类项目，热度可能不错，但今天缺少明确可执行工作流，暂不进入 Top。"
+    },
+    {
+      "name": "ZeroLu/awesome-seedance",
+      "reason": "资料集合类仓库，和 AI 视频相关，但不是可直接测试或交付的项目。"
+    }
+  ]
+}
