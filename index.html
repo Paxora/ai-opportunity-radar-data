@@ -24,9 +24,9 @@
       #todayProjects.recommended-rail { width: 100% !important; max-width: 100% !important; display: grid !important; grid-auto-flow: column !important; grid-auto-columns: calc((100% - 24px) / 2) !important; grid-template-columns: none !important; gap: 24px !important; overflow-x: hidden !important; overflow-y: visible !important; scroll-snap-type: x mandatory !important; scroll-behavior: smooth !important; padding: 4px 0 28px !important; margin: 0 !important; scrollbar-width: none !important; }
       #todayProjects.recommended-rail::-webkit-scrollbar { display: none !important; }
       #todayProjects.recommended-rail .project-card { min-width: 0 !important; width: 100% !important; scroll-snap-align: start !important; padding: 28px !important; }
-      .scheme-flow { background:#f5f5f7; border:1px solid #e5e5ea; border-radius:18px; padding:12px 14px; margin:14px 0; }
-      .scheme-flow p { margin:6px 0; }
-      .project-card ul { margin:10px 0 14px 18px; padding:0; color:#424245; }
+      .codex-prompt { background:#f5f5f7; border:1px solid #e5e5ea; border-radius:18px; padding:14px; margin:16px 0; }
+      .codex-title { font-weight:800; margin-bottom:10px; }
+      .codex-prompt pre { white-space:pre-wrap; word-break:break-word; margin:0; font-family:inherit; line-height:1.55; color:#1d1d1f; }
       @media (max-width: 1100px) { .page-title h1 { font-size: clamp(36px, 5vw, 56px) !important; } .summary-grid { grid-template-columns: 1fr !important; } .recommendation-head { grid-template-columns: 1fr !important; align-items: start !important; } .recommendation-head .toolbar { justify-self: stretch !important; justify-content: flex-start !important; } .carousel-button.prev { left: 8px !important; } .carousel-button.next { right: 8px !important; } }
       @media (max-width: 900px) { .page-title h1 { white-space: normal !important; } #todayProjects.recommended-rail { grid-auto-columns: 86vw !important; overflow-x: hidden !important; } }
       @media (max-width: 700px) { .page-title h1 { font-size: clamp(36px, 12vw, 56px) !important; } .mission { font-size: 22px !important; } .summary-card { font-size: 18px !important; } }
@@ -38,7 +38,7 @@
       <header class="page-title">
         <p class="eyebrow">Value-first · V1.5</p>
         <h1>Open-source AI Opportunity</h1>
-        <p class="page-subtitle">不是工具榜，而是从 GitHub-first 信号里提炼有价值的落地方案、工作流和机会判断。</p>
+        <p class="page-subtitle">不是工具榜，而是从 GitHub-first 信号里提炼有价值的落地方案和可直接执行的 Codex 提示词。</p>
       </header>
 
       <nav class="tabs" aria-label="Dashboard sections">
@@ -51,7 +51,7 @@
         <section class="panel is-active" id="today">
           <section class="mission-layout">
             <article class="mission-card">
-              <p class="eyebrow">今日验证</p>
+              <p class="eyebrow">今日 Codex 提示词</p>
               <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
             </article>
           </section>
@@ -66,7 +66,7 @@
             <div class="toolbar">
               <label class="search">
                 <span>搜索</span>
-                <input id="searchInput" type="search" placeholder="方案、工具、场景、行动..." />
+                <input id="searchInput" type="search" placeholder="方案、工具、场景、提示词..." />
               </label>
               <label class="select">
                 <span>分类</span>
@@ -116,6 +116,6 @@
       <div class="empty-card">暂无内容。</div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui16"></script>
+    <script src="assets/app.js?v=20260703-ui17"></script>
   </body>
 </html>
