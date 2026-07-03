@@ -33,7 +33,6 @@
       <nav class="tabs" aria-label="Dashboard sections">
         <button class="tab is-active" data-tab="today">今日日报</button>
         <button class="tab" data-tab="history">历史日报</button>
-        <button class="tab" data-tab="archive">PDF 归档</button>
         <button class="tab" data-tab="library">项目库</button>
       </nav>
 
@@ -44,7 +43,7 @@
               <h2 id="todayTitle">今日日报</h2>
               <p id="todayTheme">暂无日报。</p>
             </div>
-            <a class="button" id="todayHtml" href="#" hidden>打开 HTML 日报</a>
+            <a class="button" id="todayHtml" href="#" hidden>打开日报</a>
           </div>
           <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
           <div class="summary-grid" id="summaryList"></div>
@@ -77,20 +76,10 @@
           <div class="section-head">
             <div>
               <h2>历史日报</h2>
-              <p>按日期查看 JSON、HTML 和 PDF。</p>
+              <p>按日期查看日报和 JSON 数据。</p>
             </div>
           </div>
           <div class="history-list" id="historyList"></div>
-        </section>
-
-        <section class="panel" id="archive">
-          <div class="section-head">
-            <div>
-              <h2>PDF 归档</h2>
-              <p>GitHub Actions 会从 HTML 日报自动生成 PDF。</p>
-            </div>
-          </div>
-          <div class="archive-grid" id="archiveGrid"></div>
         </section>
 
         <section class="panel" id="library">
