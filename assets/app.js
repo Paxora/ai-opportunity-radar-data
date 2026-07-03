@@ -162,7 +162,7 @@ function projectCard(project, options = {}) {
     ${options.library ? `<p class="muted">出现 ${project.appearances} 次 · 首次 ${project.firstSeen} · 最近 ${project.lastSeen}</p>` : ""}
     ${project.why_today ? `<p>${escapeHtml(project.why_today)}</p>` : ""}
     ${listItems(project.core_data)}
-    ${project.today_action ? `<p class="action-line"><strong>今日行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
+    ${project.today_action ? `<p class="action-line"><strong>建议行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
     ${fitGrid(project.fit)}
     ${project.business_model?.length ? `<div class="chips">${chipList(project.business_model)}</div>` : ""}
     ${links ? `<div class="links">${links}</div>` : ""}
@@ -172,18 +172,18 @@ function projectCard(project, options = {}) {
 
 function topProjectCard(project) {
   if (!project) {
-    return `<p class="muted">日报写入后，这里会显示今日最值得优先查看的项目。</p>`;
+    return `<p class="muted">日报写入后，这里会显示今天最值得优先查看的机会。</p>`;
   }
   const links = projectLinks(project);
   return `<div class="top-project-title">
       <div>
-        <p class="eyebrow">Top Opportunity</p>
+        <p class="eyebrow">今日首要机会</p>
         <h3>${escapeHtml(project.name || "Untitled Project")}</h3>
       </div>
       ${project.score !== undefined ? `<div class="score">${project.score}</div>` : ""}
     </div>
     <p class="muted">${escapeHtml(project.why_today || project.today_action || "今日优先关注项目")}</p>
-    ${project.today_action ? `<p class="action-line"><strong>今日行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
+    ${project.today_action ? `<p class="action-line"><strong>建议行动：</strong>${escapeHtml(project.today_action)}</p>` : ""}
     ${links ? `<div class="links">${links}</div>` : ""}`;
 }
 
@@ -202,7 +202,7 @@ function renderToday(report) {
   $("#latestDate").textContent = report?.date || "--";
   $("#marketScore").textContent = report?.market_score ?? "--";
   $("#projectCount").textContent = report?.projects?.length || 0;
-  $("#todayTitle").textContent = report ? `${report.title || "AI Opportunity Radar"} ${report.version || ""}` : "今日日报";
+  $("#todayTitle").textContent = report ? "今日重点信号" : "今日重点信号";
   $("#todayTheme").textContent = report?.theme || "暂无日报。";
   $("#todayMission").textContent = report?.today_mission || "ChatGPT 计划任务写入数据后会自动展示。";
   $("#topProject").innerHTML = topProjectCard(findTopProject(report));
