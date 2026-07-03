@@ -21,11 +21,26 @@ The system keeps two daily artifacts:
 - Dashboard JSON: `data/daily/YYYY-MM-DD.json`
 - Report page: `reports/html/YYYY-MM-DD.html`
 
+It also keeps one long-term tracking file:
+
+- Non-GitHub watchlist: `data/watchlist.json`
+
 The HTML file is the official daily report, and the UI should call it **日报**.
 
-## V1.4 Content Selection Rules
+## Content Rules Overview
 
-V1.4 is not an AI news summary. It is designed to select AI projects, tools, products, and open-source repositories that are worth watching, testing, or turning into an opportunity today.
+The system now uses two tracks:
+
+```text
+V1.4: GitHub / open-source signal standard
+V1.5: Non-GitHub product, platform, and creator-tool signal standard
+```
+
+V1.5 does not replace V1.4. GitHub and open-source items still use V1.4. Non-GitHub products and platforms such as Seedance, TapNow, Liblib.TV, Coze, Dify, and n8n use V1.5.
+
+## V1.4: GitHub / Open-source Standard
+
+V1.4 is not an AI news summary. It selects open-source projects and GitHub repositories that are worth watching, testing, or turning into an opportunity today.
 
 Core principle:
 
@@ -33,62 +48,35 @@ Core principle:
 hard data signals + personal relevance + today action value
 ```
 
-Each run should first collect at least 15-20 candidates, then filter them down to Top 5. Top 5 is ranked by opportunity score, not by stars alone.
+Scope:
 
-### Scope
+- open-source projects
+- MCP tools
+- Agent frameworks
+- ComfyUI plugins / workflows
+- open-source video models
+- automation-tool repositories
+- Vibe Coding / Codex-related tools
 
-Priority areas:
-
-- AI video / image-to-video / text-to-video / digital human / avatar
-- ComfyUI / AIGC workflow / creative automation
-- content production, imaging workflow, photo/video productivity tools
-- AI Agent / MCP / Browser Agent / automation
-- AI Coding / Vibe Coding / Codex-related tools
-- AI SaaS / AI App / productized workflow
-- tools that improve AI Opportunity Radar itself
-
-### Hard Data Signals
-
-Each candidate should collect as many of the following as possible:
+Each candidate should collect as many of these as possible:
 
 - `stars`: GitHub star count
 - `forks`: GitHub fork count
-- `star_growth`: 7-day / 30-day star growth; if unavailable, state that it could not be reliably obtained
+- `star_growth`: 7-day / 30-day star growth; state clearly if unavailable
 - `last_updated`: latest update date
 - `archived`: whether the repo is archived
 - `recent_activity`: recent commits, releases, issues / PR activity
-- `community_signal`: Product Hunt, Reddit, Hacker News, X, news, blog, or developer community signals
+- `community_signal`: Product Hunt, Reddit, Hacker News, X, or developer community signals
 - `demo_signal`: demo, website, sample video, screenshot, or live experience
 - `readme_quality`: whether the README clearly explains use case, installation, and examples
 
-### Selection Threshold
+Every Top 5 GitHub item must have:
 
-Every Top 5 project must have:
-
-1. At least 2 hard data signals, such as stars, star growth, recent updates, release, community discussion, demo, or README quality.
-2. At least 1 personal relevance signal, such as AI video, photography, content production, Vibe Coding, or the radar system itself.
+1. At least 2 hard data signals.
+2. At least 1 personal relevance signal, such as AI video, photography, content production, Vibe Coding, or Opportunity Radar.
 3. At least 1 clear action value, such as watching a demo, testing it, sending it to Codex, making a content idea, or adding it to the watchlist.
 
-The following should not enter Top 5:
-
-- News-only items with no action.
-- Generic model, funding, or industry trend summaries.
-- Items weakly related to AI video, photography, Vibe Coding, or Opportunity Radar.
-- Items without a clear action recommendation for today.
-- Archived, unmaintained, unclear, or non-demonstrable projects.
-- Pure infrastructure projects that the user cannot use today or convert into a tool, content idea, or project opportunity.
-
-### Star Rules
-
-- High stars but low relevance: downrank.
-- Low stars but fast growth and strong fit with AI video / photography / Vibe Coding: can be selected.
-- High stars but long inactive: downrank.
-- High stars but only a low-level library: exclude unless it supports the user's projects.
-- Medium stars with demo, examples, and commercial use case: upweight.
-
-### Scoring Model
-
-Each candidate is scored from 1-5 on five dimensions:
+Scoring model:
 
 | Dimension | Weight | Meaning |
 | --- | --- | --- |
@@ -100,13 +88,86 @@ Each candidate is scored from 1-5 on five dimensions:
 
 Projects below 8.0 should not enter Top 5. Projects without a clear `today_action` should not enter Top 5.
 
+## V1.5: Non-GitHub Product & Creator-tool Standard
+
+V1.5 is dedicated to discovering and judging valuable non-GitHub signals.
+
+Scope:
+
+- AI video products: Seedance, Kling, Jimeng, Vidu, PixVerse, Runway, Pika, Veo, Sora, Luma, Hailuo, etc.
+- AIGC creation platforms: TapNow, Liblib.TV, TusiArt, Krea, Civitai, OpenArt, Midjourney, Ideogram, Recraft, Canva, Firefly, etc.
+- Agent / automation platforms: Coze, Dify, n8n, FastGPT, Flowise, Langflow, Activepieces, Zapier, Make, Gumloop, etc.
+- Creator tools / workflows: infinite canvas, image-to-image, inpainting, outpainting, poster generation, storyboarding, AI photography, AI short-video workflows
+
+V1.5 core flow:
+
+```text
+candidate discovery → type detection → multi-source verification → type-specific scoring → Top / observation / rejected
+```
+
+### Candidate Discovery
+
+Each daily run should first check:
+
+1. Fixed entities in `data/watchlist.json`.
+2. Official sources: websites, announcements, product updates, official accounts.
+3. Creator sources: real cases and tutorials from Bilibili, Douyin, Xiaohongshu, YouTube, and X.
+4. Community sources: Product Hunt, Reddit, Discord, comments, and tool communities.
+
+News is background only. It must not be used as a core selection signal.
+
+### Multi-source Verification
+
+A non-GitHub candidate needs at least 2 evidence types before it can enter Top 5.
+
+The four evidence types are:
+
+| Evidence type | Meaning |
+| --- | --- |
+| `official` | official website, announcement, changelog, official account, product entry |
+| `creator` | Bilibili, Douyin, Xiaohongshu, YouTube cases, tutorials, creator work streams |
+| `community` | X, Reddit, Product Hunt, Discord, comment discussion |
+| `technical` | Hugging Face, ModelScope, arXiv, Papers with Code, public model or technical docs |
+
+Selection rule:
+
+```text
+1 evidence type: observation only
+2 evidence types: candidate pool
+3+ evidence types: can compete for Top 5
+```
+
+### Type-specific Scoring
+
+Use different standards for different types:
+
+- **AI video product**: recent 30-90 day signal, official product entry, real cases, fit with photography/video/ads/short films, and whether it can be tested today.
+- **AIGC creation platform**: infinite canvas, image-to-image, inpainting, outpainting, templates, workflows, model marketplace, creator cases, and commercial visual use cases.
+- **Agent / automation platform**: agent builder, workflow builder, source connection, non-programmer usability, Opportunity Radar usefulness, and whether it can be turned into an MVP with Codex.
+- **Creator case**: whether the result is real, the workflow is reusable, it fits shooting/content production, and it can become a content idea, service, or client case.
+
+## Watchlist
+
+`data/watchlist.json` is the fixed tracking list for non-GitHub content.
+
+It includes at least:
+
+- AI video products
+- AIGC creation platforms
+- Agent / automation platforms
+- Radar-related tools
+
+When the user points out a missed item, add it to the Watchlist first, then track it with V1.5 rules instead of relying on one-off search.
+
 ## What Writes Here
 
 ChatGPT scheduled tasks should update these paths every day:
 
-- `data/daily/YYYY-MM-DD.json`
-- `reports/html/YYYY-MM-DD.html`
-- `data/manifest.json`
+```text
+data/daily/YYYY-MM-DD.json
+reports/html/YYYY-MM-DD.html
+data/manifest.json
+```
 
 The expected manifest shape is:
 
@@ -125,68 +186,49 @@ The expected manifest shape is:
 
 ## Daily JSON Shape
 
-Each daily JSON file should follow the V1.4 structure:
+Each daily JSON file should support the two-track structure:
 
 ```json
 {
   "date": "YYYY-MM-DD",
-  "version": "V1.4",
+  "version": "V1.5",
   "title": "AI Opportunity Radar",
   "theme": "今日主题",
   "market_score": 8.6,
   "today_mission": "今天最值得做的一件事",
   "summary": ["摘要1", "摘要2", "摘要3"],
-  "projects": [
-    {
-      "id": "project-slug",
-      "rank": 1,
-      "name": "Project Name",
-      "category": ["AI 视频", "工作流"],
-      "score": 9.1,
-      "scores": {
-        "data_score": 4,
-        "activity_score": 5,
-        "personal_fit_score": 5,
-        "business_score": 4,
-        "action_score": 5
-      },
-      "selection_basis": {
-        "stars": 12800,
-        "forks": 900,
-        "star_growth": "recent 30-day growth / unavailable",
-        "last_updated": "YYYY-MM-DD",
-        "archived": false,
-        "recent_activity": "recent commits / release signal",
-        "community_signal": "community discussion signal",
-        "demo_signal": "demo / sample video / website / README example",
-        "why_selected": "selected because it satisfies data, relevance, and action value"
-      },
-      "verdict": "值得今天测试",
-      "one_liner": "一句话说明机会点",
-      "github": "https://github.com/example/project",
-      "website": "",
-      "docs": "",
-      "why_today": "为什么今天值得关注",
-      "evidence": ["事实依据1", "事实依据2", "事实依据3"],
-      "opportunity": "可能形成的具体机会",
-      "risk": "潜在风险或噪音判断",
-      "china_competitors": "国内竞品或替代方案",
-      "fit": {
-        "Opportunity Radar": 5,
-        "AI Video": 4,
-        "Photography": 3,
-        "Vibe Coding": 4
-      },
-      "today_action": "今天具体应该做什么",
-      "action_type": "test",
-      "timebox": "20 分钟",
-      "links": {
-        "github": "https://github.com/example/project",
-        "website": "",
-        "docs": ""
-      }
-    }
-  ]
+  "projects": [],
+  "watchlist_observations": [],
+  "rejected_candidates": []
+}
+```
+
+Meaning:
+
+- `projects`: today's Top items. GitHub items use V1.4; non-GitHub items use V1.5.
+- `watchlist_observations`: items with signals but not enough evidence or action value.
+- `rejected_candidates`: discovered but rejected items, with reasons.
+
+Recommended fields for non-GitHub items:
+
+```json
+{
+  "source_type": "aigc_creation_platform",
+  "evidence_pack": {
+    "official": "official evidence",
+    "creator": "creator evidence",
+    "community": "community evidence",
+    "technical": "technical evidence if applicable",
+    "evidence_count": 2,
+    "confidence": "A / B / C"
+  },
+  "selection_basis": {
+    "why_now": "why it matters today",
+    "product_signal": "product capability or update",
+    "creator_signal": "creator cases or tutorials",
+    "personal_fit": "fit with photography/video/content production/automation",
+    "today_action_value": "what can be done in 15-30 minutes today"
+  }
 }
 ```
 
@@ -198,7 +240,7 @@ The Dashboard is fully static:
 - `assets/style.css`
 - `assets/app.js`
 
-It reads report data directly from the repository and supports:
+It supports:
 
 - today's report
 - historical reports
@@ -247,9 +289,13 @@ The current production flow is:
 ```text
 ChatGPT scheduled task
 ↓
-Collect 15-20 candidate projects
+Read data/watchlist.json
 ↓
-Filter Top 5 by V1.4 rules
+Evaluate GitHub / open-source candidates with V1.4
+↓
+Evaluate non-GitHub products / platforms / creator tools with V1.5
+↓
+Generate Top items + observations + rejected candidates
 ↓
 Generate daily JSON + report page
 ↓
