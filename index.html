@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI Opportunity Radar</title>
+    <title>Open-source AI Opportunity Project Radar</title>
     <link rel="stylesheet" href="assets/style.css?v=20260703-ui7" />
     <style>
       .page-title h1 {
@@ -92,9 +92,9 @@
     <div class="page-glow" aria-hidden="true"></div>
     <div class="shell">
       <header class="page-title">
-        <p class="eyebrow">AI Opportunity Radar</p>
-        <h1>AI Opportunity Radar</h1>
-        <p class="page-subtitle">每日筛选最值得关注的 AI 项目、工具和机会信号。</p>
+        <p class="eyebrow">GitHub-only · V1.4</p>
+        <h1>Open-source AI Opportunity Project Radar</h1>
+        <p class="page-subtitle">每日只从 GitHub 筛选值得关注的开源 AI 项目、工具和机会信号。</p>
       </header>
 
       <nav class="tabs" aria-label="Dashboard sections">
@@ -147,7 +147,7 @@
 
           <section class="recommendation-head">
             <div>
-              <p class="eyebrow">今日信号</p>
+              <p class="eyebrow">GitHub 信号</p>
               <h2>今日推荐</h2>
             </div>
             <div class="toolbar">
@@ -165,7 +165,7 @@
                 <span>状态</span>
                 <select id="statusFilter">
                   <option value="">全部状态</option>
-                  <option value="favorite">收藏</option>
+                  <option value="starred">已收藏</option>
                   <option value="testing">测试中</option>
                   <option value="done">已完成</option>
                   <option value="dropped">已放弃</option>
@@ -173,44 +173,31 @@
               </label>
             </div>
             <div class="carousel-controls" aria-label="今日推荐切换">
-              <button class="carousel-button" id="recommendPrev" type="button" aria-label="上一组">‹</button>
-              <button class="carousel-button" id="recommendNext" type="button" aria-label="下一组">›</button>
+              <button class="carousel-button" id="carouselPrev" type="button" aria-label="上一组">‹</button>
+              <button class="carousel-button" id="carouselNext" type="button" aria-label="下一组">›</button>
             </div>
           </section>
-
-          <div class="cards recommended-rail" id="todayProjects"></div>
+          <section class="project-grid recommended-rail" id="todayProjects"></section>
         </section>
 
         <section class="panel" id="history">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">历史记录</p>
-              <h2>历史日报</h2>
-              <p>按日期查看每日机会信号和原始 JSON 数据。</p>
-            </div>
-          </div>
-          <div class="history-list" id="historyList"></div>
+          <section class="section-heading">
+            <p class="eyebrow">Reports</p>
+            <h2>历史日报</h2>
+          </section>
+          <section class="history-list" id="historyList"></section>
         </section>
 
         <section class="panel" id="library">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">机会池</p>
-              <h2>项目库</h2>
-              <p>汇总所有日报中的项目，查看出现次数、最近更新时间和状态。</p>
-            </div>
-          </div>
-          <div class="cards compact" id="libraryProjects"></div>
+          <section class="section-heading">
+            <p class="eyebrow">Project Library</p>
+            <h2>项目库</h2>
+            <p>按 GitHub 项目维度汇总历史出现次数、首次出现和最近出现。</p>
+          </section>
+          <section class="library-grid" id="libraryGrid"></section>
         </section>
       </main>
     </div>
-
-    <template id="emptyTemplate">
-      <div class="empty">
-        <strong>暂无数据</strong>
-        <p>请先写入 data/manifest.json 和 data/daily/YYYY-MM-DD.json。</p>
-      </div>
-    </template>
 
     <script src="assets/app.js?v=20260703-ui7"></script>
   </body>
