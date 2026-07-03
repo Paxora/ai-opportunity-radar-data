@@ -16,12 +16,12 @@ It has three jobs:
 
 ## Current Design
 
-The system now keeps only two daily artifacts:
+The system keeps two daily artifacts:
 
 - Dashboard JSON: `data/daily/YYYY-MM-DD.json`
-- Report HTML: `reports/html/YYYY-MM-DD.html`
+- Report page: `reports/html/YYYY-MM-DD.html`
 
-PDF output has been removed. The HTML file is the official daily report, and the UI should call it **日报** rather than **HTML 日报**.
+The HTML file is the official daily report, and the UI should call it **日报** rather than **HTML 日报**.
 
 ## What Writes Here
 
@@ -45,8 +45,6 @@ The expected manifest shape is:
   ]
 }
 ```
-
-Do not add a `pdf` field to `data/manifest.json`.
 
 ## Daily JSON Shape
 
@@ -110,7 +108,7 @@ It reads report data directly from the repository and supports:
 
 Status labels are stored in the browser's `localStorage`. They are not written back to GitHub.
 
-## Report HTML
+## Report Page
 
 Daily reports are stored here:
 
@@ -118,7 +116,7 @@ Daily reports are stored here:
 reports/html/YYYY-MM-DD.html
 ```
 
-These HTML files are the official daily reports. They should use the V1 visual structure:
+These files are the official daily reports. They should use the V1 visual structure:
 
 - Cover
 - Executive Summary
@@ -156,7 +154,7 @@ The current production flow is:
 ```text
 ChatGPT scheduled task
 ↓
-Generate daily JSON + report HTML
+Generate daily JSON + report page
 ↓
 Write to GitHub repository
 ↓
