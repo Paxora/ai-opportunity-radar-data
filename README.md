@@ -1,4 +1,4 @@
-# AI Opportunity Radar Data
+# Open-source AI Opportunity Project Radar Data
 
 <p>
   <a href="./README.md"><strong>English</strong></a>
@@ -6,211 +6,170 @@
   <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
-This repository is the data warehouse and static Dashboard for **AI Opportunity Radar**.
+This repository is the data warehouse and static dashboard for **Open-source AI Opportunity Project Radar**.
 
-It has three jobs:
+The radar has one clear scope:
 
-1. Relay station: ChatGPT scheduled tasks write daily report data here.
-2. Lightweight database: the Dashboard reads `data/manifest.json` and `data/daily/*.json`.
-3. Public display site: GitHub Pages hosts the Dashboard from `index.html`.
+```text
+Collection source: GitHub only
+Evaluation standard: V1.4 GitHub / open-source project standard
+```
 
-## Current Design
+Non-GitHub collection has been removed from the production scope. The system does not collect from Bilibili, Douyin, Xiaohongshu, YouTube, X, Product Hunt, Reddit, news sites, official product sites, or creator platforms.
+
+## What this repository does
+
+1. Stores daily GitHub-only radar reports.
+2. Stores lightweight JSON data for the static dashboard.
+3. Hosts the dashboard through GitHub Pages.
+
+## Daily artifacts
 
 The system keeps two daily artifacts:
 
 - Dashboard JSON: `data/daily/YYYY-MM-DD.json`
 - Report page: `reports/html/YYYY-MM-DD.html`
 
-Long-term tracking file:
+There is no non-GitHub watchlist in production.
 
-- Non-GitHub watchlist: `data/watchlist.json`
+## Source policy
 
-## Content Rules Overview
+The only collection source is GitHub.
 
-The system uses two tracks:
+Allowed GitHub sources include:
 
-```text
-V1.4: GitHub / open-source signal standard
-V1.5.1: non-GitHub product, platform, creator-tool, and ecosystem-chain signal standard
-```
+- GitHub repository search
+- GitHub repository metadata
+- GitHub README files
+- GitHub releases
+- GitHub issues / pull requests when useful
+- GitHub stars / forks / recent activity
+- GitHub demo links or documentation links found inside repository metadata or README files
 
-V1.5.1 does not replace V1.4. GitHub and open-source items still use V1.4. Non-GitHub products and platforms use V1.5.1.
+Not used as collection sources:
 
-## V1.4: GitHub / Open-source Standard
+- Bilibili
+- Douyin
+- Xiaohongshu
+- YouTube
+- X
+- Product Hunt
+- Reddit
+- News websites
+- Official non-GitHub product pages as primary discovery sources
+- Non-GitHub creator-platform watchlists
 
-Scope:
+External links found inside a GitHub repository can be recorded as supporting context, but they do not change the collection source. The candidate must originate from GitHub.
 
-- open-source projects
+## V1.4: GitHub / Open-source Project Standard
+
+V1.4 is the only active evaluation standard.
+
+Its goal is not to summarize AI news. Its goal is to identify open-source AI projects that are worth watching, testing, cloning, assigning to Codex, or turning into a practical workflow.
+
+### Scope
+
+V1.4 applies to:
+
+- Open-source AI projects
 - MCP tools
 - Agent frameworks
 - ComfyUI plugins / workflows
-- open-source video models
-- automation-tool repositories
+- Open-source video or image models
+- Automation-tool repositories
 - Vibe Coding / Codex-related tools
+- Tools that can improve the radar itself
 
-Each GitHub candidate should collect as many of these as possible:
+### Candidate data to collect
 
-- `stars`, `forks`, `star_growth`
-- `last_updated`, `archived`
-- `recent_activity`, releases, issues / PRs
-- `readme_quality`
-- demo / website / sample video
-- fit with AI video, photography, content production, Vibe Coding, or Opportunity Radar
+Each GitHub candidate should collect as many of these fields as possible:
 
-A Top GitHub item must have:
+- `stars`
+- `forks`
+- `star_growth` when reliable; if not reliable, state that it is unavailable
+- `last_updated`
+- `archived`
+- `recent_activity`
+- releases
+- issues / pull requests
+- README quality
+- demo / website / screenshots / sample videos
+- documentation quality
+- relevance to AI video, photography, content production, Vibe Coding, Codex, MCP, Agent workflows, or the radar system itself
+
+### Top selection requirements
+
+A GitHub item can enter the Top list only when it has:
 
 1. At least 2 hard data signals.
 2. At least 1 personal relevance signal.
 3. At least 1 clear 15-30 minute `today_action`.
 
-## V1.5.1: Non-GitHub & Ecosystem-chain Standard
+### Scoring model
 
-V1.5.1 covers non-GitHub content:
+| Dimension | Weight | Meaning |
+| --- | ---: | --- |
+| `data_score` | 20% | stars, forks, star growth, community attention |
+| `activity_score` | 20% | recent updates, commits, releases, issues / PRs |
+| `personal_fit_score` | 25% | relevance to AI video, photography, content production, radar, Vibe Coding |
+| `business_score` | 20% | potential to become SaaS, template, service, workflow, content product, or vertical solution |
+| `action_score` | 15% | whether there is a concrete action that can be done today |
 
-- AI video products: Seedance, Kling, Jimeng, Vidu, PixVerse, Runway, Pika, Veo, Sora, Luma, Hailuo, etc.
-- AIGC creation platforms: TapNow, Liblib.TV / LibTV, TusiArt, Krea, Civitai, OpenArt, Midjourney, Ideogram, Recraft, Canva, Firefly, etc.
-- Agent / automation platforms: Coze, Dify, n8n, FastGPT, Flowise, Langflow, Activepieces, Zapier, Make, Gumloop, etc.
-- Creator tools / workflows: infinite canvas, image-to-image, inpainting, outpainting, poster generation, storyboarding, AI photography, AI short-video workflows
+Items below 8.0 should not enter the Top list.
 
-Core flow:
+Items without a clear `today_action` should not enter the Top list.
 
-```text
-candidate discovery → type detection → multi-source verification → upstream/downstream merge → type-specific scoring → Top / observation / rejected
-```
+## Daily JSON shape
 
-## V1.5.1 Hard Rules
-
-### 1. Top must keep GitHub
-
-Each daily Top list must include:
-
-```text
-at least 2 GitHub / open-source items
-```
-
-If fewer than 2 qualified GitHub items are included, explain why in `rejected_candidates`.
-
-### 2. Well-known products cannot enter just because they are famous
-
-Seedance, n8n, Coze, Dify, Krea, Runway, Sora, and similar large products cannot enter Top only because they are strong.
-
-They need a concrete new signal:
-
-- new wrapper
-- new workflow
-- new creator case
-- new technical release
-- new open-source repository
-- new product entry
-- new directly testable path
-
-### 3. Merge upstream/downstream duplicates
-
-If multiple items refer to the same capability chain, merge them.
-
-Example:
-
-```text
-Seedance 2.0 = base model / capability source
-LibTV / Dreamina / Doubao / Krea / ComfyUI Seedance Node = product or workflow wrappers
-creator cases = real-use validation
-```
-
-Do not write them as unrelated opportunities. Write them as:
-
-```text
-Seedance ecosystem chain: base model → product wrapper → workflow → action today
-```
-
-### 4. Every Top item needs depth
-
-Every Top item must answer:
-
-1. What is non-obvious beyond common knowledge?
-2. What is the new signal today?
-3. How does it relate to photography / video / content production / Opportunity Radar?
-4. What are its upstream/downstream relationships?
-5. What exactly can be tested in 15-30 minutes today?
-
-If these cannot be answered, it should not enter Top.
-
-### 5. Do not force Top 5
-
-Prefer 3-4 high-quality items over filling the list with weak candidates.
-
-## Multi-source Verification
-
-A non-GitHub candidate needs at least 2 evidence types before it can enter Top.
-
-| Evidence type | Meaning |
-| --- | --- |
-| `official` | official website, announcement, changelog, official account, product entry |
-| `creator` | Bilibili, Douyin, Xiaohongshu, YouTube cases, tutorials, creator work streams |
-| `community` | X, Reddit, Product Hunt, Discord, comment discussion |
-| `technical` | GitHub, Hugging Face, ModelScope, arXiv, Papers with Code, public model or technical docs |
-
-News is background only. It must not be used as a core selection signal.
-
-## Watchlist
-
-`data/watchlist.json` is the fixed tracking list for non-GitHub content.
-
-When the user points out a missed item, add it to the Watchlist first, then track it with V1.5.1 rules.
-
-## Daily JSON Shape
-
-Each daily JSON file should support:
+Each daily JSON file should use V1.4:
 
 ```json
 {
   "date": "YYYY-MM-DD",
-  "version": "V1.5.1",
-  "title": "AI Opportunity Radar",
-  "theme": "今日主题",
+  "version": "V1.4",
+  "title": "Open-source AI Opportunity Project Radar",
+  "theme": "Daily GitHub open-source opportunity signals",
   "market_score": 8.6,
-  "today_mission": "今天最值得做的一件事",
+  "today_mission": "The most useful action today",
   "summary": [],
   "projects": [],
-  "ecosystem_chains": [],
-  "watchlist_observations": [],
   "rejected_candidates": []
 }
 ```
 
-Field meaning:
+### Project item fields
 
-- `projects`: today's Top items. GitHub items use V1.4; non-GitHub items use V1.5.1.
-- `ecosystem_chains`: upstream/downstream opportunity chains, for example Seedance → LibTV / Krea / ComfyUI → creator case → action today.
-- `watchlist_observations`: items with signals but not enough evidence or action value.
-- `rejected_candidates`: discovered but rejected items, with reasons.
-
-Recommended Top item fields:
+Recommended fields for each project:
 
 ```json
 {
-  "source_type": "github_open_source / aigc_creation_platform / ecosystem_chain",
-  "non_obvious_signal": "what is not common knowledge",
-  "relation": {
-    "base_model": "base model if applicable",
-    "product_wrapper": "product entry if applicable",
-    "workflow_layer": "workflow layer if applicable",
-    "creator_case": "case layer if applicable"
+  "id": "project-id",
+  "rank": 1,
+  "name": "Project name",
+  "source_type": "github_open_source",
+  "category": [],
+  "score": 8.8,
+  "scores": {
+    "data_score": 0,
+    "activity_score": 0,
+    "personal_fit_score": 0,
+    "business_score": 0,
+    "action_score": 0
   },
-  "evidence_pack": {
-    "official": "official evidence",
-    "creator": "creator evidence",
-    "community": "community evidence",
-    "technical": "technical evidence",
-    "evidence_count": 2,
-    "confidence": "A / B / C"
-  },
-  "today_action": "what to do in 15-30 minutes"
+  "github": "https://github.com/owner/repo",
+  "why_today": "Why this GitHub project matters today",
+  "evidence": [],
+  "opportunity": "What opportunity it suggests",
+  "risk": "Main risk or limitation",
+  "today_action": "What to do in 15-30 minutes",
+  "action_type": "test / clone / inspect / assign_to_codex / watch",
+  "timebox": "15-30 minutes"
 }
 ```
 
-## What Writes Here
+## Files updated by the scheduled task
 
-ChatGPT scheduled tasks should update these paths every day:
+The scheduled task should update:
 
 ```text
 data/daily/YYYY-MM-DD.json
@@ -220,7 +179,7 @@ data/manifest.json
 
 ## Dashboard
 
-The Dashboard is fully static:
+The dashboard is fully static:
 
 - `index.html`
 - `assets/style.css`
@@ -232,30 +191,32 @@ Dashboard URL:
 https://paxora.github.io/ai-opportunity-radar-data/
 ```
 
-## Scope
-
-This repository does not call the OpenAI API.
-
-ChatGPT scheduled tasks perform collection, judgment, and report generation. Codex only sets up and maintains repository infrastructure when needed.
-
-Current production flow:
+## Current production flow
 
 ```text
 ChatGPT scheduled task
 ↓
-Read data/watchlist.json
+Collect GitHub candidates only
 ↓
-Evaluate GitHub / open-source candidates with V1.4
+Evaluate candidates with V1.4
 ↓
-Evaluate non-GitHub products / platforms / creator tools with V1.5.1
+Generate Top GitHub / open-source projects + rejected candidates
 ↓
-Merge upstream/downstream ecosystem chains
+Write daily JSON and HTML report
 ↓
-Generate Top items + ecosystem chains + observations + rejected candidates
-↓
-Generate daily JSON + report page
-↓
-Write to GitHub repository
+Update manifest
 ↓
 Dashboard reads manifest + daily JSON
 ```
+
+## Explicitly out of scope
+
+The following are not part of the current production scope:
+
+- Non-GitHub product discovery
+- Bilibili / Douyin / Xiaohongshu collection
+- YouTube / X creator-signal collection
+- Product Hunt / Reddit community collection
+- News collection
+- Non-GitHub watchlists
+- V1.5 / V1.5.1 non-GitHub standards
