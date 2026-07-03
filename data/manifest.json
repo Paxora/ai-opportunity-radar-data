@@ -4,8 +4,7 @@
     {
       "date": "2026-07-03",
       "file": "data/daily/2026-07-03.json",
-      "html": "reports/html/2026-07-03.html",
-      "pdf": "reports/pdf/2026-07-03.pdf"
+      "html": "reports/html/2026-07-03.html"
     }
   ]
 }
