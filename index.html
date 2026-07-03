@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="assets/style.css" />
   </head>
   <body>
+    <div class="page-glow" aria-hidden="true"></div>
     <div class="shell">
-      <header class="topbar">
-        <div>
-          <p class="brand-kicker">AI Opportunity Radar</p>
-          <h1>机会项目雷达</h1>
+      <header class="nav">
+        <div class="nav-brand">
+          <span class="brand-dot"></span>
+          <strong>AI Opportunity Radar</strong>
         </div>
         <a class="button button-dark" id="todayHtml" href="#" hidden>打开日报</a>
       </header>
@@ -24,30 +25,42 @@
 
       <main>
         <section class="panel is-active" id="today">
-          <section class="hero">
-            <div class="hero-main">
+          <section class="hero-apple">
+            <div class="hero-copy-block">
               <p class="eyebrow" id="latestDate">--</p>
-              <h2 id="todayTitle">今日日报</h2>
+              <h1>机会项目雷达</h1>
+              <p id="todayTitle" class="hero-title-sub">今日日报</p>
               <p class="hero-copy" id="todayTheme">暂无日报。</p>
             </div>
-            <div class="hero-side">
-              <div class="metric primary">
-                <span class="metric-label">Market Score</span>
-                <strong id="marketScore">--</strong>
-              </div>
-              <div class="metric">
-                <span class="metric-label">Projects</span>
-                <strong id="projectCount">0</strong>
+            <div class="hero-visual" aria-label="Today signal overview">
+              <div class="orb orb-blue"></div>
+              <div class="orb orb-purple"></div>
+              <div class="glass-device">
+                <div class="device-topline"></div>
+                <div class="device-main-score">
+                  <span>Market Score</span>
+                  <strong id="marketScore">--</strong>
+                </div>
+                <div class="device-stats">
+                  <div>
+                    <span>Projects</span>
+                    <strong id="projectCount">0</strong>
+                  </div>
+                  <div>
+                    <span>Status</span>
+                    <strong>Live</strong>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          <section class="mission-board">
-            <div>
+          <section class="mission-layout">
+            <article class="mission-card">
               <p class="eyebrow">Today Mission</p>
               <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
-            </div>
-            <div class="top-project" id="topProject"></div>
+            </article>
+            <article class="top-project" id="topProject"></article>
           </section>
 
           <section class="summary-grid" id="summaryList"></section>
@@ -55,7 +68,7 @@
           <section class="workspace-head">
             <div>
               <p class="eyebrow">Opportunity Cards</p>
-              <h2>今日 5 个机会项目</h2>
+              <h2>今日机会项目</h2>
             </div>
             <div class="toolbar">
               <label class="search">
