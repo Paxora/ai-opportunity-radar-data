@@ -8,73 +8,86 @@
   </head>
   <body>
     <div class="shell">
-      <header class="hero">
+      <header class="topbar">
         <div>
-          <p class="eyebrow">AI Opportunity Radar</p>
-          <h1>Daily Signal Dashboard</h1>
-          <p class="hero-copy" id="heroCopy">等待日报数据写入后，这里会自动显示最新机会雷达。</p>
+          <p class="brand-kicker">AI Opportunity Radar</p>
+          <h1>机会项目雷达</h1>
         </div>
-        <div class="hero-metrics">
-          <div class="metric">
-            <span class="metric-label">Latest</span>
-            <strong id="latestDate">--</strong>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Market</span>
-            <strong id="marketScore">--</strong>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Projects</span>
-            <strong id="projectCount">0</strong>
-          </div>
-        </div>
+        <a class="button button-dark" id="todayHtml" href="#" hidden>打开日报</a>
       </header>
 
       <nav class="tabs" aria-label="Dashboard sections">
-        <button class="tab is-active" data-tab="today">今日日报</button>
+        <button class="tab is-active" data-tab="today">今日工作台</button>
         <button class="tab" data-tab="history">历史日报</button>
         <button class="tab" data-tab="library">项目库</button>
       </nav>
 
       <main>
         <section class="panel is-active" id="today">
-          <div class="section-head">
-            <div>
+          <section class="hero">
+            <div class="hero-main">
+              <p class="eyebrow" id="latestDate">--</p>
               <h2 id="todayTitle">今日日报</h2>
-              <p id="todayTheme">暂无日报。</p>
+              <p class="hero-copy" id="todayTheme">暂无日报。</p>
             </div>
-            <a class="button" id="todayHtml" href="#" hidden>打开日报</a>
-          </div>
-          <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
-          <div class="summary-grid" id="summaryList"></div>
-          <div class="toolbar">
-            <label class="search">
-              <span>搜索</span>
-              <input id="searchInput" type="search" placeholder="项目名、分类、行动..." />
-            </label>
-            <label class="select">
-              <span>分类</span>
-              <select id="categoryFilter">
-                <option value="">全部分类</option>
-              </select>
-            </label>
-            <label class="select">
-              <span>状态</span>
-              <select id="statusFilter">
-                <option value="">全部状态</option>
-                <option value="favorite">收藏</option>
-                <option value="testing">测试中</option>
-                <option value="done">已完成</option>
-                <option value="dropped">已放弃</option>
-              </select>
-            </label>
-          </div>
+            <div class="hero-side">
+              <div class="metric primary">
+                <span class="metric-label">Market Score</span>
+                <strong id="marketScore">--</strong>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Projects</span>
+                <strong id="projectCount">0</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="mission-board">
+            <div>
+              <p class="eyebrow">Today Mission</p>
+              <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
+            </div>
+            <div class="top-project" id="topProject"></div>
+          </section>
+
+          <section class="summary-grid" id="summaryList"></section>
+
+          <section class="workspace-head">
+            <div>
+              <p class="eyebrow">Opportunity Cards</p>
+              <h2>今日 5 个机会项目</h2>
+            </div>
+            <div class="toolbar">
+              <label class="search">
+                <span>搜索</span>
+                <input id="searchInput" type="search" placeholder="项目名、分类、行动..." />
+              </label>
+              <label class="select">
+                <span>分类</span>
+                <select id="categoryFilter">
+                  <option value="">全部分类</option>
+                </select>
+              </label>
+              <label class="select">
+                <span>状态</span>
+                <select id="statusFilter">
+                  <option value="">全部状态</option>
+                  <option value="favorite">收藏</option>
+                  <option value="testing">测试中</option>
+                  <option value="done">已完成</option>
+                  <option value="dropped">已放弃</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
           <div class="cards" id="todayProjects"></div>
         </section>
 
         <section class="panel" id="history">
           <div class="section-head">
             <div>
+              <p class="eyebrow">Archive</p>
               <h2>历史日报</h2>
               <p>按日期查看日报和 JSON 数据。</p>
             </div>
@@ -85,6 +98,7 @@
         <section class="panel" id="library">
           <div class="section-head">
             <div>
+              <p class="eyebrow">Opportunity Pool</p>
               <h2>项目库</h2>
               <p>汇总所有日报中的项目，查看出现次数和时间线。</p>
             </div>
