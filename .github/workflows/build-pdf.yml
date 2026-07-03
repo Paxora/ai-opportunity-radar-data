@@ -35,7 +35,15 @@ jobs:
         run: node scripts/html_to_pdf.mjs
 
       - name: Commit generated PDFs
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Build PDF reports"
-          file_pattern: "reports/pdf/*.pdf"
+        run: |
+          if [ -z "$(git status --porcelain reports/pdf)" ]; then
+            echo "No new PDFs to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add reports/pdf/*.pdf
+          git commit -m "Build PDF reports"
+          git push origin HEAD:main

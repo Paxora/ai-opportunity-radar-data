@@ -10,6 +10,7 @@ const appState = {
   reports: new Map(),
   allProjects: [],
   library: [],
+  availablePaths: new Map(),
   search: "",
   category: "",
   status: "",
@@ -24,6 +25,32 @@ async function fetchJson(path) {
     throw new Error(`Failed to load ${path}`);
   }
   return response.json();
+}
+
+async function pathExists(path) {
+  if (!path) return false;
+  if (appState.availablePaths.has(path)) {
+    return appState.availablePaths.get(path);
+  }
+
+  let exists = false;
+  try {
+    const response = await fetch(path, { method: "HEAD", cache: "no-store" });
+    exists = response.ok;
+  } catch (error) {
+    exists = false;
+  }
+
+  appState.availablePaths.set(path, exists);
+  return exists;
+}
+
+async function updateReportFileAvailability() {
+  await Promise.all(
+    (appState.manifest.days || []).map(async (day) => {
+      day.pdfAvailable = await pathExists(day.pdf);
+    }),
+  );
 }
 
 function projectKey(project) {
@@ -210,7 +237,7 @@ function renderHistory() {
             <div class="history-actions">
               ${day.file ? `<a href="${escapeAttr(day.file)}" target="_blank" rel="noreferrer">JSON</a>` : ""}
               ${day.html ? `<a href="${escapeAttr(day.html)}" target="_blank" rel="noreferrer">HTML</a>` : ""}
-              ${day.pdf ? `<a href="${escapeAttr(day.pdf)}" target="_blank" rel="noreferrer">PDF</a>` : ""}
+              ${day.pdfAvailable ? `<a href="${escapeAttr(day.pdf)}" target="_blank" rel="noreferrer">PDF</a>` : ""}
             </div>
           </div>`,
         )
@@ -219,7 +246,7 @@ function renderHistory() {
 }
 
 function renderArchive() {
-  const pdfs = (appState.manifest.days || []).filter((day) => day.pdf);
+  const pdfs = (appState.manifest.days || []).filter((day) => day.pdfAvailable);
   $("#archiveGrid").innerHTML = pdfs.length
     ? pdfs
         .map(
@@ -316,6 +343,7 @@ async function init() {
       appState.manifest.latest = appState.manifest.days[0].date;
     }
 
+    await updateReportFileAvailability();
     buildLibrary();
     updateCategoryFilter();
     renderToday(appState.reports.get(appState.manifest.latest));
