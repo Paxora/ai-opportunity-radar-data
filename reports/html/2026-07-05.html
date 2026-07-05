@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open-source AI Opportunity 2026-07-05</title>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#f5f5f7;color:#1d1d1f;line-height:1.65}
+    main{max-width:1040px;margin:0 auto;padding:48px 24px}
+    h1{font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.04em}
+    h2{font-size:28px;margin:38px 0 14px;letter-spacing:-.03em}
+    h3{font-size:22px;margin:0 0 8px}
+    .muted{color:#6e6e73}.hero,.card{background:#fff;border:1px solid #e5e5ea;border-radius:28px;padding:28px;margin:18px 0;box-shadow:0 18px 45px rgba(0,0,0,.04)}
+    .score{display:inline-flex;align-items:center;justify-content:center;background:#1d1d1f;color:white;border-radius:999px;padding:4px 12px;font-weight:700;margin-left:8px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.chip{background:#f2f2f7;border:1px solid #e5e5ea;border-radius:999px;padding:4px 10px;font-size:13px;color:#424245}
+    pre{white-space:pre-wrap;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:18px;padding:18px;overflow:auto}
+    a{color:#06c;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.summary{background:#fff;border:1px solid #e5e5ea;border-radius:22px;padding:18px}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <p class="muted">2026-07-05 · V1.5-value-first</p>
+    <h1>Open-source AI Opportunity</h1>
+    <p>从工具榜升级到可持续运行和可维护的机会方案</p>
+    <h2>今日 Codex 提示词</h2>
+    <p>优先做 InfiAgent 长周期研究状态引擎：把每日机会雷达从一次性生成，升级成能读取历史、去重、沉淀规则的连续系统。</p>
+  </section>
+
+  <section class="grid">
+    <div class="summary">今天的核心不是追新工具，而是解决 AI Opportunity Radar 长期运行的三个问题：状态丢失、stars 误导、AI 生成代码维护风险。</div>
+    <div class="summary">Top 5 全部转成可执行方案：长周期状态引擎、项目健康度评分器、AI 代码质量守门、PR churn 风险检查、安全版 Figma MCP 流。</div>
+    <div class="summary">优先级最高的是 InfiAgent 思路：先把历史状态和用户反馈固化成文件，再让每天 9 点的日报变得更稳定。</div>
+  </section>
+
+  <h2>Top 5 机会方案</h2>
+
+  <article class="card">
+    <h3>#1 InfiAgent：长周期研究任务的文件状态引擎 <span class="score">9.4</span></h3>
+    <div class="chips"><span class="chip">Agent workflow</span><span class="chip">Research workflow</span><span class="chip">System workflow</span><span class="chip">AI workflow</span></div>
+    <p><strong>价值判断：</strong>InfiAgent 的机会不是又一个 Agent 框架，而是把长周期任务的上下文从聊天窗口迁移到文件化 workspace state，适合解决日报、资料研究、项目拆解这类多轮任务越跑越乱的问题。</p>
+    <p><strong>解决的问题：</strong>每日雷达容易丢状态、重复推荐、忘记昨天规则；文件状态引擎可以让每次运行先读历史快照，再输出增量结果。</p>
+    <p><strong>主流方案对比：</strong>prompt chaining 适合短流程，RAG 适合检索资料；文件化状态更适合可恢复的长周期研究流水线。</p>
+    <pre>你现在是我的 AI 研究系统架构师。
+
+目标：参考 InfiAgent 的文件化状态思路，为 Open-source AI Opportunity Radar 设计一个“长周期研究状态引擎”，让每日任务能读取历史、避免重复、保留判断依据，并稳定生成新的日报 JSON。
+
+请不要介绍 InfiAgent 是什么，直接输出可开发方案。
+
+请按下面结构输出：
+1. 当前日报生成为什么会出现状态丢失、重复推荐、规则漂移
+2. 设计 workspace state 文件结构，至少包含候选池、已推荐项目、淘汰原因、评分规则、UI 约束、运行日志
+3. 每次运行开始时 Codex 应该读取哪些文件，结束时写回哪些文件
+4. 如何判断一个项目是新机会还是旧工具重复出现
+5. 如何把昨天的用户反馈变成今天的硬规则
+6. 给出最小目录结构和 JSON schema
+7. 给出 daily_run.py 的伪代码
+8. 今天 30 分钟内如何用 3 条 mock 候选验证闭环
+
+限制：
+- 不要重做 Dashboard UI
+- 不要引入大型数据库
+- 先用本地 JSON / Markdown 文件完成
+- 输出要能直接交给 Codex 开发。</pre>
+    <p><a href="https://github.com/ChenglinPoly/infiAgent">GitHub</a></p>
+  </article>
+
+  <article class="card">
+    <h3>#2 Agent 框架健康度评分器：别再只看 stars <span class="score">9.2</span></h3>
+    <p><strong>价值判断：</strong>用 contributor density、PR 活跃度、留存、跨生态贡献来替代热门项目榜，直接提升日报筛选质量。</p>
+    <pre>你现在是我的开源 AI 项目评估系统设计师。
+
+目标：给 Open-source AI Opportunity Radar 增加一个“项目健康度评分器”，不要只看 GitHub stars，而是综合判断项目是否真的值得研究和复用。
+
+请按结构输出评分字段、获取方式、100 分公式、如何接入 daily JSON、rejected_candidates 自动原因、最小 Python 脚本和 30 分钟验证步骤。</pre>
+  </article>
+
+  <article class="card">
+    <h3>#3 Godot AI 贡献禁令：AI 代码提交质量守门模板 <span class="score">8.9</span></h3>
+    <p><strong>价值判断：</strong>不是完全禁止 AI 写代码，而是给 vibe coding 项目加 PR 模板、禁止项、允许项和提交前自查，防止维护债。</p>
+    <pre>你现在是我的 AI 代码质量守门员。
+
+目标：参考 Godot 对 AI-authored code 的治理信号，为我的个人 GitHub 项目设计一套“AI 代码提交质量守门模板”，用于 Codex / Claude Code / Cursor 生成代码后的提交检查。
+
+请输出 PR 模板、pre-merge checklist、禁止项、允许项、Codex 自查提示词和 30 分钟接入步骤。</pre>
+    <p><a href="https://github.com/godotengine/godot">GitHub</a></p>
+  </article>
+
+  <article class="card">
+    <h3>#4 Agent PR Churn 检查器：预测 AI 改动后续维护风险 <span class="score">8.7</span></h3>
+    <p><strong>价值判断：</strong>不只看当前 PR 是否通过，而是用 diff 指标评估 AI 改动后续会不会变成维护债。</p>
+    <pre>你现在是我的 AI PR 风险评估助手。
+
+目标：设计一个“Agent PR Churn 检查器”，用于评估 Codex / Claude Code 生成的代码改动是否可能带来后续维护风险。
+
+请输出风险指标、从 git diff 提取方法、低中高风险规则、pr_risk_report.md 模板、阻止自动提交条件和 30 分钟验证步骤。</pre>
+  </article>
+
+  <article class="card">
+    <h3>#5 Figma MCP 安全版设计稿还原流 <span class="score">8.5</span></h3>
+    <p><strong>价值判断：</strong>把 Figma 到代码从“直接装 MCP 全权限跑”改成最小权限、固定版本、可回滚的安全工作流。</p>
+    <pre>你现在是我的 MCP 安全工作流设计助手。
+
+目标：基于 Figma Context MCP，设计一条“安全版 Figma 到前端代码还原流”，既能让 Codex 读取 Figma 设计信息，又尽量降低第三方 MCP 和本地命令执行风险。
+
+请输出风险点、最小权限原则、版本锁定、MCP 配置、Codex 使用流程、安全检查清单、漏洞回滚和 30 分钟 demo 验证步骤。</pre>
+    <p><a href="https://github.com/GLips/Figma-Context-MCP">GitHub</a></p>
+  </article>
+
+  <h2>淘汰候选</h2>
+  <ul>
+    <li>OpenClaw：热度强，但今天对 Dashboard 稳定生成和可维护工作流不如状态引擎、评分器直接。</li>
+    <li>AutoGPT：经典但偏历史，不适合作为今天 Top，只作为不要只看 stars 的反例。</li>
+    <li>Manus：专有 agent 产品，不符合 open-source GitHub-first 主筛选标准。</li>
+    <li>Figma 官方 MCP 新闻：已合并进安全版 Figma MCP 流，转成可执行方案。</li>
+    <li>Godot AI ban 新闻：已转成 AI 代码提交质量守门模板。</li>
+  </ul>
+</main>
+</body>
+</html>
