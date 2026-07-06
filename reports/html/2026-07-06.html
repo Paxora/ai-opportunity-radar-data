@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open-source AI Opportunity · 2026-07-06</title>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f7;color:#1d1d1f;margin:0;padding:40px;line-height:1.6}
+    main{max-width:1040px;margin:0 auto}
+    h1{font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.04em}
+    h2{font-size:28px;margin:40px 0 16px;letter-spacing:-.03em}
+    article,.mission,.summary,.reject{background:#fff;border:1px solid #e5e5ea;border-radius:24px;padding:24px;margin:18px 0;box-shadow:0 16px 40px rgba(0,0,0,.04)}
+    .eyebrow{color:#6e6e73;text-transform:uppercase;font-size:12px;font-weight:700;letter-spacing:.08em;margin:0 0 8px}
+    .score{float:right;font-size:28px;font-weight:800;color:#06c}
+    .chips span{display:inline-block;background:#eef5ff;color:#06c;border-radius:999px;padding:4px 10px;margin:4px 6px 4px 0;font-size:13px;font-weight:600}
+    pre{white-space:pre-wrap;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:16px;padding:16px;overflow:auto}
+    a{color:#06c;text-decoration:none;font-weight:600}
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Open-source AI Opportunity V1.5</p>
+  <h1>2026-07-06 今日机会方案</h1>
+  <section class="mission"><p class="eyebrow">今日 Codex 提示词</p><p>请在当前仓库里实现一个“机会方案卡片验证器”：读取 data/daily/*.json，检查每条 Top 是否都有 name、source_project、github、category、score、value_insight、problem_solved、mainstream_comparison、codex_prompt、today_action、next_opportunity、evidence；同时检查 codex_prompt 是否是可直接执行的完整提示词，而不是 input/process/output 这种抽象结构。输出一份 validation-report.md，并在发现字段缺失时给出具体修复建议。</p></section>
+  <section class="summary"><p>今天的机会重点不是单个热门工具，而是把 agent、MCP、ComfyUI、Blender previs 和自动剪辑转成可复用工作流资产。</p><p>优先选择能直接交给 Codex 落地的方案：视频素材粗剪、Seedance 镜头预演、ComfyUI 本地工作流、MCP 调试、循环式提示词库。</p><p>淘汰标准继续收紧：只有星标、只有概念、只有教程合集、没有可执行路径或缺少真实使用场景的项目不进入 Top。</p></section>
+  <h2>Top 5</h2>
+  <article><div class="score">93</div><h3>Agentic Video Editor：摄影师素材粗剪工作流</h3><p><a href="https://github.com/Don-Uwe/video-editor-ai-agent">GitHub</a></p><div class="chips"><span>AI workflow</span><span>Content workflow</span><span>Short video</span><span>Agent framework</span></div><p><strong>价值判断：</strong>把 raw footage + creative brief 变成可重复的素材筛选、裁切、渲染、复核流水线。</p><p><strong>解决的问题：</strong>拍摄后素材量大，人工先筛片、找可用镜头、做粗剪非常耗时。</p><p><strong>主流方案对比：</strong>剪辑软件强在精修，纯生成工具不能处理真实素材；它卡在真实素材后期自动化。</p><pre>你现在是我的视频后期自动化工程师。请参考 Agentic Video Editor 的思路，在当前仓库里设计并实现一个最小版 raw footage 粗剪流水线：1）输入一个 footage 文件夹和 brief.json；2）用 ffprobe 扫描视频时长、分辨率、音轨信息并生成 footage-index.json；3）根据 brief 生成一个 edit-plan.json，包含推荐片段、起止时间、用途说明和风险提示；4）用 ffmpeg 按 edit-plan 导出 rough-cut.mp4；5）生成 review-report.md，列出每个片段为什么被选中、哪些地方需要人工复核。先不要接真实大模型，先用规则和 mock scorer 跑通完整流程；保留接口，后续可以接入 Gemini/OpenAI 作为 Director 和 Reviewer。请给出目录结构、核心代码、运行命令和一个 sample brief。</pre></article>
+  <article><div class="score">91</div><h3>Blender + Seedance：产品视频镜头预演工作流</h3><p><a href="https://github.com/Evolink-AI/Awesome-Blender-Seedance-Workflow-Usecases">GitHub</a></p><div class="chips"><span>AI workflow</span><span>Marketing video</span><span>Multimodal</span><span>Content workflow</span></div><p><strong>价值判断：</strong>先用 Blender/Blender MCP 做镜头、运动、角色位置预演，再把 reference video 交给视频模型生成。</p><p><strong>解决的问题：</strong>直接文生视频很难稳定控制镜头运动、人物走位和空间关系。</p><p><strong>主流方案对比：</strong>传统 3D 预演成本高，纯 AI 视频提示词不可控；低成本 blockout + 视频生成更适合小团队。</p><pre>你现在是我的 AIGC 视频工作流产品经理和 Codex 开发助手。请在当前仓库里设计一个“Blender previs → 视频生成提示词包”的最小工具：1）输入 shot_brief.md，里面包含产品、场景、镜头运动、时长、画幅、风格；2）输出 blender_blockout_plan.md，说明需要创建哪些几何体、相机路径、关键帧和运动节奏；3）输出 seedance_prompt.md，包含 start frame 描述、reference video 使用说明、镜头语言、负面约束和质量检查项；4）输出一个 checklist.md，告诉用户如何在 Blender MCP 中执行、导出 viewport preview，并把 preview 作为视频模型参考。不要调用外部 API，先生成结构化文件和模板。请给出可运行 CLI、示例输入和示例输出。</pre></article>
+  <article><div class="score">89</div><h3>ComfyUI-Agent-Kit：本地 AIGC 工作流模板资产化</h3><p><a href="https://github.com/SlavaSexton/ComfyUI-Agent-Kit">GitHub</a></p><div class="chips"><span>AI workflow</span><span>Multimodal</span><span>Content workflow</span><span>MCP</span></div><p><strong>价值判断：</strong>把 ComfyUI 工作流从一次性节点图变成 agent 可读取、可验证、可复用、可保存的模板资产。</p><p><strong>解决的问题：</strong>ComfyUI workflow 经常依赖不清晰、复用成本高。</p><p><strong>主流方案对比：</strong>模板站只提供下载，云平台不可控；本地资产库更适合专业创作者。</p><pre>你现在是我的 ComfyUI workflow 资产化助手。请在当前仓库里实现一个最小版 ComfyUI workflow 采集与验证系统：1）新建 workflows/ 目录，每条记录包含 source_url、scene、input_assets、core_nodes、model_dependencies、replaceable_parts、commercial_value、run_difficulty、json_path；2）提供一个 validate_workflow_record.py，检查字段是否完整、是否有 JSON、是否写清依赖模型和可替换部分；3）提供一个 workflow_score.py，根据可复用性、商业价值、跑通难度、依赖清晰度给 0-100 分；4）生成 workflow_library.md，把合格 workflow 输出成表格；5）用一个“产品图动态化短视频”样例填充完整记录。不要连接真实 ComfyUI，先把资产管理和评分规则跑通。</pre></article>
+  <article><div class="score">86</div><h3>mcpsnoop：MCP 工具调用调试工作台</h3><p><a href="https://github.com/kerlenton/mcpsnoop">GitHub</a></p><div class="chips"><span>MCP</span><span>Agent framework</span><span>System workflow</span><span>Evaluation</span></div><p><strong>价值判断：</strong>把 MCP 调试变成可观察工作流，适合所有正在搭 Codex/Claude/Cursor MCP 的人。</p><p><strong>解决的问题：</strong>MCP server 配好了但 agent 不调用、参数不对、调用挂起、日志看不懂。</p><p><strong>主流方案对比：</strong>MCP Inspector 更像测试客户端；透明代理能看真实调用路径。</p><pre>你现在是我的 MCP 调试工程师。请在当前仓库里写一份 MCP 调试工作台方案，并实现一个最小 mock：1）创建 docs/mcp-debug-playbook.md，解释如何用透明代理思路排查 MCP 不调用、参数错误、调用超时、capability 不一致；2）实现一个 scripts/mock_mcp_proxy_logger.py，模拟记录 client→server 和 server→client 的 JSON-RPC frame；3）提供 examples/mcp_frames.jsonl，包含正常 tool call、参数错误、pending 超时、server error 四种案例；4）生成 analyze_mcp_frames.py，读取 jsonl 并输出问题诊断报告；5）在 README 中写明如何把这个思路迁移到真实 mcpsnoop。不要真正启动 MCP server，先把排查方法和日志分析闭环做出来。</pre></article>
+  <article><div class="score">84</div><h3>Loopy：可复用 Codex 循环提示词库</h3><p><a href="https://github.com/Forward-Future/loopy">GitHub</a></p><div class="chips"><span>Agent framework</span><span>Workflow</span><span>Value-first</span><span>Evaluation</span></div><p><strong>价值判断：</strong>把一次性 prompt 变成有检查、有反馈、有停止条件的循环工作流。</p><p><strong>解决的问题：</strong>给 Codex 的提示词经常太开放，执行后不知道是否成功，也不知道下一步该继续、停止还是回退。</p><p><strong>主流方案对比：</strong>普通 prompt library 只给一句提示词；loop 更像可执行 playbook。</p><pre>你现在是我的 Codex 工作流设计助手。请在当前仓库里为 Open-source AI Opportunity Dashboard 增加一个 loops/ 目录，并创建一个“日报质量改进循环”模板：1）目标：每天生成的机会方案必须不是工具榜，而是可落地方案；2）检查：读取 data/daily 最新 JSON，检查 Top 5 是否有价值判断、问题、对比、codex_prompt、evidence；3）行动：如果发现某条像工具介绍，自动生成 rewrite_suggestion.md；4）停止条件：Top 5 全部通过字段完整性和价值判断检查；5）输出：daily-loop-receipt.md，记录检查结果、修改建议、是否通过。请实现 validate_daily_loop.py，并给出运行命令。</pre></article>
+  <h2>Rejected Candidates</h2>
+  <section class="reject"><p><strong>gemini-search-mcp：</strong>更像免费搜索 MCP 替代品，价值点偏工具接入，后续可作为低成本信息源采集候选。</p><p><strong>Awesome Vibe Research：</strong>内容质量高，但更偏科研流程资料库，和当前摄影/AIGC/机会雷达主线弱。</p><p><strong>AI-Trading-Skills：</strong>交易类风险较高，和当前主线不一致。</p><p><strong>MiMo-Code：</strong>更偏代码模型本身，容易变成模型榜。</p><p><strong>ComfyUI 单一插件：</strong>信号太窄，缺少完整 workflow 和商业复用路径。</p></section>
+</main>
+</body>
+</html>
