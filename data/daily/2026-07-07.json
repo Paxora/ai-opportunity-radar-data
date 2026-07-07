@@ -1,0 +1,139 @@
+{
+  "date": "2026-07-07",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "请在当前仓库里实现一个“AI 机会线索收集器 V0”：读取一个 sources.yaml，支持 GitHub repo、README URL、手动粘贴的候选项目三类输入；为每个候选生成 candidate-card.json，字段包含 source_project、github、category、raw_signal、real_user_scenario、possible_workflow、risk、score_reason；最后输出 candidates-review.md，按“是否能转成具体落地方案”排序。不要做工具榜，不要只按 star 排名，先用 mock 数据跑通完整流程。",
+  "summary": [
+    "今天的重点是把“AI agent 和工作流工具”转成可落地的工作台，而不是继续堆热门项目名。",
+    "优先选择能直接帮你做机会雷达、AIGC 工作流资产库、浏览器采集、私有知识检索和团队流程自动化的项目。",
+    "淘汰标准继续收紧：只有概念、只有 API 包装、缺少可执行工作流、没有真实使用场景或明显需要重成本部署的项目不进入 Top。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "OpenSail：把每日机会雷达升级成可审计 Agent 工作流",
+      "source_project": "OpenSail",
+      "github": "https://github.com/TesslateAI/OpenSail",
+      "category": ["Agent framework", "Workflow", "Production agents", "Automation"],
+      "score": 94,
+      "value_insight": "OpenSail 的价值不是“又一个 Codex/Cursor 替代品”，而是把一次性 AI 任务变成可调度、可审批、可记录、可迁移的工作流。对你的 Opportunity Radar 来说，它代表下一阶段方向：日报不是生成一次就结束，而是变成可复用、可追踪、可回滚的 agent 流程资产。",
+      "problem_solved": "现在的日报依赖一次性执行：收集、判断、写文件、更新 dashboard 都容易出现漏路径、manifest 没更新、UI 缓存不刷新等问题。OpenSail 的思路可以把这些步骤拆成触发器、agent action、审批、预算、日志、交付目标和运行历史。",
+      "mainstream_comparison": "普通 n8n 更偏连接器和自动化，Codex 更偏代码执行，ChatGPT 计划任务更偏定时触发；OpenSail 的差异是把 agent、工作区、审批、预算、日志、连接器和可复用 app 放在同一层，更适合把“稳定日报系统”做成长期产品。",
+      "codex_prompt": "你现在是我的 AI 工作流系统架构师。请在当前仓库里设计并实现一个最小版“日报生成运行收据系统”：1）新增 runs/ 目录，每次生成日报后写入 runs/YYYY-MM-DD.json；2）收据必须记录 started_at、finished_at、input_sources、generated_files、manifest_latest、validation_checks、warnings、commit_sha；3）新增 scripts/validate_daily_run.py，检查 data/daily/YYYY-MM-DD.json、reports/html/YYYY-MM-DD.html、data/manifest.json 是否一致；4）如果检查失败，生成 runs/YYYY-MM-DD-fix.md，列出具体修复步骤；5）更新 README，说明每天生成日报后如何运行验证。不要接外部服务，先用本地文件把“可审计日报流程”跑通。",
+      "today_action": "先给 2026-07-07 的日报补一份 run receipt，让日报生成不再只是提交文件，而是有可检查的运行记录。",
+      "next_opportunity": "后续可以把日报系统升级成真正的 AgentOps Dashboard：每次收集了哪些来源、为什么入选、为什么淘汰、哪一步失败、如何修复，都能在 dashboard 里看到。",
+      "evidence": [
+        "OpenSail README 明确强调可调度、可触发、可审批、可预算、可追踪和可复用的 AI workflows。",
+        "README 举例包含 every morning check sources、update Linear、send result to Slack 这类定时信息流程，和日报系统高度贴合。",
+        "项目强调 run history、预算、权限、日志、human review，正好解决当前 dashboard 自动更新的稳定性问题。"
+      ],
+      "video_links": [{"label": "GitHub", "url": "https://github.com/TesslateAI/OpenSail"}]
+    },
+    {
+      "rank": 2,
+      "name": "ByteChef：把 AI 机会线索采集做成可视化 Agent + Workflow",
+      "source_project": "ByteChef",
+      "github": "https://github.com/bytechefhq/bytechef",
+      "category": ["AI workflow", "Agent framework", "Automation", "MCP"],
+      "score": 92,
+      "value_insight": "ByteChef 的机会点不是替代 n8n，而是把“工作流自动化”和“AI agent 循环”合在同一个可视化平台里。对你最有价值的是：用它的产品结构反推你的机会雷达采集器应该怎么设计——信息源、过滤、agent 判断、结构化输出、失败解释、修复建议都应该是节点。",
+      "problem_solved": "现在机会线索收集容易停留在搜索结果和人工判断，缺少一套可复用的采集节点、判断节点、去重节点、证据节点和输出节点。ByteChef 的 Agent component、tool selection、structured output、guardrails 和 Copilot 生成 workflow，适合作为机会雷达 V2 的参考结构。",
+      "mainstream_comparison": "n8n 擅长自动化连接，但 AI 判断链路需要自己拼；纯 Agent 框架擅长推理，但流程可视化和失败排查弱。ByteChef 把两者合并，适合做“可解释的线索采集流水线”。",
+      "codex_prompt": "你现在是我的自动化产品经理和 Codex 开发助手。请在当前仓库里实现一个“AI 机会线索采集工作流 DSL”：1）新增 workflows/opportunity-radar.yaml，定义 source、fetch、dedupe、score、reject、export 六类节点；2）新增 scripts/run_workflow_mock.py，读取 yaml 后用 mock 数据模拟执行；3）每个候选必须输出 raw_signal、value_scenario、workflow_idea、rejection_reason 或 selected_reason；4）生成 data/candidates/YYYY-MM-DD.json 和 reports/candidates/YYYY-MM-DD.md；5）README 中解释如何把这个 DSL 后续接到 GitHub Search、Reddit、Product Hunt、YouTube/Bilibili。先不要调用真实 API，先跑通可视化工作流背后的数据结构。",
+      "today_action": "先把机会雷达的采集逻辑写成 workflow yaml，让“收集规则”从口头标准变成可执行配置。",
+      "next_opportunity": "后续可以接入真实 GitHub Search 和 RSS，再把每一步失败原因显示在 dashboard：为什么没选、缺什么证据、是否需要人工复核。",
+      "evidence": [
+        "ByteChef README 描述为统一 AI agent orchestration 和 workflow automation 的开源平台。",
+        "README 说明 AI Agent component 执行 model → tool selection → execution → observation → next step 的完整 agent loop。",
+        "README 列出 MCP in/out、guardrails、RAG、structured output、Copilot 生成 workflow 等能力，适合拆成机会采集流水线。"
+      ],
+      "video_links": [{"label": "GitHub", "url": "https://github.com/bytechefhq/bytechef"}]
+    },
+    {
+      "rank": 3,
+      "name": "Nanobrowser：低成本网页采集与竞品观察 Agent",
+      "source_project": "Nanobrowser",
+      "github": "https://github.com/nanobrowser/nanobrowser",
+      "category": ["Agent framework", "Research workflow", "Automation", "Browser agent"],
+      "score": 90,
+      "value_insight": "Nanobrowser 的价值不是“免费 Operator”，而是给你一个低成本网页操作 agent 的产品范式：在浏览器里完成搜索、打开页面、提取信息、遇到问题自我纠正。对机会雷达来说，它可以成为“人工可监督的网页采集助手”，特别适合那些 GitHub API 抓不到的 demo、教程、案例、评论区信号。",
+      "problem_solved": "很多有价值的 AI 项目不只在 GitHub README 里，真实价值往往藏在 demo 页面、Chrome 商店、YouTube/Bilibili 案例、论坛评论和文档页面。纯 API 抓取不够，人工浏览又耗时。浏览器 agent 可以补上网页观察和手动验证之间的空白。",
+      "mainstream_comparison": "OpenAI Operator 价格和封闭性更高，传统爬虫对动态网页和登录页面不友好；Nanobrowser 本地浏览器运行、支持多模型和多 agent，更适合做轻量、可监督、可替换模型的采集助手。",
+      "codex_prompt": "你现在是我的网页采集自动化助手。请在当前仓库里实现一个“浏览器采集任务模板库”：1）新增 browser_tasks/ 目录；2）创建 github_project_review.md、producthunt_review.md、youtube_case_review.md 三个任务模板；3）每个模板都必须包含目标、打开哪些页面、需要提取哪些字段、如何判断真实使用价值、如何记录证据、遇到登录/反爬/信息不足时如何停止；4）新增 scripts/browser_task_to_candidate.py，把人工或 agent 填好的 markdown 转成 candidate-card.json；5）输出 examples/browser_candidate_example.json，演示一个项目如何从网页观察转成机会候选。不要调用真实浏览器，先把任务模板和结构化转换跑通。",
+      "today_action": "先做三个网页采集任务模板，把以后让浏览器 agent 看的内容标准化。",
+      "next_opportunity": "后续可把 Nanobrowser/Browser-use 类工具接进来，让它按模板收集 demo、教程、评论和使用案例，再由 Codex 汇总成日报候选。",
+      "evidence": [
+        "Nanobrowser README 说明它是运行在浏览器中的开源 AI web automation 工具。",
+        "README 强调 multi-agent system、Planner 与 Navigator 协作、自我纠正和实时网页分析。",
+        "README 说明它本地运行、可选择 OpenAI、Anthropic、Gemini、Ollama、Groq 等模型，适合低成本采集验证。"
+      ],
+      "video_links": [{"label": "GitHub", "url": "https://github.com/nanobrowser/nanobrowser"}]
+    },
+    {
+      "rank": 4,
+      "name": "DJZ-Workflows：ComfyUI 工作流素材库筛选器",
+      "source_project": "DJZ-Workflows",
+      "github": "https://github.com/MushroomFleet/DJZ-Workflows",
+      "category": ["AI workflow", "Content workflow", "ComfyUI", "Short video"],
+      "score": 88,
+      "value_insight": "DJZ-Workflows 的价值不是“1000 个 workflow 很多”，而是它暴露了一个更真实的问题：AIGC 工作流资产会越来越多，但创作者真正需要的是筛选、归类、依赖检查、商业场景匹配和跑通难度评估。对你来说，机会不是收藏 workflow，而是做“工作流资产筛选器”。",
+      "problem_solved": "ComfyUI workflow 合集数量大、类型杂，包含视频、音频、3D、upscale、inpainting、ControlNet 等方向。直接收藏会变成垃圾堆；必须把它们转成适用场景、输入素材、核心节点、依赖模型、输出结果、可替换部分、商业价值和跑通难度。",
+      "mainstream_comparison": "普通 workflow 合集解决“有没有模板”，但不解决“哪个模板值得学、能不能跑、适合什么商业场景”。工作流筛选器更贴近摄影师/AIGC 创作者的真实需求。",
+      "codex_prompt": "你现在是我的 ComfyUI 工作流资产管理助手。请在当前仓库里实现一个“ComfyUI workflow 筛选器 V0”：1）新增 comfyui_workflows/schema.json，字段包括 source_link、workflow_pack、scene、input_assets、core_nodes、model_dependencies、output_result、replaceable_parts、commercial_value、run_difficulty、notes；2）新增 examples/comfyui_workflows/djz_sample.json，示范录入一个视频生成或音频反应视觉 workflow；3）新增 scripts/score_comfyui_workflow.py，根据商业复用价值、依赖清晰度、跑通难度、是否有教程链接给分；4）输出 reports/comfyui_workflow_library.md，按分数排序；5）README 写明淘汰标准：只有炫图、没有 JSON、依赖不清晰、没有输入输出说明的一律不收。不要下载大模型，不要运行 ComfyUI，先把资产筛选规则跑通。",
+      "today_action": "先用 DJZ-Workflows 作为样例源，录入 1 条视频类 workflow 记录，验证评分和 Markdown 输出。",
+      "next_opportunity": "后续可以扩展成个人 AIGC workflow 库：每条模板都知道适合产品图、短视频、动态海报、风格化写真还是批量后期。",
+      "evidence": [
+        "DJZ-Workflows README 说明它包含大量 ComfyUI specialized workflow packs，覆盖 AI image 和 video generation。",
+        "README 列出 text-to-video、video-to-video、animation loop、audio-reactive、upscaling、ControlNet、inpainting、IP Adapter 等多个方向。",
+        "README 提到 workflow packs 关联教程视频，适合把教程链接纳入采集表。"
+      ],
+      "video_links": [{"label": "GitHub", "url": "https://github.com/MushroomFleet/DJZ-Workflows"}]
+    },
+    {
+      "rank": 5,
+      "name": "DeepSearcher：私有资料 + 网络信号的深度研究报告器",
+      "source_project": "DeepSearcher",
+      "github": "https://github.com/zilliztech/deep-searcher",
+      "category": ["Research workflow", "RAG", "AI workflow", "Evaluation"],
+      "score": 86,
+      "value_insight": "DeepSearcher 的机会点不是普通 RAG 问答，而是把私有资料、网页抓取、向量库和多模型推理组合成“研究报告生成器”。对你的机会雷达来说，它适合处理历史日报、项目 README、采集表和网页证据，生成更稳定的趋势判断。",
+      "problem_solved": "日报每天都在生成，但历史信号容易被遗忘：某个方案出现过几次、上次为什么淘汰、今天是否有新证据、是否值得重新进入 Top。DeepSearcher 这类 private-data search + report 能把历史库变成判断依据。",
+      "mainstream_comparison": "普通搜索只看当前网页，普通 RAG 只回答局部问题；DeepSearcher 的定位是 search、evaluation、reasoning 和 comprehensive report，更适合做“机会复盘”和“候选项目二次研究”。",
+      "codex_prompt": "你现在是我的机会雷达研究系统工程师。请在当前仓库里实现一个“历史日报检索与复盘 V0”：1）读取 data/daily/*.json，建立一个本地 markdown 索引 reports/opportunity_index.md；2）按 source_project 汇总出现次数、首次出现、最近出现、最高分、曾经的 rejected reason；3）新增 scripts/research_project_history.py，输入项目名，输出这个项目在历史日报中的价值变化、是否重复推荐、是否需要重新评估；4）生成 reports/history_review_2026-07-07.md，列出最值得继续追踪的 5 个方向；5）不要接真实向量库，先用本地 JSON + 简单关键词检索跑通，后续再预留 embedding/vector store 接口。",
+      "today_action": "先把 data/daily 历史日报汇总成 opportunity_index.md，避免每天只看最新而忘掉历史判断。",
+      "next_opportunity": "后续可以接 Milvus/Qdrant，把 README、docs、demo notes、视频案例和日报全部做成私有机会知识库。",
+      "evidence": [
+        "DeepSearcher README 说明它结合 LLM 和向量数据库做 private data search、evaluation、reasoning 和 comprehensive report。",
+        "README 明确适合企业知识管理、智能问答和信息检索场景。",
+        "README 提供本地文件加载和可选网页抓取接口，适合先从历史日报 JSON 做本地资料库。"
+      ],
+      "video_links": [{"label": "GitHub", "url": "https://github.com/zilliztech/deep-searcher"}]
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "Veo 3.1 ComfyUI Nodes",
+      "github": "https://github.com/Anil-matcha/veo3.1-comfyui",
+      "reason": "节点能力清晰，包含 T2V、I2V、Reference、Extend、4K upscale 和示例 workflow，但核心依赖 MuAPI key，今天更适合作为后续视频生成节点候选，不适合作为 Top 机会方案。"
+    },
+    {
+      "name": "ultimate_mcp_server",
+      "github": "https://github.com/Dicklesworthstone/ultimate_mcp_server",
+      "reason": "工具集合面很广，但容易变成 MCP 工具榜；需要进一步拆出具体使用场景，比如日志分析、文件处理或浏览器调试后再评估。"
+    },
+    {
+      "name": "open-deep-research 系列项目",
+      "github": "https://github.com/nickscamara/open-deep-research",
+      "reason": "深度研究方向符合趋势，但同质化项目较多；今天选择 DeepSearcher 是因为它更明确支持 private data、vector DB 和 report，更适合机会雷达历史库。"
+    },
+    {
+      "name": "parallel-browser-mcp / camofox-mcp",
+      "github": "https://github.com/etairl/parallel-browser-mcp",
+      "reason": "浏览器 MCP 方向值得关注，但当前信号更偏底层连接器；今天选择 Nanobrowser 是因为它的用户场景、浏览器内运行和多 agent 结构更完整。"
+    },
+    {
+      "name": "单一 ComfyUI 插件类项目",
+      "github": "https://github.com/search?q=comfyui+workflow+video+generation&type=repositories",
+      "reason": "很多插件只解决一个节点或模型接入问题，缺少完整 workflow、输入输出说明和商业复用路径；暂不进入 Top。"
+    }
+  ]
+}
