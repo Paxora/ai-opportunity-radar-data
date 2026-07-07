@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open-source AI Opportunity · 2026-07-07</title>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f7;color:#1d1d1f;margin:0;padding:40px;line-height:1.6}
+    main{max-width:1040px;margin:0 auto}
+    h1{font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.04em}
+    h2{font-size:28px;margin:40px 0 16px;letter-spacing:-.03em}
+    article,.mission,.summary,.reject{background:#fff;border:1px solid #e5e5ea;border-radius:24px;padding:24px;margin:18px 0;box-shadow:0 16px 40px rgba(0,0,0,.04)}
+    .eyebrow{color:#6e6e73;text-transform:uppercase;font-size:12px;font-weight:700;letter-spacing:.08em;margin:0 0 8px}
+    .score{float:right;font-size:28px;font-weight:800;color:#06c}
+    .chips span{display:inline-block;background:#eef5ff;color:#06c;border-radius:999px;padding:4px 10px;margin:4px 6px 4px 0;font-size:13px;font-weight:600}
+    pre{white-space:pre-wrap;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:16px;padding:16px;overflow:auto}
+    a{color:#06c;text-decoration:none;font-weight:600}
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Open-source AI Opportunity V1.5</p>
+  <h1>2026-07-07 今日机会方案</h1>
+  <section class="mission"><p class="eyebrow">今日 Codex 提示词</p><p>请在当前仓库里实现一个“AI 机会线索收集器 V0”：读取一个 sources.yaml，支持 GitHub repo、README URL、手动粘贴的候选项目三类输入；为每个候选生成 candidate-card.json，字段包含 source_project、github、category、raw_signal、real_user_scenario、possible_workflow、risk、score_reason；最后输出 candidates-review.md，按“是否能转成具体落地方案”排序。不要做工具榜，不要只按 star 排名，先用 mock 数据跑通完整流程。</p></section>
+  <section class="summary"><p>今天的重点是把“AI agent 和工作流工具”转成可落地的工作台，而不是继续堆热门项目名。</p><p>优先选择能直接帮你做机会雷达、AIGC 工作流资产库、浏览器采集、私有知识检索和团队流程自动化的项目。</p><p>淘汰标准继续收紧：只有概念、只有 API 包装、缺少可执行工作流、没有真实使用场景或明显需要重成本部署的项目不进入 Top。</p></section>
+  <h2>Top 5</h2>
+  <article><div class="score">94</div><h3>OpenSail：把每日机会雷达升级成可审计 Agent 工作流</h3><p><a href="https://github.com/TesslateAI/OpenSail">GitHub</a></p><div class="chips"><span>Agent framework</span><span>Workflow</span><span>Production agents</span><span>Automation</span></div><p><strong>价值判断：</strong>把一次性 AI 任务变成可调度、可审批、可记录、可迁移的工作流。</p><p><strong>解决的问题：</strong>日报生成容易出现漏路径、manifest 没更新、UI 缓存不刷新等问题。</p><p><strong>主流方案对比：</strong>n8n 偏连接器，Codex 偏代码执行，ChatGPT 计划任务偏定时触发；OpenSail 更像长期 AgentOps 控制层。</p><pre>你现在是我的 AI 工作流系统架构师。请在当前仓库里设计并实现一个最小版“日报生成运行收据系统”：1）新增 runs/ 目录，每次生成日报后写入 runs/YYYY-MM-DD.json；2）收据必须记录 started_at、finished_at、input_sources、generated_files、manifest_latest、validation_checks、warnings、commit_sha；3）新增 scripts/validate_daily_run.py，检查 data/daily/YYYY-MM-DD.json、reports/html/YYYY-MM-DD.html、data/manifest.json 是否一致；4）如果检查失败，生成 runs/YYYY-MM-DD-fix.md，列出具体修复步骤；5）更新 README，说明每天生成日报后如何运行验证。不要接外部服务，先用本地文件把“可审计日报流程”跑通。</pre></article>
+  <article><div class="score">92</div><h3>ByteChef：把 AI 机会线索采集做成可视化 Agent + Workflow</h3><p><a href="https://github.com/bytechefhq/bytechef">GitHub</a></p><div class="chips"><span>AI workflow</span><span>Agent framework</span><span>Automation</span><span>MCP</span></div><p><strong>价值判断：</strong>把“工作流自动化”和“AI agent 循环”合在同一个可视化平台里。</p><p><strong>解决的问题：</strong>机会线索收集缺少可复用的采集、判断、去重、证据和输出节点。</p><p><strong>主流方案对比：</strong>n8n 擅长自动化连接，纯 Agent 框架擅长推理；ByteChef 把两者合并。</p><pre>你现在是我的自动化产品经理和 Codex 开发助手。请在当前仓库里实现一个“AI 机会线索采集工作流 DSL”：1）新增 workflows/opportunity-radar.yaml，定义 source、fetch、dedupe、score、reject、export 六类节点；2）新增 scripts/run_workflow_mock.py，读取 yaml 后用 mock 数据模拟执行；3）每个候选必须输出 raw_signal、value_scenario、workflow_idea、rejection_reason 或 selected_reason；4）生成 data/candidates/YYYY-MM-DD.json 和 reports/candidates/YYYY-MM-DD.md；5）README 中解释如何把这个 DSL 后续接到 GitHub Search、Reddit、Product Hunt、YouTube/Bilibili。先不要调用真实 API，先跑通可视化工作流背后的数据结构。</pre></article>
+  <article><div class="score">90</div><h3>Nanobrowser：低成本网页采集与竞品观察 Agent</h3><p><a href="https://github.com/nanobrowser/nanobrowser">GitHub</a></p><div class="chips"><span>Agent framework</span><span>Research workflow</span><span>Automation</span><span>Browser agent</span></div><p><strong>价值判断：</strong>把浏览器观察、网页提取、遇阻自我纠正变成可监督采集流程。</p><p><strong>解决的问题：</strong>demo、教程、评论区和文档中的真实价值信号，纯 GitHub API 很难抓全。</p><p><strong>主流方案对比：</strong>Operator 更封闭更贵，传统爬虫不适合动态网页；本地浏览器 agent 更适合轻量验证。</p><pre>你现在是我的网页采集自动化助手。请在当前仓库里实现一个“浏览器采集任务模板库”：1）新增 browser_tasks/ 目录；2）创建 github_project_review.md、producthunt_review.md、youtube_case_review.md 三个任务模板；3）每个模板都必须包含目标、打开哪些页面、需要提取哪些字段、如何判断真实使用价值、如何记录证据、遇到登录/反爬/信息不足时如何停止；4）新增 scripts/browser_task_to_candidate.py，把人工或 agent 填好的 markdown 转成 candidate-card.json；5）输出 examples/browser_candidate_example.json，演示一个项目如何从网页观察转成机会候选。不要调用真实浏览器，先把任务模板和结构化转换跑通。</pre></article>
+  <article><div class="score">88</div><h3>DJZ-Workflows：ComfyUI 工作流素材库筛选器</h3><p><a href="https://github.com/MushroomFleet/DJZ-Workflows">GitHub</a></p><div class="chips"><span>AI workflow</span><span>Content workflow</span><span>ComfyUI</span><span>Short video</span></div><p><strong>价值判断：</strong>机会不是收藏 workflow，而是做“工作流资产筛选器”。</p><p><strong>解决的问题：</strong>ComfyUI workflow 合集数量大、类型杂，直接收藏会变成垃圾堆。</p><p><strong>主流方案对比：</strong>合集解决“有没有模板”，筛选器解决“哪个值得学、能不能跑、适合什么商业场景”。</p><pre>你现在是我的 ComfyUI 工作流资产管理助手。请在当前仓库里实现一个“ComfyUI workflow 筛选器 V0”：1）新增 comfyui_workflows/schema.json，字段包括 source_link、workflow_pack、scene、input_assets、core_nodes、model_dependencies、output_result、replaceable_parts、commercial_value、run_difficulty、notes；2）新增 examples/comfyui_workflows/djz_sample.json，示范录入一个视频生成或音频反应视觉 workflow；3）新增 scripts/score_comfyui_workflow.py，根据商业复用价值、依赖清晰度、跑通难度、是否有教程链接给分；4）输出 reports/comfyui_workflow_library.md，按分数排序；5）README 写明淘汰标准：只有炫图、没有 JSON、依赖不清晰、没有输入输出说明的一律不收。不要下载大模型，不要运行 ComfyUI，先把资产筛选规则跑通。</pre></article>
+  <article><div class="score">86</div><h3>DeepSearcher：私有资料 + 网络信号的深度研究报告器</h3><p><a href="https://github.com/zilliztech/deep-searcher">GitHub</a></p><div class="chips"><span>Research workflow</span><span>RAG</span><span>AI workflow</span><span>Evaluation</span></div><p><strong>价值判断：</strong>把私有资料、网页抓取、向量库和多模型推理组合成“研究报告生成器”。</p><p><strong>解决的问题：</strong>历史日报信号容易被遗忘，重复推荐和重新评估缺少依据。</p><p><strong>主流方案对比：</strong>普通搜索只看当前网页，普通 RAG 回答局部问题；DeepSearcher 更适合做机会复盘报告。</p><pre>你现在是我的机会雷达研究系统工程师。请在当前仓库里实现一个“历史日报检索与复盘 V0”：1）读取 data/daily/*.json，建立一个本地 markdown 索引 reports/opportunity_index.md；2）按 source_project 汇总出现次数、首次出现、最近出现、最高分、曾经的 rejected reason；3）新增 scripts/research_project_history.py，输入项目名，输出这个项目在历史日报中的价值变化、是否重复推荐、是否需要重新评估；4）生成 reports/history_review_2026-07-07.md，列出最值得继续追踪的 5 个方向；5）不要接真实向量库，先用本地 JSON + 简单关键词检索跑通，后续再预留 embedding/vector store 接口。</pre></article>
+  <h2>Rejected Candidates</h2>
+  <section class="reject"><p><strong>Veo 3.1 ComfyUI Nodes：</strong>节点能力清晰，但核心依赖 MuAPI key，今天更适合作为后续视频生成节点候选。</p><p><strong>ultimate_mcp_server：</strong>工具集合面广，但容易变成 MCP 工具榜，需要进一步拆成具体场景。</p><p><strong>open-deep-research 系列：</strong>方向符合趋势，但同质化较多；今天选择 DeepSearcher 是因为更贴近私有资料 + 报告。</p><p><strong>parallel-browser-mcp / camofox-mcp：</strong>偏底层连接器；今天选择 Nanobrowser 是因为用户场景和多 agent 结构更完整。</p><p><strong>单一 ComfyUI 插件类项目：</strong>缺少完整 workflow、输入输出说明和商业复用路径。</p></section>
+</main>
+</body>
+</html>
