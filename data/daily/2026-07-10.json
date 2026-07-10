@@ -1,0 +1,134 @@
+{
+  "date": "2026-07-10",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "请把今天的机会方向落成一个最小可验证模块：先选 1 条 Top 方案，用 Codex 建立 schema、样例数据、评分脚本和中文报告，不要先做大而全的平台。",
+  "summary": [
+    "今天的核心信号集中在 Agent 浏览器、网页数据抽取和 AI 视频模板资产，不适合做工具榜。",
+    "Top 5 都已从原始项目转成可执行机会方案：每条包含落地方案、价值判断、对比和可复制给 Codex 的提示词。",
+    "优先级判断：能直接解决来源采集、私域研究、创意模板沉淀和视频商业化复用的问题，才进入今日推荐。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Browser-use：竞品创意信号采集机器人",
+      "source_project": "browser-use/browser-use",
+      "github": "https://github.com/browser-use/browser-use",
+      "category": ["Browser automation", "AI agent", "Research workflow"],
+      "score": 95,
+      "value_insight": "browser-use 的机会不是“让 AI 控浏览器”，而是把 YouTube、Bilibili、Product Hunt、竞品官网和案例页变成可重复采集的创意信号入口。对你的 AI 机会雷达来说，它最适合补足 GitHub 之外的真实使用案例。",
+      "problem_solved": "现在日报容易偏 GitHub 项目本身，缺少真实用户如何使用、视频案例热不热、是否有可复用工作流。浏览器自动化可以把搜索、打开结果、提取标题/链接/发布时间/案例描述标准化，减少人工到处翻。",
+      "mainstream_comparison": "传统 RSS 和 GitHub Search 只能看到项目更新；browser-use/agent-browser 这类方案能进入网页和搜索结果页，更接近真实内容发现。但它不应直接替代评分系统，而应作为候选信号采集器。",
+      "codex_prompt": "你现在是我的竞品创意信号采集机器人开发助手。请在当前仓库新增 research_agents/browser_signal_collector/spec.md，定义一个最小采集流程：输入关键词列表，分别搜索 YouTube、Bilibili、Product Hunt 和项目官网；输出字段必须包含 source、query、title、url、published_at、creator_or_author、use_case、evidence_text、possible_opportunity、dedupe_key。再新增 examples/browser_signal_collector/2026-07-10.sample.json，手写 5 条样例数据；新增 scripts/score_browser_signals.py，根据新鲜度、是否有具体案例、是否贴合 AI 视频/内容生产/Codex 工作流打分；最后生成 reports/browser_signal_collector_mvp.md，用中文说明今天如何 30 分钟验证。不要接真实浏览器，先把 schema、样例和评分跑通。",
+      "today_action": "今天先不接复杂自动浏览器，只做 schema + 5 条样例 + 评分脚本，验证它是否能补足 GitHub-only 的盲区。",
+      "next_opportunity": "下一步再把高分 query 接入真实浏览器采集，并让日报只读取通过评分的网页信号。",
+      "evidence": [
+        {"source": "GitHub", "url": "https://github.com/browser-use/browser-use", "note": "项目定位是 Make websites accessible for AI agents，搜索结果显示它支持让 Codex、Claude Code、Cursor 等代理直接使用浏览器。"},
+        {"source": "Browser-use changelog", "url": "https://browser-use.com/changelog", "note": "2026-03-22 的 CLI 2.0 信号强调可在终端运行，并同步真实浏览器 profile。"},
+        {"source": "GitHub topic", "url": "https://github.com/topics/browser-automation", "note": "browser-use 在 browser-automation 主题下保持高热度，并在 2026-07-09 附近仍有更新信号。"}
+      ],
+      "video_links": [
+        {"label": "YouTube", "url": "https://www.youtube.com/results?search_query=browser-use+AI+agent+workflow"},
+        {"label": "bilibili", "url": "https://search.bilibili.com/all?keyword=browser-use%20AI%20agent%20workflow"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Maxun：非 GitHub 来源结构化采集器",
+      "source_project": "getmaxun/maxun",
+      "github": "https://github.com/getmaxun/maxun",
+      "category": ["Web data", "Automation", "Source pipeline"],
+      "score": 93,
+      "value_insight": "Maxun 的价值不是又一个爬虫工具，而是把网页变成结构化 API。它适合做 AI Opportunity Radar 的非 GitHub 来源层：项目页、榜单页、案例页、教程页先被抽成统一候选，再进入价值评分。",
+      "problem_solved": "非 GitHub 来源最容易乱：字段不统一、重复多、人工判断重、页面结构变化大。Maxun 的 no-code robot 思路可以先解决“如何稳定抽取网页字段”的问题。",
+      "mainstream_comparison": "n8n 适合编排流程，RSS 适合订阅更新；Maxun 更像网页字段抽取层。它不负责最终判断价值，但可以为日报提供更干净的候选池。",
+      "codex_prompt": "你现在是我的非 GitHub 来源采集架构师。请在当前仓库新增 sources/web_extractors/schema.json，定义一个网页抽取器标准：source_name、source_url、page_type、refresh_frequency、selectors_or_rules、raw_fields、normalized_fields、dedupe_key、quality_signals、known_failures。再新增 examples/web_extractors/product_hunt_ai.sample.json、examples/web_extractors/youtube_search.sample.json、examples/web_extractors/bilibili_search.sample.json 三个样例；新增 scripts/normalize_web_candidates.py，把样例统一输出到 candidates/web/2026-07-10.json；最后生成 reports/web_source_extractor_plan.md，说明 Maxun 适合接哪些来源、不适合接哪些来源，以及如何避免低质量网页噪音进入 Top。",
+      "today_action": "今天先做 web_extractors/schema.json 和 3 个来源样例，别急着部署 Maxun。",
+      "next_opportunity": "后续把 Product Hunt、YouTube/Bilibili 搜索结果页、RunComfy 节点页等变成标准来源。",
+      "evidence": [
+        {"source": "GitHub", "url": "https://github.com/getmaxun/maxun", "note": "README/搜索摘要称 Maxun 是 open-source no-code web data platform，用于 extraction、crawling、scraping、search。"},
+        {"source": "GitHub org", "url": "https://github.com/getmaxun", "note": "组织页显示定位为 Turn Any Website Into A Structured API，并有约 16.4k stars 的公开热度信号。"},
+        {"source": "Maxun website", "url": "https://maxun.dev/", "note": "官网强调可把网页转成结构化 API，输出 Markdown、HTML、Text、Links 等格式。"}
+      ],
+      "video_links": [
+        {"label": "YouTube", "url": "https://www.youtube.com/results?search_query=Maxun+web+data+extraction+AI"},
+        {"label": "bilibili", "url": "https://search.bilibili.com/all?keyword=Maxun%20web%20data%20extraction"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "BrowserOS：本地私域研究浏览器工作台",
+      "source_project": "browseros-ai/BrowserOS",
+      "github": "https://github.com/browseros-ai/BrowserOS",
+      "category": ["Agentic browser", "Privacy", "Research workflow"],
+      "score": 91,
+      "value_insight": "BrowserOS 的机会不是换一个浏览器，而是做一个本地私域研究工作台：登录状态、网页访问、素材检索、竞品观察尽量留在本地，适合长期积累摄影/视频/AIGC 方向的私人研究语料。",
+      "problem_solved": "很多高价值信号来自登录后的平台、个人收藏、搜索历史和创意参考，但直接交给云端 Agent 有隐私与账号风险。本地 Agentic Browser 可以作为“人工确认 + 本地提取”的中间层。",
+      "mainstream_comparison": "Perplexity Comet、ChatGPT Atlas、Dia 更偏产品化浏览器体验；BrowserOS 的开源和本地模型/自带 API key 思路更适合作为可控研究工作台原型。",
+      "codex_prompt": "你现在是我的本地私域研究工作台产品经理。请在当前仓库新增 private_research_browser/spec.md，设计一个不需要联网登录的 MVP：用户手动导出或粘贴网页标题、链接、摘录、截图说明，系统统一整理成 private_research_notes/YYYY-MM-DD.json。字段包括 platform、url、title、why_saved、visual_style、workflow_hint、commercial_value、risk_note、next_action。再新增 examples/private_research_notes/ai_video_reference.sample.json；新增 scripts/score_private_research_notes.py；最后生成 reports/private_research_browser_mvp.md，说明 BrowserOS 这类本地浏览器未来如何接入，但当前 MVP 只做手动导入，避免账号风险。",
+      "today_action": "今天先做手动导入版私域研究笔记 schema，保护账号和隐私，不直接自动登录平台。",
+      "next_opportunity": "后续可把本地浏览器采集到的高价值页面转成视频模板、ComfyUI workflow 采集任务或日报候选。",
+      "evidence": [
+        {"source": "GitHub", "url": "https://github.com/browseros-ai/BrowserOS", "note": "项目描述为 open-source Chromium fork that runs AI agents natively，强调 privacy-first。"},
+        {"source": "BrowserOS website", "url": "https://www.browseros.com/", "note": "官网称 AI agents run locally，并显示 10,000+ GitHub stars、13 supported AI providers、53 built-in browser tools。"},
+        {"source": "Y Combinator", "url": "https://www.ycombinator.com/companies/browseros", "note": "YC 页面把它描述为 open-source agentic browser that runs AI agents locally，并强调 logged-in sessions 的自动化场景。"}
+      ],
+      "video_links": [
+        {"label": "YouTube", "url": "https://www.youtube.com/results?search_query=BrowserOS+agentic+browser+review"},
+        {"label": "bilibili", "url": "https://search.bilibili.com/all?keyword=BrowserOS%20agentic%20browser"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "ComfyUI-Easy-Media：多轨视频工作流资产标准",
+      "source_project": "yolain/ComfyUI-Easy-Media",
+      "github": "https://github.com/yolain/ComfyUI-Easy-Media",
+      "category": ["AI video", "ComfyUI", "Template asset"],
+      "score": 90,
+      "value_insight": "ComfyUI-Easy-Media 的价值不是节点包本身，而是它把视频、音频、字幕、任务轨道拆成更接近剪辑工程的结构。对你来说，它适合转成“高质量 AI 视频 workflow 采集表”的多轨字段标准。",
+      "problem_solved": "之前只看炫图或节点名，很难判断 workflow 是否可商业复用。多轨结构可以帮助判断输入素材、核心节点、依赖模型、可替换部分、输出结果和跑通难度。",
+      "mainstream_comparison": "普通 ComfyUI workflow 是节点图，适合技术复现；多轨视频资产标准更接近摄影师/剪辑师的商业交付语言，适合沉淀产品图动态化、口播、短剧和广告片模板。",
+      "codex_prompt": "你现在是我的 ComfyUI 视频工作流资产标准开发助手。请在当前仓库新增 comfy_video_assets/schema.json，字段必须包含 source_link、scene_type、input_media、tracks、core_nodes、required_models、output_result、replaceable_parts、commercial_reuse_value、run_difficulty、validation_steps、reject_reason。再新增 examples/comfy_video_assets/easy_media_multitrack.sample.json，用“产品图动态化 15 秒短视频”填一条样例；新增 scripts/score_comfy_video_asset.py，根据商业复用价值、依赖清晰度、是否可替换素材、跑通难度打分；最后生成 reports/comfy_video_asset_standard.md，明确哪些 workflow 淘汰。",
+      "today_action": "今天先把 ComfyUI workflow 采集标准写成可校验 schema，并录入一条产品图动态化样例。",
+      "next_opportunity": "后续每天从 GitHub/RunComfy/YouTube/Bilibili 搜到的 workflow 先入库评分，再决定是否进入日报 Top。",
+      "evidence": [
+        {"source": "GitHub", "url": "https://github.com/yolain/ComfyUI-Easy-Media", "note": "项目描述为 streamlined media loading and video pipeline assembly，面向 ComfyUI 视频处理工作流。"},
+        {"source": "RunComfy", "url": "https://www.runcomfy.com/comfyui-nodes/ComfyUI-Easy-Media", "note": "RunComfy 2026 年近期页面称该扩展用于简化 media loading 和 video pipeline assembly。"},
+        {"source": "GitHub search", "url": "https://github.com/yolain/ComfyUI-Easy-Media", "note": "搜索摘要显示项目约 112 stars，虽然不是最大热度，但结构贴合视频模板资产。"}
+      ],
+      "video_links": [
+        {"label": "YouTube", "url": "https://www.youtube.com/results?search_query=ComfyUI-Easy-Media+workflow"},
+        {"label": "bilibili", "url": "https://search.bilibili.com/all?keyword=ComfyUI-Easy-Media%20workflow"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "Seedance 2.0 Prompt Library：商业镜头模板拆解库",
+      "source_project": "YouMind-OpenLab/awesome-seedance-2-prompts",
+      "github": "https://github.com/YouMind-OpenLab/awesome-seedance-2-prompts",
+      "category": ["AI video", "Marketing video", "Prompt library"],
+      "score": 88,
+      "value_insight": "Seedance prompt 库的机会不是复制提示词，而是把高质量视频 prompt 拆成镜头、机位、动作、风格、参考素材和可替换变量，变成可复用的商业短视频模板。",
+      "problem_solved": "AI 视频模型更新很快，但商业镜头语言复用周期更长。把 prompt 拆成结构化模板后，可以服务产品广告、探店、口播、短剧、摄影样片等场景。",
+      "mainstream_comparison": "直接用 Seedance/Dreamina 只能得到单次生成结果；结构化模板库可以跨 Seedance、Veo、Runway、Kling、ComfyUI 复用，价值更接近可售卖资产。",
+      "codex_prompt": "你现在是我的 AI 视频商业镜头模板库助手。请在当前仓库新增 video_prompt_assets/schema.json，字段包括 source_link、model、scene_type、duration、shot_breakdown、camera_movement、subject_action、style_reference、input_assets、replaceable_variables、commercial_use_case、copyright_risk、score。再新增 examples/video_prompt_assets/seedance_product_ad_15s.sample.json，把一个 15 秒产品广告 prompt 拆成 3 个镜头；新增 scripts/score_video_prompt_asset.py；最后生成 reports/video_prompt_asset_library.md，说明如何从 Seedance prompt 库筛选值得商业复用的模板，而不是照搬提示词。",
+      "today_action": "今天先拆 1 条 15 秒产品广告模板，验证字段是否能复用到其它 AI 视频模型。",
+      "next_opportunity": "后续建立产品展示、人物口播、UGC 广告、短剧转场、旅拍样片五类模板库。",
+      "evidence": [
+        {"source": "GitHub", "url": "https://github.com/YouMind-OpenLab/awesome-seedance-2-prompts", "note": "仓库描述为 2000+ curated Seedance 2.0 video generation prompts，覆盖 cinematic、anime、UGC、ads、meme styles。"},
+        {"source": "GitHub", "url": "https://github.com/ZeroLu/awesome-seedance", "note": "另一个 Seedance 2.0 资源库强调 prompts、video generation techniques and resources，说明该方向已有多个资源集合。"},
+        {"source": "The Verge", "url": "https://www.theverge.com/ai-artificial-intelligence/877931/bytedance-seedance-2-video-generator-ai-launch", "note": "2026-02-12 报道称 Seedance 2.0 支持文本、图像、视频、音频组合提示，并可生成最长约 15 秒带音频片段。"}
+      ],
+      "video_links": [
+        {"label": "YouTube", "url": "https://www.youtube.com/results?search_query=Seedance+2.0+prompt+ads+UGC"},
+        {"label": "bilibili", "url": "https://search.bilibili.com/all?keyword=Seedance%202.0%20prompt%20%E5%B9%BF%E5%91%8A"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"name": "vercel-labs/agent-browser", "reason": "信号很强，但今天已由 browser-use 承担浏览器采集方向；agent-browser 更适合作为后续真实浏览器执行层，不单独进入 Top。"},
+    {"name": "Comfy-Org/ComfyUI", "reason": "基础平台过大，直接推荐会变成工具榜；今天只保留能转成多轨视频资产标准的 ComfyUI-Easy-Media。"},
+    {"name": "GitHub browser-automation topic", "reason": "主题页适合发现候选，但不是具体机会方案，不能直接进入 Top。"},
+    {"name": "Seedance prompt 资源合集", "reason": "如果只做提示词收藏价值不够，必须拆成商业镜头模板和可替换变量后才进入 Top。"},
+    {"name": "普通 AI agent 浏览器评论/测评", "reason": "讨论热度能作为旁证，但缺少可复制落地结构，不能替代 GitHub-first 项目与方案设计。"}
+  ]
+}
