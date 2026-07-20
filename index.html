@@ -13,7 +13,7 @@
       .mission-card .eyebrow { margin-bottom: 10px !important; }
       .mission { font-size: clamp(22px, 2vw, 30px) !important; line-height: 1.18 !important; letter-spacing: -0.035em !important; max-width: none !important; }
       .summary-grid { width: 100% !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 24px !important; margin: 24px 0 0 !important; }
-      .summary-card { min-height: 0 !important; height: auto !important; padding: 26px 28px !important; border-radius: 26px !important; font-size: clamp(18px, 1.35vw, 24px) !important; line-height: 1.48 !important; letter-spacing: -0.02em !important; }
+      .summary-card { min-height: 0 !important; height: auto !important; padding: 24px 26px !important; border-radius: 24px !important; font-size: clamp(17px, 1.25vw, 22px) !important; line-height: 1.48 !important; letter-spacing: -0.02em !important; }
       .recommendation-head { display: grid !important; grid-template-columns: minmax(260px, 1fr) minmax(520px, auto) !important; align-items: end !important; gap: 18px !important; margin: 42px 0 22px !important; }
       .recommendation-head .toolbar { margin: 0 !important; justify-self: end !important; justify-content: flex-end !important; }
       .recommendation-carousel { position: relative !important; width: 100% !important; }
@@ -23,16 +23,18 @@
       .carousel-button:disabled { opacity: .28; cursor: default; }
       #todayProjects.recommended-rail { width: 100% !important; max-width: 100% !important; display: grid !important; grid-auto-flow: column !important; grid-auto-columns: calc((100% - 24px) / 2) !important; grid-template-columns: none !important; gap: 24px !important; overflow-x: hidden !important; overflow-y: visible !important; scroll-snap-type: x mandatory !important; scroll-behavior: smooth !important; padding: 4px 0 28px !important; margin: 0 !important; scrollbar-width: none !important; }
       #todayProjects.recommended-rail::-webkit-scrollbar { display: none !important; }
-      #todayProjects.recommended-rail .project-card { min-width: 0 !important; width: 100% !important; scroll-snap-align: start !important; padding: 28px !important; }
-      .codex-prompt { position:relative; background:#f5f5f7; border:1px solid #e5e5ea; border-radius:18px; padding:16px 56px 16px 16px; margin:10px 0 16px; }
-      .codex-prompt pre { white-space:pre-wrap; word-break:break-word; margin:0; font-family:inherit; line-height:1.55; color:#1d1d1f; }
-      .copy-prompt { position:absolute; top:12px; right:12px; width:36px; height:36px; border:0; border-radius:999px; background:#e8f2ff; color:#06c; cursor:pointer; font-size:0; display:flex; align-items:center; justify-content:center; }
-      .copy-prompt::before { content:"⧉"; font-size:18px; font-weight:900; line-height:1; }
-      .copy-prompt.is-copied { background:#e8f7ed; color:#188038; }
-      .copy-prompt.is-copied::before { content:"✓"; }
+      #todayProjects.recommended-rail .project-card { min-width: 0 !important; width: 100% !important; scroll-snap-align: start !important; padding: 30px !important; }
+      .detail-block { border-top: 1px solid #ececf0; padding: 16px 0 0; margin-top: 16px; }
+      .detail-block span { display: block; font-size: 13px; font-weight: 850; letter-spacing: .04em; color: #6e6e73; margin-bottom: 7px; }
+      .detail-block p { margin: 0 !important; font-size: 17px; line-height: 1.58; color: #313136; }
+      .detail-block.value { border: 0; background: #f5f5f7; border-radius: 20px; padding: 18px 20px; margin-top: 22px; }
+      .detail-block.value span { color: #1d1d1f; }
+      .detail-block.action { background: #eef6ff; border: 0; border-radius: 18px; padding: 16px 18px; }
+      .detail-block.action span { color: #06c; }
+      .detail-block.opportunity span { color: #7c3aed; }
       @media (max-width: 1100px) { .page-title h1 { font-size: clamp(36px, 5vw, 56px) !important; } .summary-grid { grid-template-columns: 1fr !important; } .recommendation-head { grid-template-columns: 1fr !important; align-items: start !important; } .recommendation-head .toolbar { justify-self: stretch !important; justify-content: flex-start !important; } .carousel-button.prev { left: 8px !important; } .carousel-button.next { right: 8px !important; } }
       @media (max-width: 900px) { .page-title h1 { white-space: normal !important; } #todayProjects.recommended-rail { grid-auto-columns: 86vw !important; overflow-x: hidden !important; } }
-      @media (max-width: 700px) { .page-title h1 { font-size: clamp(36px, 12vw, 56px) !important; } .mission { font-size: 22px !important; } .summary-card { font-size: 18px !important; } }
+      @media (max-width: 700px) { .page-title h1 { font-size: clamp(36px, 12vw, 56px) !important; } .mission { font-size: 22px !important; } .summary-card { font-size: 18px !important; } #todayProjects.recommended-rail .project-card { padding: 24px !important; } }
     </style>
   </head>
   <body>
@@ -41,7 +43,7 @@
       <header class="page-title">
         <p class="eyebrow">Value-first · V1.5</p>
         <h1>Open-source AI Opportunity</h1>
-        <p class="page-subtitle">不是工具榜，而是从 GitHub-first 信号里提炼有价值的落地方案和可直接执行的 Codex 提示词。</p>
+        <p class="page-subtitle">从 GitHub-first 信号里提炼真正值得关注的机会、落地价值和下一步行动。</p>
       </header>
 
       <nav class="tabs" aria-label="Dashboard sections">
@@ -54,8 +56,8 @@
         <section class="panel is-active" id="today">
           <section class="mission-layout">
             <article class="mission-card">
-              <p class="eyebrow">今日 Codex 提示词</p>
-              <div class="mission" id="todayMission">ChatGPT 计划任务写入数据后会自动展示。</div>
+              <p class="eyebrow">今日重点</p>
+              <div class="mission" id="todayMission">日报写入数据后会自动展示。</div>
             </article>
           </section>
 
@@ -69,7 +71,7 @@
             <div class="toolbar">
               <label class="search">
                 <span>搜索</span>
-                <input id="searchInput" type="search" placeholder="方案、工具、场景、提示词..." />
+                <input id="searchInput" type="search" placeholder="方案、工具、场景、行动..." />
               </label>
               <label class="select">
                 <span>分类</span>
@@ -108,7 +110,7 @@
           <section class="section-heading">
             <p class="eyebrow">Scheme Library</p>
             <h2>方案库</h2>
-            <p>按机会方案维度汇总历史出现次数、来源工具、首次出现和最近出现。</p>
+            <p>按机会方案维度汇总历史出现次数、首次出现和最近出现。</p>
           </section>
           <section class="library-grid" id="libraryProjects"></section>
         </section>
@@ -119,6 +121,6 @@
       <div class="empty-card">暂无内容。</div>
     </template>
 
-    <script src="assets/app.js?v=20260703-ui22"></script>
+    <script src="assets/app.js?v=20260721-ui23"></script>
   </body>
 </html>
