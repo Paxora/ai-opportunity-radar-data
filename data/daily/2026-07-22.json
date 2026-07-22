@@ -1,0 +1,140 @@
+{
+  "date": "2026-07-22",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "优先验证第 1 条：把一段 3-5 分钟口播素材做成“去停顿、去重复、保留原始时间码、保存为可复用剪辑 Skill”的最小流程，并检查它是否真的减少下一次同类视频的重复劳动。",
+  "summary": [
+    "今天值得关注的不是又一个 AI 剪辑工具，而是把一次性编辑动作沉淀成可复用 Skill、可审计操作协议和可重复交付模板。",
+    "Top 5 分别覆盖口播粗剪 Skill、Premiere Agent 安全执行层、双语字幕清理、聊天内动态图形模板和 Agent 原生剪辑沙盒。",
+    "共同机会是把 AI 从“给建议”推进到“执行可检查、失败可回退、结果可复用”的专业后期流程。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "把 FireRed-OpenStoryline 的口播粗剪能力沉淀成“可复用品牌剪辑 Skill”",
+      "source_project": "FireRedTeam/FireRed-OpenStoryline",
+      "github": "https://github.com/FireRedTeam/FireRed-OpenStoryline",
+      "category": ["口播粗剪", "剪辑 Skill", "批量内容生产"],
+      "score": 97,
+      "value_insight": "真正有价值的不是让模型自动剪一次，而是把去口头禅、删重复句、保留节奏、匹配字幕样式和导出规范沉淀成一个可复用 Skill。下次只换素材和品牌配置，就能复用同一套规则。",
+      "problem_solved": "口播、课程、访谈和短视频反复出现同样的机械工作：听停顿、删废话、找重复、调字幕和统一风格。现有一键剪辑通常只能给出一次性结果，规则无法复用，也难以追溯为什么删掉某一段。",
+      "mainstream_comparison": "相比剪映的一键口播剪辑，它更强调 Skill 归档、自然语言修订和流程复用；相比手工剪辑，它能明显减少第一遍清理时间。短板是最终节奏和情绪仍需人工判断，不能把 ASR 结果直接当成成片。",
+      "today_action": "选一段 3-5 分钟口播，先只验证三条规则：删除超过 0.8 秒的无意义停顿、标记重复句、保留所有删减前后的原始时间码。最后把规则整理成一个可复用 Skill 草案。",
+      "next_opportunity": "可进一步做成面向知识博主、课程团队和企业口播的“品牌粗剪 Skill 包”，按模板、账号或月度内容量收费。",
+      "evidence": [
+        {
+          "source": "FireRed-OpenStoryline README",
+          "url": "https://github.com/FireRedTeam/FireRed-OpenStoryline",
+          "note": "项目公开支持 ASR 口播粗剪、自然语言修订、媒体理解和完整编辑工作流归档为自定义 Skill。"
+        },
+        {
+          "source": "FireRed-OpenStoryline 2026-03/04 更新",
+          "url": "https://github.com/FireRedTeam/FireRed-OpenStoryline#news",
+          "note": "README 记录了口播去口头禅/重复句 Skill，以及 AI 转场生成等近期能力。"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "把 Premiere MCP 变成“先预检、再执行、可回滚”的广告片自动组装协议",
+      "source_project": "hetpatel-11/Adobe_Premiere_Pro_MCP",
+      "github": "https://github.com/hetpatel-11/Adobe_Premiere_Pro_MCP",
+      "category": ["Premiere MCP", "广告片组装", "安全执行"],
+      "score": 95,
+      "value_insight": "278 个工具本身不是机会，真正的机会是把常用广告片组装动作压缩成少量高层协议：导入素材、建立序列、按镜头计划组装、应用模板、做音频 ducking、导出和生成验证报告。",
+      "problem_solved": "Agent 直接调用大量 NLE 工具时容易出现误操作、上下文丢失和不可回退。编辑师需要的是一套先检查项目状态、再执行、最后验证差异的稳定协议，而不是让模型自由操作 278 个工具。",
+      "mainstream_comparison": "相比手工 Premiere，它能把重复组装和批量操作交给 Agent；相比通用 GUI 自动化，它直接使用 MCP 工具，稳定性更高。短板是仍依赖 CEP/Premiere 环境，且复杂审美和节奏判断不能自动化。",
+      "today_action": "先定义一个 30 秒产品广告的最小协议：读取项目状态 → 导入 6 个镜头 → 建立序列 → 按 clipPlan 排列 → 添加 2 个转场 → 做基础音频 ducking → 导出前生成差异报告。今天只写协议和检查项，不执行真实项目。",
+      "next_opportunity": "可发展成针对电商、信息流和品牌短片的可审计 Agent 编辑模板，并迁移到 DaVinci MCP 的同类协议设计。",
+      "evidence": [
+        {
+          "source": "Adobe Premiere Pro MCP README",
+          "url": "https://github.com/hetpatel-11/Adobe_Premiere_Pro_MCP",
+          "note": "截至 2026-06-29，README 声明暴露 278 个工具，覆盖导入、时间线、字幕、调色、音频、导出和高层广告组装流程。"
+        },
+        {
+          "source": "Premiere MCP live validation",
+          "url": "https://github.com/hetpatel-11/Adobe_Premiere_Pro_MCP#current-status",
+          "note": "README 记录了真实 Premiere 2026 会话中的工具执行和 schema 验证结果。"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "用 FlyCut Caption 做“口播清理 + 双语字幕 + 可回退删减”的交付流水线",
+      "source_project": "x007xyz/flycut-caption",
+      "github": "https://github.com/x007xyz/flycut-caption",
+      "category": ["双语字幕", "口播清理", "本地处理"],
+      "score": 92,
+      "value_insight": "FlyCut Caption 的实际价值不是字幕工具，而是把识别、逐词删改、停顿清理、双语翻译、预览和导出放进同一条可回退流程，适合把“字幕底稿 + 第一遍粗剪”合并完成。",
+      "problem_solved": "常见流程需要在转写工具、翻译工具、剪辑软件和字幕软件之间来回搬运，删除口播废话后字幕又要重新对齐。双语内容还会增加第二条字幕轨的同步成本。",
+      "mainstream_comparison": "相比剪映，FlyCut 更适合本地、逐词级编辑和双轨字幕；相比 WhisperX，它提供可视化删改、停顿剪切和硬字幕导出。短板是专业排版、复杂时间线和最终声音处理仍需 NLE。",
+      "today_action": "用一段 60-90 秒中英混合口播测试：生成双语字幕、删除 3 处口头禅、标记 2 个停顿、导出 SRT 和仅保留有效片段的视频，检查字幕是否仍然同步。",
+      "next_opportunity": "可包装成短视频双语字幕交付 SOP，服务知识博主、课程、采访和出海内容团队。",
+      "evidence": [
+        {
+          "source": "FlyCut Caption README",
+          "url": "https://github.com/x007xyz/flycut-caption",
+          "note": "项目支持 Whisper/FunASR、逐词时间码、双语字幕、智能停顿剪切、实时预览和 SRT/JSON/硬字幕导出。"
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "把 Remotion MCP App 变成“聊天内可预览的品牌动态图形模板生成器”",
+      "source_project": "mcp-use/remotion-mcp-app",
+      "github": "https://github.com/mcp-use/remotion-mcp-app",
+      "category": ["动态图形", "Remotion", "MCP App"],
+      "score": 90,
+      "value_insight": "真正的机会不是让模型随意写一段 Remotion，而是固定品牌色、字体、节奏和组件边界，让模型只在模板参数内生成标题卡、数据动画、价格卡和社媒包装，并在聊天界面直接预览。",
+      "problem_solved": "很多短视频需要大量轻量包装，但每次手工改标题、数字、颜色和时长都很重复。传统模板又常常被锁在某个 NLE 或需要手动改层。",
+      "mainstream_comparison": "相比 After Effects/MOGRT，它更适合代码化、批量和版本控制；相比直接用 Remotion 写代码，MCP App 能在聊天内即时预览和迭代。短板是复杂设计仍需要设计师定义模板，不能把视觉质量交给模型自由发挥。",
+      "today_action": "先设计 3 个固定模板：8 秒标题卡、10 秒数据对比、6 秒价格促销卡。只开放文字、数字、品牌色和时长四类参数，并测试模型能否在不改组件结构的情况下生成 3 个版本。",
+      "next_opportunity": "可形成面向品牌账号、电商和知识内容的可批量动态图形模板库，输出透明视频或直接进入剪辑时间线。",
+      "evidence": [
+        {
+          "source": "Remotion MCP App README",
+          "url": "https://github.com/mcp-use/remotion-mcp-app",
+          "note": "项目把 MCP server、Remotion 编译和聊天内播放器结合，支持局部文件更新与实时预览。"
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "把 Monet 当成“Agent 剪辑实验沙盒”，先验证操作协议再迁移到专业 NLE",
+      "source_project": "Monet-AI-Editor/Monet",
+      "github": "https://github.com/Monet-AI-Editor/Monet",
+      "category": ["Agent 原生剪辑", "本地沙盒", "协议验证"],
+      "score": 88,
+      "value_insight": "Monet 最有价值的定位不是替代 DaVinci，而是提供一个 Agent 原生、项目结构透明、命令确定的实验沙盒。可以先在这里验证素材搜索、剪切、字幕、动态图形和导出协议，再把成熟规则迁移到专业 NLE。",
+      "problem_solved": "直接在 DaVinci 或 Premiere 里测试 Agent 工作流风险高、调试慢，而且每次失败都可能污染真实项目。需要一个可恢复、可检查、命令确定的轻量环境做协议验证。",
+      "mainstream_comparison": "相比 DaVinci/Premiere，Monet 的专业精修能力较弱，但更适合 Codex/Claude Code 直接操作、查看项目结构和快速回退；相比纯脚本，它有真实时间线、预览、转写和导出。",
+      "today_action": "只测试一个最小协议：导入 3 个视频 → 本地转写 → 搜索一句话 → 切出对应片段 → 加标题卡 → 导出 1080p。记录每一步是否有确定命令、状态回读和失败回退。",
+      "next_opportunity": "如果协议稳定，可把 Monet 作为 AI 剪辑工作流的测试环境，并将成熟流程移植到 DaVinci MCP 或 OTIO 中间层。",
+      "evidence": [
+        {
+          "source": "Monet README",
+          "url": "https://github.com/Monet-AI-Editor/Monet",
+          "note": "项目公开提供 Agent 原生终端、editorctl/MCP、本地转写、语义搜索、真实时间线、Remotion 和本地导出。"
+        }
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "VisoMaster",
+      "reason": "人脸替换能力本身有热度，但本次没有找到比现有主流人脸/视频工具更明确、可复用且与当前后期主线一致的机会方案。"
+    },
+    {
+      "name": "NarratoAI",
+      "reason": "功能覆盖视频理解与自动剪辑，但若只按工具介绍进入 Top，会与已有自动剪辑方案重复；本次缺少更独特的工作流判断。"
+    },
+    {
+      "name": "FireRed-OpenStoryline",
+      "reason": "原始工具本身不直接进入 Top，只有“口播粗剪规则沉淀为品牌剪辑 Skill”的具体方案入选。"
+    },
+    {
+      "name": "Adobe Premiere Pro MCP",
+      "reason": "原始 MCP 工具集合不直接进入 Top，只有“先预检、再执行、可回滚的广告片自动组装协议”入选。"
+    }
+  ]
+}
