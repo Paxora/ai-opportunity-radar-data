@@ -1,0 +1,159 @@
+{
+  "date": "2026-07-23",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "优先验证第 1 条：不要安装整套 OpenMontage，先把一个对标视频拆成制作承诺、镜头来源、模型选择、预算上限和交付质检五张表，判断这种“先约束、后生成”的方法能否减少无效试错。",
+  "summary": [
+    "今天的高价值信号不是又出现了五个新工具，而是开源项目正在把 AI 视频生产拆成五个可复用能力：参考视频反推、素材语义检索、生成镜头资产管理、导出质量门禁和字幕本地化。",
+    "Top 5 均被转化为具体方案；工具本身不作为结论，重点是它能否形成可审查、可复用、可继续扩展的工作流。",
+    "共同机会是把 AI 视频生产从一次性提示词试错，升级为有资产台账、质量标准、版本记录和人工审批的生产系统。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "用 OpenMontage 建立“对标视频 → 制作承诺 → 模型路由 → 成片质检”的参考驱动生产协议",
+      "source_project": "calesthio/OpenMontage",
+      "github": "https://github.com/calesthio/OpenMontage",
+      "category": ["参考视频分析", "Agent 视频生产", "质量门禁"],
+      "score": 97,
+      "value_insight": "OpenMontage 最值得借鉴的不是“一句话自动做视频”，而是它把参考视频、供应商选择、预算治理、失败回退和交付质检放在同一条可审计链路里。真正有价值的落地方式，是先把对标视频转成可检查的制作承诺，再决定每个镜头用真实素材、生成视频、生成图片还是动态图形，避免模型先生成一堆无法剪辑的素材。",
+      "problem_solved": "当前 AI 视频项目通常从提示词和模型选择开始，缺少对标结构、镜头来源、成本上限和交付标准，导致生成次数多、镜头功能混乱、预算失控，最后仍无法形成连贯成片。",
+      "mainstream_comparison": "相比直接在 Seedance、Veo、Runway 等平台逐镜头生成，这种方法牺牲一点启动速度，换来清晰的镜头任务、供应商替换和失败回退；相比传统人工制片表，它可以由 Coding Agent 自动维护，但仍必须保留人工批准，不能把自动生成结果直接视为可交付成片。",
+      "today_action": "选一个 30-60 秒对标视频，只做纸面验证：整理制作承诺、镜头清单、素材来源、主选/备用模型、单镜头预算、失败回退和交付 QC。判断这套表是否能在生成前暴露至少 3 个风险。",
+      "next_opportunity": "把这套参考驱动协议沉淀为通用 Pre-production Skill，后续可接 Seedance、Veo、ComfyUI、Remotion 或真实素材库，而不被单一模型锁定。",
+      "evidence": [
+        {
+          "source": "OpenMontage repository",
+          "url": "https://github.com/calesthio/OpenMontage",
+          "note": "项目提供参考视频驱动、真实素材与生成素材并行、供应商评分、预算治理、质量门禁和渲染后自检。"
+        },
+        {
+          "source": "OpenMontage public README",
+          "url": "https://github.com/calesthio/OpenMontage#readme",
+          "note": "README 明确描述 provider routing、approval thresholds、post-render review 和 auditable decision trail。"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "用 Edit Mind 建立“本地素材语义检索 → 候选镜头板 → 人工初筛”的 AI 助理选片台",
+      "source_project": "IliasHad/edit-mind",
+      "github": "https://github.com/IliasHad/edit-mind",
+      "category": ["素材管理", "语义检索", "本地工作流"],
+      "score": 95,
+      "value_insight": "Edit Mind 的价值不是做一个视频搜索网站，而是把本地素材库转成可按对白、人物、物体、文字和场景检索的镜头数据库。对专业剪辑最有价值的落地，是先返回少量候选镜头和时间码，再由编辑师按叙事功能、人物推动和画面质量确认，而不是让 AI 直接生成成片。",
+      "problem_solved": "长素材项目中，真正耗时的是反复翻找镜头、确认人物出现位置、找相似动作和定位对白。普通文件名和文件夹无法表达内容，纯转录又看不到画面信息。",
+      "mainstream_comparison": "相比云端视频理解服务，它更适合隐私敏感和本地素材；相比 DaVinci 的人工关键词，它能自动提取多模态元数据；相比端到端 AI 剪辑，它更保守但更可靠，因为最终选择仍由人工完成。短板是首次索引成本和人脸识别等隐私治理需要提前定义。",
+      "today_action": "不要索引整个硬盘。先选 20 条短素材，定义 5 个真实检索问题，例如“人物进入空间”“手部翻动物品”“店外环境”“医生问诊”“镜头稳定的空镜”，检查返回结果是否真的减少翻素材时间。",
+      "next_opportunity": "验证成功后，可把它接到 Shot Mapping：每个叙事功能自动返回 3 条候选，并保留未采用理由，形成可审查的 AI 助理选片流程。",
+      "evidence": [
+        {
+          "source": "Edit Mind repository",
+          "url": "https://github.com/IliasHad/edit-mind",
+          "note": "项目支持本地视频索引、Whisper、目标与人脸分析、语义检索和 Docker 部署。"
+        },
+        {
+          "source": "Edit Mind release signal",
+          "url": "https://github.com/IliasHad/edit-mind/releases",
+          "note": "项目已形成持续发布记录，说明其不只是一次性概念演示。"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "把 Jellyfish 的一致性台账改造成“AI 生成镜头资产登记与版本审批”工作台",
+      "source_project": "Forget-C/Jellyfish",
+      "github": "https://github.com/Forget-C/Jellyfish",
+      "category": ["生成素材管理", "镜头一致性", "版本审批"],
+      "score": 93,
+      "value_insight": "Jellyfish 最有价值的不是短剧生成本身，而是它把角色、场景、道具、服装、镜头候选、提示词和生成任务当作可追踪资产。这个方法可以迁移到任何 AI 视频项目：每个生成镜头都绑定用途、版本、模型、提示词、参考图和批准状态，避免素材散落在文件夹里。",
+      "problem_solved": "AI 生成镜头常见问题不是缺少模型，而是同一角色和场景不断漂移、多个候选无法比较、提示词与结果失联、被批准的版本难以追溯，最终进入剪辑时找不到正确素材。",
+      "mainstream_comparison": "相比直接使用模型平台的历史记录，它能跨模型统一管理；相比普通网盘或 Finder 文件夹，它能保留镜头功能和生成上下文；相比完整影视制片管理系统，它更贴近生成式资产，但目前仍需要验证数据结构是否足够稳定。",
+      "today_action": "拿一个已有 AI 视频项目，建立 10 条镜头记录，只保留：镜头功能、角色/场景、参考图、模型、提示词版本、seed、候选文件、批准状态和进入时间线位置。检查是否能在 5 分钟内找到任意镜头的生成来源。",
+      "next_opportunity": "把这套资产台账接入 ComfyUI、Seedance 或其他生成平台，形成统一的生成镜头注册表，再与 DaVinci Media Pool 或 OTIO 时间线关联。",
+      "evidence": [
+        {
+          "source": "Jellyfish repository",
+          "url": "https://github.com/Forget-C/Jellyfish",
+          "note": "项目覆盖脚本、分镜、一致性管理、候选资产、异步生成任务和导出。"
+        },
+        {
+          "source": "Jellyfish README",
+          "url": "https://github.com/Forget-C/Jellyfish#readme",
+          "note": "README 把角色、场景、道具、服装和生成任务作为一等生产资产。"
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "用 FFmpeg Quality Metrics 建立“导出前后自动对比 + 异常帧定位”的视频交付质量门禁",
+      "source_project": "slhck/ffmpeg-quality-metrics + Netflix/vmaf",
+      "github": "https://github.com/slhck/ffmpeg-quality-metrics",
+      "category": ["视频 QC", "交付检查", "自动化"],
+      "score": 91,
+      "value_insight": "这个项目的高价值用法不是给视频打一个抽象分数，而是在转码、压缩、平台适配或 AI 修复后自动对比参考版本，找出质量骤降的具体帧。它适合成为 DaVinci 导出、代理文件、短视频多平台版本和生成式修复结果的独立 QC 层。",
+      "problem_solved": "不同编码器、码率、分辨率和平台导出设置会造成肉眼不易稳定复现的损失；人工从头观看多个版本耗时，且容易漏掉局部模糊、纹理损坏、帧插值异常或过度压缩。",
+      "mainstream_comparison": "相比只看文件大小和码率，VMAF、SSIM、PSNR 等指标能定位差异；相比专业商业 QC 系统，它更轻量且可脚本化；但指标不能代替人工审美判断，尤其不能判断叙事、肤色偏好或生成内容是否合理。",
+      "today_action": "选一条 20 秒原片，导出两个不同码率版本，生成全局指标和逐帧结果；只验证一件事：最低分的 5 帧是否真的对应肉眼可见问题。",
+      "next_opportunity": "把它接入自动导出流程：低于阈值时阻止交付，并自动生成异常帧预览和报告，形成跨平台视频交付 QC 模块。",
+      "evidence": [
+        {
+          "source": "FFmpeg Quality Metrics repository",
+          "url": "https://github.com/slhck/ffmpeg-quality-metrics",
+          "note": "支持 VMAF、SSIM、PSNR、VIF、MSAD，输出逐帧指标、全局统计、JSON/CSV 和浏览器可视化。"
+        },
+        {
+          "source": "Netflix VMAF repository",
+          "url": "https://github.com/Netflix/vmaf",
+          "note": "VMAF 提供生产可用的感知视频质量评估，并可通过 FFmpeg 集成。"
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "用 Subtitle Translator 建立“术语表锁定 + 批量翻译 + 时间轴不变”的客户字幕本地化流程",
+      "source_project": "rockbenben/subtitle-translator",
+      "github": "https://github.com/rockbenben/subtitle-translator",
+      "category": ["字幕本地化", "批量交付", "质量控制"],
+      "score": 88,
+      "value_insight": "Subtitle Translator 的价值不是把 SRT 交给模型翻译，而是把多文件、多语言、术语一致性和格式保持变成可批量执行的交付流程。真正有价值的方案应把客户术语表、禁译词、专有名词和人工抽查规则固定下来，避免每次翻译从零开始。",
+      "problem_solved": "字幕本地化常见问题包括人名和品牌名不一致、上下句语义断裂、时间轴被破坏、标点和行长不合平台规范，以及多个版本无法统一修改。",
+      "mainstream_comparison": "相比直接复制到 ChatGPT，它更适合批量文件和格式保持；相比专业字幕 SaaS，它可自托管并支持多模型；但高风险内容、口语双关和医疗法律语境仍需要人工复核，不能全自动交付。",
+      "today_action": "选一个 30 行 SRT，建立 10 个术语的测试表，分别检查专有名词一致性、前后文连贯、时间码保持和每行长度。只有四项都通过，才考虑批量化。",
+      "next_opportunity": "把术语表、字幕规范和抽查规则做成客户级模板，形成多语言视频交付 SOP，而不是一次性翻译工具。",
+      "evidence": [
+        {
+          "source": "Subtitle Translator repository",
+          "url": "https://github.com/rockbenben/subtitle-translator",
+          "note": "项目支持 SRT、ASS、VTT、LRC，覆盖多语言和多个 LLM 提供商，并持续发布版本。"
+        },
+        {
+          "source": "Subtitle Translator releases",
+          "url": "https://github.com/rockbenben/subtitle-translator/releases",
+          "note": "公开 release 记录显示项目已形成可部署和持续维护的批量字幕工具。"
+        }
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "PixVerse-MCP",
+      "reason": "官方 MCP 接入信号明确，但单独把视频生成 API 接给 Agent 仍然只是工具连接；本次没有比 OpenMontage 的参考驱动、预算治理和质量门禁更完整的机会方案。"
+    },
+    {
+      "name": "Cutia",
+      "reason": "浏览器本地剪辑和隐私方向有价值，但现阶段更像开源剪辑器本体，尚未提炼出区别于现有 NLE 的高价值 AI 工作流。"
+    },
+    {
+      "name": "AI Video Editor 类一键粗剪仓库",
+      "reason": "多数项目展示了转录、LLM 选段和自动渲染，但镜头判断、重复检查、人工审批和专业 NLE 接口不足，容易退化成低可控的一键成片工具。"
+    },
+    {
+      "name": "eMediaLibrary",
+      "reason": "自托管媒体资产管理和 AI 搜索方向成立，但部署栈较重；对个人当前阶段而言，Edit Mind 的本地视频语义检索验证成本更低。"
+    },
+    {
+      "name": "VideoMaMa",
+      "reason": "视频抠像技术信号强，也已有 ComfyUI 等生态接入，但本次缺少足够明确的低成本业务验证路径，先作为生成式后期专项观察项。"
+    }
+  ]
+}
