@@ -1,6 +1,11 @@
 {
-  "latest": "2026-07-23",
+  "latest": "2026-07-24",
   "days": [
+    {
+      "date": "2026-07-24",
+      "file": "data/daily/2026-07-24.json",
+      "html": "reports/html/2026-07-24.html"
+    },
     {
       "date": "2026-07-23",
       "file": "data/daily/2026-07-23.json",
