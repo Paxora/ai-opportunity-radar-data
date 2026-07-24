@@ -1,0 +1,103 @@
+{
+  "date": "2026-07-24",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "优先验证第 1 条：把 OpenChatCut 当作“外部 Agent 的安全时间线沙盒”，只测试读取工程、生成隔离草稿、人工审阅和应用四步，不直接让 Agent 修改正式时间线。",
+  "summary": [
+    "今天最有价值的信号不是更多一键成片工具，而是开源项目开始把 Agent 编辑拆成隔离草稿、可视检查、标准时间线和确定性媒体执行层。",
+    "Top 5 覆盖可审阅时间线沙盒、DaVinci 可视闭环、视觉分析到 FCPXML、语义检索到 OTIO，以及受限 FFmpeg 执行。",
+    "共同机会是先让 AI 生成可检查中间产物，再由人工批准进入专业 NLE，避免不可解释的端到端自动成片。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "把 OpenChatCut MCP 变成“外部 Agent 提案 → 隔离草稿 → 人工审阅 → 应用时间线”的安全剪辑沙盒",
+      "source_project": "0xsline/OpenChatCut",
+      "github": "https://github.com/0xsline/OpenChatCut",
+      "category": ["Agent 剪辑", "MCP", "时间线审阅"],
+      "score": 97,
+      "value_insight": "OpenChatCut 最值得验证的不是聊天剪辑界面，而是它允许 Codex、Claude 等外部 Agent 通过 MCP 读取工程并提交编辑提案，修改先进入隔离会话，再由用户审阅后应用。这个结构把 Agent 的创造性和真实时间线的安全性分开，适合用来测试可回退的剪辑协议。",
+      "problem_solved": "Agent 直接操作真实工程时容易出现误删、错误入出点、上下文漂移和难以追踪的批量修改。传统 MCP 往往只暴露工具，却没有完整的提案、草稿、审阅和批准边界。",
+      "mainstream_comparison": "相比直接控制 DaVinci 或 Premiere，它更适合低风险验证操作协议；相比一键成片工具，它保留真实多轨时间线和人工修改能力。短板是编辑器专业能力、项目成熟度和复杂成片案例仍需验证，不能替代 DaVinci 精剪。",
+      "today_action": "启动 OpenChatCut 后连接其 Streamable HTTP MCP，只完成四步：读取一个含 3 个素材的测试工程、创建 manual approval 编辑会话、提交一次换序与裁切提案、在界面中审阅差异后再应用。记录每一步的状态回读和失败回退。",
+      "next_opportunity": "把通过验证的操作沉淀为少量高层编辑 Skill，例如粗剪重排、字幕段落删改和 B-roll 插入，再将成熟协议迁移到 DaVinci MCP。",
+      "evidence": [
+        {"source": "OpenChatCut repository", "url": "https://github.com/0xsline/OpenChatCut", "note": "仓库包含 external-agent MCP、时间线工具、项目工具和外部编辑提案存储等实现。"},
+        {"source": "OpenChatCut MCP configuration", "url": "https://github.com/0xsline/OpenChatCut/blob/main/.mcp.json", "note": "仓库提供 MCP 配置，并通过外部 Agent 桥接剪辑工程。"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "用 Resolve MCP 建立“时间线操作 → 截图复核 → 本地转写 → 差异确认”的 DaVinci 可视闭环",
+      "source_project": "barckley75/resolve-mcp",
+      "github": "https://github.com/barckley75/resolve-mcp",
+      "category": ["DaVinci MCP", "可视检查", "Apple Silicon"],
+      "score": 95,
+      "value_insight": "该项目的价值不只是暴露 Resolve 工具，而是把 52 个控制工具、本地 mlx-whisper 转写、Resolve 窗口截图和任意 Resolve Python 代码执行放进同一条闭环。最有价值的方案是每次操作后自动读取时间线状态并截图，让 Agent 不再只相信 API 返回值。",
+      "problem_solved": "自动化写入时间线后，API 成功不等于画面正确；轨道遮挡、错误缩放、字幕位置和素材离线等问题需要视觉复核。转写、时间线操作和审片分散在多个工具中，也会增加上下文丢失。",
+      "mainstream_comparison": "相比纯 Resolve 脚本，它更适合自然语言编排和状态回读；相比 GUI 自动化，它直接使用 Resolve API，稳定性更高。短板是项目明确标注为实验用途，存在修改或删除工程数据的风险，必须在副本项目中运行。",
+      "today_action": "在一个复制的测试工程中，只验证：读取项目与时间线 → 添加一个 marker → 截图确认 marker 所在页面 → 对一段音频生成 SRT → 不自动导入字幕。检查 API 状态与截图是否一致。",
+      "next_opportunity": "建立每个写操作后的自动验证门：结构检查、当前页截图、时间线差异摘要和人工批准，再扩展到批量镜头组装。",
+      "evidence": [
+        {"source": "Resolve MCP repository", "url": "https://github.com/barckley75/resolve-mcp", "note": "README 列出 52 个工具，覆盖时间线、调色、Fusion、渲染、本地转写、截图和 Resolve Python 代码执行。"},
+        {"source": "Resolve MCP safety notice", "url": "https://github.com/barckley75/resolve-mcp#readme", "note": "项目明确警告仅供测试，AI 工具可能修改或删除项目数据，应始终使用备份。"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "把 Vision LLM 视频流水线拆成“镜头评分基准 → 去重 → FCPXML 粗剪”的可审查 DaVinci 实验",
+      "source_project": "mazsola2k/ai-video-editor",
+      "github": "https://github.com/mazsola2k/ai-video-editor",
+      "category": ["视觉分析", "DaVinci FCPXML", "粗剪基准"],
+      "score": 93,
+      "value_insight": "这个项目最值得借鉴的是完整的中间产物链：按固定间隔抽帧、视觉描述、CLIP/ResNet 特征、场景评分、感知哈希去重，最后输出 DaVinci 可导入的 FCPXML。它可作为检验自有素材分析规则的基准，而不是直接照搬成片逻辑。",
+      "problem_solved": "很多 AI 剪辑方案只给最终视频，无法判断错在镜头分析、评分、去重还是时间线生成。缺少可审查的场景 JSON 和标准时间线，会让调整只能反复重跑整个流水线。",
+      "mainstream_comparison": "相比端到端云剪辑，它保留分析 JSON、提取片段和 FCPXML；相比手工选片，它能批量标记静态、无声、重复和高光场景。短板是当前实现偏特定题材与 NVIDIA/Linux 环境，自动评分不能直接迁移到人物 Vlog 和探店叙事。",
+      "today_action": "不运行整套流水线，只取 10 个镜头，复刻三项输出：场景描述、0-10 质量评分、感知哈希相似度。人工复核错误类型，再决定哪些字段值得接入现有素材初筛。",
+      "next_opportunity": "将其可解释的分析层接入你的 Blueprint 与 Shot Mapping，并只把人工批准镜头导出为 FCPXML 或 OTIO。",
+      "evidence": [
+        {"source": "AI Video Editing Pipeline repository", "url": "https://github.com/mazsola2k/ai-video-editor", "note": "项目公开视觉分析、场景分类、去重、速度调整和 DaVinci FCPXML 输出的完整流水线。"},
+        {"source": "Pipeline documentation", "url": "https://github.com/mazsola2k/ai-video-editor/blob/main/PIPELINE_DIAGRAM.md", "note": "项目将分析、片段提取、时间线生成、Resolve 渲染和发布拆成独立阶段。"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "用 Video Editing MCP 做“语义检索 → 候选片段 → OTIO 粗剪 → DaVinci 打开”的助理剪辑交付链",
+      "source_project": "burningion/video-editing-mcp",
+      "github": "https://github.com/burningion/video-editing-mcp",
+      "category": ["语义检索", "OTIO", "助理剪辑"],
+      "score": 91,
+      "value_insight": "这个 MCP 的价值不在自动生成成片，而在于把多模态检索结果连到 OpenTimelineIO，并能把编辑项目送入本机 DaVinci。适合把它改造成助理剪辑流程：搜索只返回候选，粗剪先输出 OTIO，最终由编辑师在 Resolve 中确认。",
+      "problem_solved": "素材搜索工具与时间线工具通常分离：找到片段后还要人工记录时间码、建立工程和排列镜头。直接端到端生成又缺少镜头选择理由和中间审查。",
+      "mainstream_comparison": "相比单纯视频搜索，它能继续生成 OTIO；相比直接 DaVinci MCP 写入，它先形成可交换中间文件。短板是核心分析依赖 Video Jungle 账户和 API，并非完全本地，成本与隐私需要评估。",
+      "today_action": "用 3 条非敏感测试视频，只验证搜索结果是否包含准确时间码，以及生成的 OTIO 能否在 DaVinci 打开；不测试自动成片，不上传真实客户素材。",
+      "next_opportunity": "把搜索结果扩展为候选镜头板，附叙事功能、采用理由和备用镜头，再接入人工确认门。",
+      "evidence": [
+        {"source": "Video Editing MCP repository", "url": "https://github.com/burningion/video-editing-mcp", "note": "项目支持上传与多模态分析、语义搜索、生成编辑，以及导出 OpenTimelineIO 到本机 DaVinci Resolve。"},
+        {"source": "Video Editing MCP demo", "url": "https://www.youtube.com/watch?v=KG6TMLD8GmA", "note": "仓库提供公开演示，展示 MCP 驱动的视频检索与编辑流程。"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "把 FFmpeg MCP 收缩为“白名单媒体预处理服务”，只执行可验证的确定性操作",
+      "source_project": "Kush36Agrawal/Video_Editor_MCP",
+      "github": "https://github.com/Kush36Agrawal/Video_Editor_MCP",
+      "category": ["FFmpeg MCP", "预处理", "安全执行"],
+      "score": 88,
+      "value_insight": "单个 execute_ffmpeg 工具如果允许任意命令风险很高，但如果收缩为固定白名单，就能成为可靠的媒体预处理层：转码代理、抽音频、裁切测试段、合并参考片和烧录审阅水印。每项操作都有明确输入、输出和校验标准。",
+      "problem_solved": "AI 剪辑流程前后存在大量机械媒体操作，直接让 Agent 拼接 FFmpeg 命令容易覆盖文件、访问越权目录或生成参数不一致的产物。",
+      "mainstream_comparison": "相比手工命令，它便于被 Agent 调用并返回进度；相比完整 NLE MCP，它更轻量、确定性更高。短板是项目规模小、工具抽象过低，不能承担叙事剪辑，必须额外实施目录隔离和参数白名单。",
+      "today_action": "只允许 4 个操作：生成代理、提取 WAV、裁切 20 秒测试片、生成低码率审阅版。禁止自由命令字符串，所有输出写入独立目录并验证时长、分辨率和编码。",
+      "next_opportunity": "将其作为所有分析和 NLE 自动化之前的统一媒体入口，减少编码、路径和格式差异导致的失败。",
+      "evidence": [
+        {"source": "Video Editor MCP repository", "url": "https://github.com/Kush36Agrawal/Video_Editor_MCP", "note": "项目通过 MCP 执行 FFmpeg，支持裁切、合并、转码、速度、音频、字幕和基础滤镜。"},
+        {"source": "Security considerations", "url": "https://github.com/Kush36Agrawal/Video_Editor_MCP#security-considerations", "note": "README 提到允许目录、命令验证和输入参数清理，可作为进一步白名单化的基础。"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"name": "OpenCut-AI", "reason": "功能列表丰富，但搜索到的是分叉项目，当前缺少足够独立验证、稳定发布和真实生产案例，不进入今日 Top。"},
+    {"name": "Cutia", "reason": "是有价值的本地浏览器编辑器，但当前 AI、Agent 或可审查自动化工作流信号不足，仍更接近通用编辑器。"},
+    {"name": "通用一键成片项目", "reason": "多数只展示最终输出，缺少可审查镜头选择、标准时间线、失败回退和人工批准，不符合 V1.5。"},
+    {"name": "PixVerse MCP", "reason": "生成能力明确，但更偏模型 API 接入；今天优先选择能改善真实剪辑工程、素材检索和时间线安全性的方案。"}
+  ]
+}
