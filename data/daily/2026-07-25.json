@@ -1,0 +1,159 @@
+{
+  "date": "2026-07-25",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "优先验证第 1 条：用 VibeFrame 的方法做一个 30 秒竖屏项目骨架，只产出 STORYBOARD、DESIGN、成本上限、dry-run 和审阅报告，不直接生成完整成片，验证约束是否能减少返工。",
+  "summary": [
+    "今天的高价值信号集中在一件事：AI 视频工作流开始把创意意图、成本、编辑决策和交付检查写成机器可读的中间产物，而不是只依赖一次性提示词。",
+    "Top 5 分别覆盖 storyboard 驱动生产、参考视频拆解、录制内容流水线、本地文本粗剪和 CapCut 草稿自动组装；每条都保留人工审阅或可编辑工程。",
+    "共同机会是建立“先生成计划与草稿 → 再人工确认 → 最后进入 NLE 或渲染”的可回退链路，避免 Agent 直接黑盒成片。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "用 VibeFrame 建立“Brief → Storyboard → Design → 成本门禁 → 审阅报告”的可审计视频项目骨架",
+      "source_project": "vericontext/vibeframe",
+      "github": "https://github.com/vericontext/vibeframe",
+      "category": ["Agent 视频生产", "Storyboard", "成本治理"],
+      "score": 97,
+      "value_insight": "VibeFrame 最有价值的不是从一句话直接渲染 MP4，而是把创意需求拆成 STORYBOARD.md、DESIGN.md、确定性项目文件、dry-run、成本门禁和机器可读审阅报告。这个结构适合成为任何 AI 视频项目的前置合同：先确认故事、视觉规则、素材来源和预算，再允许 Agent 生成或编辑。",
+      "problem_solved": "当前 AI 视频项目常在脚本、画面、模型和预算都未确定时直接进入生成，导致风格漂移、镜头功能重复、成本失控和返工。聊天记录又无法稳定充当制作文档，后续很难比较版本或追溯决策。",
+      "mainstream_comparison": "相比直接使用 Runway、Veo 或 Seedance，它增加了前期文档和审批步骤，但能显著提高可控性；相比纯 Remotion 脚本，它覆盖 storyboard、设计约束、AI 素材和成本报告；相比传统制片表，它更适合 Coding Agent 自动读取和执行。短板是复杂实拍剪辑仍需专业 NLE，项目本身也不能替代导演判断。",
+      "today_action": "为一个 30 秒竖屏视频建立最小项目：写 6 个镜头的 STORYBOARD、字体与安全区 DESIGN、每镜头素材来源、总预算上限和 dry-run 报告。今天不生成成片，只检查这套文件能否提前暴露至少 3 个风险。",
+      "next_opportunity": "把该项目骨架固化成品牌短视频、探店、产品广告和 AI 生成短片的统一 Pre-production Skill，再分别接入真实素材、ComfyUI、视频模型、Remotion 或 DaVinci。",
+      "evidence": [
+        {
+          "source": "VibeFrame README",
+          "url": "https://github.com/vericontext/vibeframe",
+          "note": "项目明确以 STORYBOARD.md、DESIGN.md、确定性项目文件、dry run、成本门禁和机器可读报告为核心接口。"
+        },
+        {
+          "source": "VibeFrame workflow",
+          "url": "https://github.com/vericontext/vibeframe#readme",
+          "note": "README 将 storyboard-driven project loop 定义为主路径，并支持 CLI、JSON 输出及可选 MCP server。"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "把 HKUDS VideoAgent 改造成“参考视频意图拆解 → 工具工作流草案 → 人工批准”的重制规划器",
+      "source_project": "HKUDS/VideoAgent",
+      "github": "https://github.com/HKUDS/VideoAgent",
+      "category": ["视频理解", "工作流规划", "参考重制"],
+      "score": 94,
+      "value_insight": "VideoAgent 的机会不在一键重制，而在它把用户意图拆成显性与隐性子任务，再通过图式工具规划和多模态检索形成工作流。更稳妥的落地方式是只输出重制计划、素材需求、工具调用顺序和风险清单，先供人工审批，再决定是否真正执行。",
+      "problem_solved": "参考视频重制常只模仿表面镜头和节奏，忽略隐含的叙事目标、声音功能、文化语境和素材约束；端到端执行还容易调用过多模型，成本高且结果不可解释。",
+      "mainstream_comparison": "相比普通视频问答模型，它进一步规划编辑与重制工具；相比 OpenMontage 等完整生产系统，它更偏研究型的意图分解与工具编排。优势是方法完整，短板是环境较重、依赖多种模型，且公开演示不能直接证明商业交付稳定性。",
+      "today_action": "选一条 30 秒参考视频，只运行纸面版意图拆解：列出显性要求、隐性要求、镜头功能、所需工具和人工确认点。禁止下载全部模型，也不执行自动重制。",
+      "next_opportunity": "将意图拆解模块接到 Blueprint 之前，用它生成对标分析初稿和工具需求，再由人工决定哪些镜头使用真实素材、动态图形或生成内容。",
+      "evidence": [
+        {
+          "source": "VideoAgent README",
+          "url": "https://github.com/HKUDS/VideoAgent",
+          "note": "项目公开描述了显性与隐性意图分析、图式工作流生成、自适应反馈和多模态检索。"
+        },
+        {
+          "source": "VideoAgent demos",
+          "url": "https://github.com/HKUDS/VideoAgent#demos",
+          "note": "仓库展示电影剪辑、梗视频、音乐视频、解说等多类重制示例，并提供 Bilibili 演示入口。"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "用 Vidpipe 建立“录制文件进入收件箱 → 受限清理 → Hook 候选 → 多平台交付包”的内容生产流水线",
+      "source_project": "htekdev/vidpipe",
+      "github": "https://github.com/htekdev/vidpipe",
+      "category": ["口播生产", "短视频切片", "内容分发"],
+      "score": 92,
+      "value_insight": "Vidpipe 的价值不是自动发遍所有平台，而是把新录制文件变成一个可检查交付包：逐词转录、受限停顿清理、15–60 秒 Hook 候选、字幕、章节、平台文案和品牌语气。关键是让自动删减有上限，并在发布前保留人工选择。",
+      "problem_solved": "知识口播、播客和屏幕录制的重复成本分散在转写、删停顿、选高光、做字幕、改画幅和写平台文案；多个工具来回搬运容易造成时间码和版本失配。",
+      "mainstream_comparison": "相比 OpusClip 等云端一键切片，它更适合本地和脚本化流水线；相比单独的 Whisper 或 Auto-Editor，它覆盖从转录到内容包装的完整交付物。短板是自动选 Hook 和文案仍需人工复核，自动发布应默认关闭。",
+      "today_action": "拿一段 8–10 分钟录制，只启用转录、停顿清理上限 20%、3 个 Hook 候选和字幕导出；关闭自动发布，比较三个候选是否真的对应不同内容承诺。",
+      "next_opportunity": "把稳定规则封装成账号级 brand.json 和交付模板，为课程、访谈、播客和个人品牌提供月度批量内容生产服务。",
+      "evidence": [
+        {
+          "source": "Vidpipe README",
+          "url": "https://github.com/htekdev/vidpipe",
+          "note": "项目支持逐词转录、上下文停顿清理、Hook-first 短片、字幕、章节、品牌语气和多平台内容。"
+        },
+        {
+          "source": "Vidpipe feature list",
+          "url": "https://github.com/htekdev/vidpipe#readme",
+          "note": "README 明确列出 Gemini Vision 场景分析、ONNX 人脸裁切和可配置的自动发布能力。"
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "把 OpenCut AI 变成“本地逐字稿粗剪台”，只负责文本删减、停顿清理和基础音频 Ducking",
+      "source_project": "Ekaanth/OpenCut-AI",
+      "github": "https://github.com/Ekaanth/OpenCut-AI",
+      "category": ["本地剪辑", "文本粗剪", "口播"],
+      "score": 89,
+      "value_insight": "OpenCut AI 最适合承担的是语言驱动内容的第一遍可视化粗剪：转录后像编辑文档一样删句，时间线同步切除，再做填充词、静音和基础背景音乐 Ducking。它不应被当成完整 AI 导演，而应是人工精剪前的本地清理工作台。",
+      "problem_solved": "口播和访谈中，编辑师需要在逐字稿与时间线之间反复定位；命令行工具虽然能删停顿，但很难直观看到删除内容和恢复片段。",
+      "mainstream_comparison": "相比 Descript，它强调自托管和本地模型；相比 Auto-Editor，它有文本编辑和真实时间线界面；相比专业 NLE，它更轻但调色、复杂声音和叙事精修能力有限。该仓库属于 OpenCut 的衍生项目，长期维护和兼容性需要单独验证。",
+      "today_action": "只用一段 3 分钟口播测试三件事：删除一句文字是否准确切时间线、Smart Cut 是否误删情绪停顿、自动 Ducking 是否保持语音清晰。不要测试语音克隆或自动生成画面。",
+      "next_opportunity": "验证可靠后，可把它作为口播项目的前处理界面，导出清理后的工程或媒体，再进入 DaVinci 完成节奏、包装和声音精修。",
+      "evidence": [
+        {
+          "source": "OpenCut AI README",
+          "url": "https://github.com/Ekaanth/OpenCut-AI",
+          "note": "项目公开支持本地逐字稿编辑、Smart Cut、Whisper 逐词时间码和 AI Auto-Duck。"
+        },
+        {
+          "source": "OpenCut AI feature overview",
+          "url": "https://github.com/Ekaanth/OpenCut-AI#readme",
+          "note": "README 将其定位为自托管 AI 视频编辑器，并说明删除文字可同步切除时间线。"
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "用 pyCapCut 建立“AI 镜头决策 JSON → 品牌模板草稿 → 人工打开检查”的批量短视频组装器",
+      "source_project": "GuanYixuan/pyCapCut",
+      "github": "https://github.com/GuanYixuan/pyCapCut",
+      "category": ["CapCut 自动化", "模板生产", "草稿生成"],
+      "score": 88,
+      "value_insight": "pyCapCut 本身不是 AI，但它能把 AI 已经确认的镜头顺序、时间码、字幕和品牌参数稳定写成可继续编辑的 CapCut 草稿。真正的机会是让 AI 只输出受约束的 clip plan，再由模板模式完成素材替换、字幕样式、转场和轨道组装，最后由人工打开草稿检查。",
+      "problem_solved": "批量短视频经常重复创建轨道、替换素材、导入字幕、改标题和套品牌包装；让 Agent 直接模拟鼠标操作 CapCut 不稳定，且难以回滚。",
+      "mainstream_comparison": "相比 GUI 自动化，它直接生成草稿结构，更快也更可重复；相比 Remotion，它保留 CapCut 的人工编辑体验和现成特效；相比 DaVinci MCP，它更适合轻量社媒模板。短板是项目仍在迁移，部分功能标注为实验性，而且 Linux/macOS 生成的草稿仍需 Windows 版 CapCut 导出。",
+      "today_action": "建立一个 15 秒模板草稿，只验证替换 3 个视频、修改标题、导入 SRT 和添加一个转场；AI 输入只允许文件路径、入出点、文字和模板 ID，不允许自由修改草稿结构。",
+      "next_opportunity": "把高频探店、产品介绍和活动预告沉淀成可批量替换的 CapCut 模板服务，并将 AI 分析结果直接映射为结构化草稿参数。",
+      "evidence": [
+        {
+          "source": "pyCapCut README",
+          "url": "https://github.com/GuanYixuan/pyCapCut",
+          "note": "项目支持模板草稿、素材与文字替换、多轨道、转场、关键帧、字幕导入和批量导出。"
+        },
+        {
+          "source": "pyCapCut compatibility notes",
+          "url": "https://github.com/GuanYixuan/pyCapCut#readme",
+          "note": "README 说明项目正在迁移，部分模块实验性较强，且 macOS/Linux 生成后仍需 Windows CapCut 导出。"
+        }
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "OpenCut",
+      "reason": "新版仍在重写，Editor API、MCP server、headless mode 和插件架构属于待交付能力；当前更适合作为观察信号，尚不足以转成今天可执行的 AI 剪辑方案。"
+    },
+    {
+      "name": "ViMax",
+      "reason": "端到端多 Agent 视频生成演示有研究价值，但今天缺少足够明确的可审查中间产物、成本门禁和专业 NLE 回退路径。"
+    },
+    {
+      "name": "通用 FFmpeg MCP",
+      "reason": "只暴露任意 FFmpeg 命令容易扩大执行风险；若没有白名单、参数校验和输出隔离，不符合 V1.5 的安全落地要求。"
+    },
+    {
+      "name": "Cutia",
+      "reason": "本地浏览器剪辑体验清晰，但当前主要是开源时间线编辑器，AI 工作流与可执行机会信号不足。"
+    },
+    {
+      "name": "一键自动成片框架",
+      "reason": "若没有 storyboard、编辑草稿、差异报告或人工批准节点，即使 Demo 完整，也不进入今天的 Top。"
+    }
+  ]
+}
