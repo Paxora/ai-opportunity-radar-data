@@ -1,1 +1,179 @@
-{"date":"2026-08-21","version":"Open-source AI Opportunity V1.5","today_mission":"今天优先修复“假成功、假反馈、晚失败”：剪映把环境失败前移，Resolve 用回读证明写操作真的生效，内容研究先清理错误行为信号，生成镜头则把交付规格前置。","summary":["剪映：渲染前探测基础 ffmpeg filter，避免整批任务中途才失败。","DaVinci：Fusion 删除关键帧从“调用成功”升级为“删除后回读确认”。","内容研究：OpenBiliClaw 修复程序化 seek 和长文本导致的假负反馈，优先提升行为数据可信度。"],"projects":[{"rank":1,"name":"capcut-cli：渲染前能力探测 → 缺失 filter 直接失败 → 再进入批量成片","source_project":"renezander030/capcut-cli","github":"https://github.com/renezander030/capcut-cli","category":["剪映批量生产","渲染门禁"],"score":99,"value_insight":"8月20日的新修复把 fps、scale、pad、setsar、format、concat、trim、setpts 这 8 个基础 filter 也纳入 ffmpeg capability probe。此前只检查 drawtext/overlay/libx264，导致某些精简 ffmpeg 在真正渲染时才报原始 parser error。真正的价值是把“机器上的 ffmpeg 到底能不能完成这份草稿”提前变成明确门禁。","problem_solved":"解决批量草稿已经生成、进入正式 render 后才因 ffmpeg 缺基础 filter 整批失败的问题；尤其适合不同机器、打包版 ffmpeg 或远程执行环境。","mainstream_comparison":"多数脚本默认系统 ffmpeg 能力完整，失败后才看 stderr；capcut-cli 现在把基础链路提前探测，更适合批量生产，因为失败点从“渲染中途”前移到“开工前”。","today_action":"用当前 Mac 上实际调用的 ffmpeg 跑一次 capability probe，再用一份 20 秒草稿执行 dry-run 和正式 render。若缺 filter，先解决 ffmpeg 环境，不要继续改草稿或模板。","next_opportunity":"通过后把 capability probe 固定成每台机器/每次环境升级后的开工检查；批量任务只在 probe 全绿后进入渲染队列，减少整批返工。","evidence":[{"type":"commit","title":"probe base-chain filters and fail fast when missing","url":"https://github.com/renezander030/capcut-cli/commit/809e1daab99e86dac91d3677706c2abeb0bc3167"}]},{"rank":2,"name":"Resolve MCP：Fusion 关键帧删除 → 操作后回读 → 只接受真实生效的自动修改","source_project":"samuelgursky/davinci-resolve-mcp","github":"https://github.com/samuelgursky/davinci-resolve-mcp","category":["DaVinci自动化","回读验收"],"score":98,"value_insight":"8月20日修复确认 fusion_comp 的 delete_keyframe 自 v2.1.0 起实际上从未正确工作：旧实现对 Input 调用不存在的 RemoveKeyFrame。新实现改为找到 BezierSpline 后调用 DeleteKeyFrames，并且不相信返回值，而是重新读取 keyframe 列表确认是否真的删除。价值在于再次证明 Resolve/Fusion 自动化不能把“API 调用没报错”当成功。","problem_solved":"解决自动修改关键帧时出现“工具返回成功或异常不清楚，但时间线实际没变”的假成功问题，避免 Agent 在错误状态上继续后续编辑。","mainstream_comparison":"普通自动化只看函数返回值或无异常；这次修复明确发现 DeleteKeyFrames 即使成功也可能返回 None，因此必须用状态回读证明结果，更符合正式剪辑的可靠性要求。","today_action":"在测试时间线做一个最小闭环：给一个 Fusion 参数加关键帧 → 读取确认存在 → 删除 → 再读取确认消失。不要先迁移正式项目，先验证当前 Resolve 21 环境中的真实行为。","next_opportunity":"把“写操作后回读”推广到 transform、keyframe、marker、clip range 等关键动作；任何不能被回读证明的动作只允许停留在测试时间线。","evidence":[{"type":"commit","title":"delete_keyframe deletes on the spline, not the Input","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/132e134d3aa25d3d0df6bdf38f051bd29d128211"}]},{"rank":3,"name":"OpenBiliClaw：去掉假负反馈 → 只用真实交互训练偏好 → 选题池不被误伤","source_project":"whiteguo233/OpenBiliClaw","github":"https://github.com/whiteguo233/OpenBiliClaw","category":["抖音/小红书运营","内容研究"],"score":97,"value_insight":"8月20日修复了两类会污染偏好数据的假信号：程序化 seek 被误当成用户主动拖动；视频卡片长文本里只要出现“不感兴趣”等词就可能被误记为 dislike。现在 seek 只在真实指针/键盘交互后记录，负反馈也只识别短控制标签。价值是让“用户行为 → 偏好 → 候选筛选”这条链少吃脏数据。","problem_solved":"解决推荐/选题系统因为浏览器自身恢复进度、页面文案关键词而错误判断用户厌恶某类内容，导致真正有价值的候选被持续压低。","mainstream_comparison":"普通跨平台采集常把 DOM 事件直接当行为事实；这里加入真实交互条件和控件语义约束，虽然少收一些事件，但数据可信度更高，更适合做长期选题画像。","today_action":"先不调推荐模型。回放 20 条近期行为日志，重点检查 seek/dislike 是否能解释为真实人工动作；把明显误判的旧事件标记出来，再观察候选池变化。","next_opportunity":"如果误反馈显著减少，就把“可解释行为事件率”作为画像质量指标；只有来源、动作和上下文都能解释的事件才进入长期偏好层。","evidence":[{"type":"commit","title":"suppress programmatic seeks and long-copy dislike misreads","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/7f2d269f4a1cc8d7d60b6aadcdb24e966a817afe"},{"type":"commit","title":"isolate DeepSeek moderation refusals in preference analysis","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/90211ac44779b0aff4ab68299afd19235af80f69"}]},{"rank":4,"name":"小红书 MCP：研究与发布权限拆开 → 先做只读案例卡 → 人工批准后再发布","source_project":"xpzouying/xiaohongshu-mcp","github":"https://github.com/xpzouying/xiaohongshu-mcp","category":["抖音/小红书运营","最小权限"],"score":94,"value_insight":"今天没有发现足够强的新小红书项目值得替换现有成熟链路，因此不为了上新而换工具。现有 xiaohongshu-mcp 已覆盖搜索、详情、登录和发布，并明确提供更低部署成本的 x-mcp 浏览器插件。真正有价值的方案仍是把研究和发布拆开：日常只读搜案例，发布留给人工确认。","problem_solved":"解决内容研究工具为了方便把发布、互动、登录等高权限能力一起交给 Agent 的风险，同时避免为少量案例检索维护复杂 Docker 环境。","mainstream_comparison":"全权限运营 MCP 功能更多，但权限边界更宽；浏览器侧/只读研究链牺牲无人值守自动化，换来部署更轻、风险更低，当前更符合真实账号运营阶段。","today_action":"只验证搜索 → 笔记详情 → 原链接回看这三步，用 10 条候选生成“Hook/结构/可复刻点/不适配原因”案例卡；不要启用自动点赞、评论或发布。","next_opportunity":"只有当案例卡连续一周能提高可拍选题命中率，再考虑把人工确认后的发布接回 MCP；研究价值未验证前不扩大权限。","evidence":[{"type":"repository","title":"xiaohongshu-mcp README and x-mcp browser option","url":"https://github.com/xpzouying/xiaohongshu-mcp"}]},{"rank":5,"name":"ComfyUI：视频输出先统一 HDR/编码 → 再进入剪辑验收 → 避免生成后交付返工","source_project":"Comfy-Org/ComfyUI","github":"https://github.com/Comfy-Org/ComfyUI","category":["AI视频生成工作流","交付兼容"],"score":92,"value_insight":"8月20–21日 Save Video 节点连续加入 HDR 视频保存、AV1、mkv/webm，以及 H.264 的 HDR color space 选项。真正的机会不是“支持更多编码”，而是把生成镜头的输出规格前置到工作流末端，减少进入 Resolve/剪映后才发现色彩空间或封装不合适而重导。","problem_solved":"解决 AI 视频生成完成后，在交付到剪辑软件阶段才发现编码、容器或 HDR 色彩空间不匹配，造成二次转码、色彩偏差或批量返工。","mainstream_comparison":"常见 ComfyUI 工作流只关心生成成功，最后用默认编码保存；新的 Save Video 能把交付规格显式化，更接近真正生产链，但仍需要在目标剪辑软件里验证。","today_action":"用同一 5 秒生成镜头输出两份：常规 H.264 和目标 HDR/H.264 配置；直接导入 Resolve 测试色彩、播放和导出，不做额外后处理。若 HDR 没有真实需求，就继续 SDR，不为新能力增加复杂度。","next_opportunity":"若后续确实存在 HDR/高质量交付需求，再把编码/色彩空间做成项目级模板；否则保留单一 SDR 输出，优先稳定和兼容。","evidence":[{"type":"commit","title":"Support HDR video saving, AV1 codec, mkv and webm","url":"https://github.com/Comfy-Org/ComfyUI/commit/dcbcf8c2e10ba618ad38cc6eebfe54b099fec11a"},{"type":"commit","title":"Add HDR color space options to h264 codec in Save Video node","url":"https://github.com/Comfy-Org/ComfyUI/commit/76135e557da1ec7dcb270160f01e597565e3e003"}]}],"rejected_candidates":[{"name":"ComfyUI Flux Video Upscale partner node","reason":"属于新功能入口，但依赖合作方节点且更偏后处理能力扩张；当前更值得先解决生成视频交付规格和真实入片兼容，因此不进 Top。"},{"name":"OpenBiliClaw Pillow 12.3.0 dependency bump","reason":"安全修复有必要，但属于依赖维护，不直接形成新的内容机会方案，不能占 Top。"},{"name":"xpzouying/xiaohongshu-mcp 8月20日 README 二维码更新","reason":"只是文档图片更新，没有新的案例研究或运营能力信号，不作为今日新增价值。"},{"name":"RedCube AI governance/profile updates","reason":"近期更新主要是治理、CI 和 profile pointer，没有出现比现有图文交付链更强的新用户价值，因此今日不重复上榜。"},{"name":"521w/xiaohongshu-mcp","reason":"仍主要是本地写作模板和标签建议，没有真实平台案例、账号反馈或效果回流证据，无法进入有价值内容 Top。"}]}
+{
+  "date": "2026-08-21",
+  "version": "Open-source AI Opportunity V1.6",
+  "today_mission": "今天先做三件低成本的事：批量出片前检查渲染环境；让 Resolve 自动修改必须回读确认；内容研究只使用真实浏览反馈。其他工具先做小范围测试，不急着更换现有流程。",
+  "summary": [
+    "剪映批量出片：先检查电脑能不能正常渲染，再开始整批任务。",
+    "DaVinci 自动化：任何删除或修改都要重新读取确认，不能只相信“成功”提示。",
+    "内容研究和 AI 视频：先验证数据是否可靠、输出是否兼容，再决定要不要扩大使用。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "capcut-cli",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": [
+        "剪映批量生产",
+        "渲染门禁"
+      ],
+      "score": 99,
+      "value_insight": "批量出片时，先确认电脑环境可以完成任务，再开始整批渲染。",
+      "problem_solved": "避免批量任务开始后才发现环境不完整，导致整批视频失败和返工。",
+      "mainstream_comparison": "普通脚本通常等到渲染报错后才发现问题；它会先检查再开工，更适合一次处理很多视频。",
+      "today_action": "拿一份约20秒的测试草稿，先运行环境检查，再实际导出一次。测试成功后，才开始批量任务。",
+      "next_opportunity": "验证稳定后，把环境检查设为每次批量出片前的固定步骤。",
+      "evidence": [
+        {
+          "type": "commit",
+          "title": "probe base-chain filters and fail fast when missing",
+          "url": "https://github.com/renezander030/capcut-cli/commit/809e1daab99e86dac91d3677706c2abeb0bc3167"
+        }
+      ],
+      "opportunity_title": "批量出片前先检查电脑环境",
+      "what_is_it": "这是一个可以读取 CapCut／剪映草稿，并通过 FFmpeg 批量生成视频的开源工具。",
+      "why_recommend": "它会在正式渲染前检查电脑是否具备所需功能，能在开工前发现问题，避免做到一半才失败。",
+      "when_not_use": "如果你只在剪映里手工导出少量视频，或者现有批量流程一直稳定，可以暂时不看。"
+    },
+    {
+      "rank": 2,
+      "name": "DaVinci Resolve MCP",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": [
+        "DaVinci自动化",
+        "回读验收"
+      ],
+      "score": 98,
+      "value_insight": "DaVinci 自动化不能只相信成功提示，每次修改都应该重新读取结果确认。",
+      "problem_solved": "解决 AI 或脚本显示操作成功，但时间线、参数或关键帧实际上没有改变的问题。",
+      "mainstream_comparison": "普通自动化只看有没有报错；这个做法会在操作后重新检查实际状态，结果更可靠。",
+      "today_action": "在测试时间线上添加一个关键帧，确认它存在；再删除它，并重新读取确认它已经消失。不要先动正式项目。",
+      "next_opportunity": "测试通过后，把修改后回读确认应用到变换、标记、片段范围等其他重要操作。",
+      "evidence": [
+        {
+          "type": "commit",
+          "title": "delete_keyframe deletes on the spline, not the Input",
+          "url": "https://github.com/samuelgursky/davinci-resolve-mcp/commit/132e134d3aa25d3d0df6bdf38f051bd29d128211"
+        }
+      ],
+      "opportunity_title": "让自动修改必须经过结果确认",
+      "what_is_it": "这是一个让 AI 或脚本控制 DaVinci Resolve 的工具，可以操作时间线、Fusion 参数和关键帧。",
+      "why_recommend": "它最近修复了关键帧删除，并加入删除后的再次检查，避免工具说成功但画面实际没有变化。",
+      "when_not_use": "如果你只手动剪辑，或者暂时不让 AI 修改 Fusion 和关键帧，可以暂时不看。"
+    },
+    {
+      "rank": 3,
+      "name": "OpenBiliClaw",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": [
+        "抖音/小红书运营",
+        "内容研究"
+      ],
+      "score": 97,
+      "value_insight": "先保证浏览反馈是真的，再用这些数据判断用户喜欢什么内容。",
+      "problem_solved": "避免系统因为错误的浏览记录而误判用户喜好，把真正有价值的选题排除掉。",
+      "mainstream_comparison": "普通采集工具看到页面事件就直接记录；它会先判断是不是用户真实操作，收集的数据更可信。",
+      "today_action": "查看最近20条浏览反馈，逐条确认是否真的是人工操作。先标记明显误判的数据，不要急着调整推荐模型。",
+      "next_opportunity": "如果误判明显减少，再把真实浏览反馈用于长期选题和内容偏好分析。",
+      "evidence": [
+        {
+          "type": "commit",
+          "title": "suppress programmatic seeks and long-copy dislike misreads",
+          "url": "https://github.com/whiteguo233/OpenBiliClaw/commit/7f2d269f4a1cc8d7d60b6aadcdb24e966a817afe"
+        },
+        {
+          "type": "commit",
+          "title": "isolate DeepSeek moderation refusals in preference analysis",
+          "url": "https://github.com/whiteguo233/OpenBiliClaw/commit/90211ac44779b0aff4ab68299afd19235af80f69"
+        }
+      ],
+      "opportunity_title": "让选题系统只相信真实的浏览反馈",
+      "what_is_it": "这是一个帮助收集和分析内容浏览行为，用来整理用户偏好和辅助选题的开源工具。",
+      "why_recommend": "它修复了两类误判：页面自动跳转不再算成用户拖动，普通文案也不会被误认为“不感兴趣”。",
+      "when_not_use": "如果你还没有积累浏览行为数据，或者目前只靠人工选题，可以先不部署。"
+    },
+    {
+      "rank": 4,
+      "name": "小红书 MCP",
+      "source_project": "xpzouying/xiaohongshu-mcp",
+      "github": "https://github.com/xpzouying/xiaohongshu-mcp",
+      "category": [
+        "抖音/小红书运营",
+        "最小权限"
+      ],
+      "score": 94,
+      "value_insight": "先用低权限验证内容研究有没有价值，不需要一开始就把账号操作全部交给 AI。",
+      "problem_solved": "解决为了找案例而给 AI 过多账号权限的问题，也减少复杂部署和维护成本。",
+      "mainstream_comparison": "全自动运营功能更多，但账号风险也更高；只读研究自动化程度较低，却更安全、更适合当前阶段。",
+      "today_action": "只测试搜索、读取详情和打开原链接。选10条内容，整理它们的开头、结构、可借鉴点和不适合你的原因。",
+      "next_opportunity": "连续测试一周，确认案例卡确实提高选题效率后，再考虑接入人工批准后的发布流程。",
+      "evidence": [
+        {
+          "type": "repository",
+          "title": "xiaohongshu-mcp README and x-mcp browser option",
+          "url": "https://github.com/xpzouying/xiaohongshu-mcp"
+        }
+      ],
+      "opportunity_title": "先让 AI 做只读研究，发布仍由人工确认",
+      "what_is_it": "这是一个让 AI 搜索、读取和发布小红书内容的连接工具。",
+      "why_recommend": "可以只开放搜索和阅读，让 AI 帮你找案例；发布、点赞和评论仍由人工决定，使用风险更低。",
+      "when_not_use": "如果你没有小红书内容研究需求，或者已经有稳定的人工案例库，可以暂时不看。"
+    },
+    {
+      "rank": 5,
+      "name": "ComfyUI",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": [
+        "AI视频生成工作流",
+        "交付兼容"
+      ],
+      "score": 92,
+      "value_insight": "生成视频时就按最终剪辑要求保存，比生成完成后再反复转码更省时间。",
+      "problem_solved": "避免 AI 视频生成后才发现格式、色彩或文件封装不适合剪辑软件，造成重新导出和画面偏色。",
+      "mainstream_comparison": "普通工作流只追求生成成功，常用默认设置保存；这个做法会提前考虑视频进入剪辑软件后的兼容性。",
+      "today_action": "用同一个5秒镜头导出普通版本和目标高动态范围版本，直接放进 Resolve 对比播放、色彩和导出。没有真实需求就继续用普通版本。",
+      "next_opportunity": "确认确有需求后，再把验证通过的格式和色彩设置保存成项目模板。",
+      "evidence": [
+        {
+          "type": "commit",
+          "title": "Support HDR video saving, AV1 codec, mkv and webm",
+          "url": "https://github.com/Comfy-Org/ComfyUI/commit/dcbcf8c2e10ba618ad38cc6eebfe54b099fec11a"
+        },
+        {
+          "type": "commit",
+          "title": "Add HDR color space options to h264 codec in Save Video node",
+          "url": "https://github.com/Comfy-Org/ComfyUI/commit/76135e557da1ec7dcb270160f01e597565e3e003"
+        }
+      ],
+      "opportunity_title": "生成视频时直接选择适合剪辑的输出格式",
+      "what_is_it": "这是一个用节点工作流生成图片和视频的开源工具。",
+      "why_recommend": "新版可以在保存视频时选择更合适的格式和色彩设置，减少导入 DaVinci Resolve 或剪映后重新转换。",
+      "when_not_use": "如果你只制作普通短视频，没有高动态范围或特殊交付要求，不需要增加新的输出设置。"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "ComfyUI Flux Video Upscale partner node",
+      "reason": "属于新功能入口，但依赖合作方节点且更偏后处理能力扩张；当前更值得先解决生成视频交付规格和真实入片兼容，因此不进 Top。"
+    },
+    {
+      "name": "OpenBiliClaw Pillow 12.3.0 dependency bump",
+      "reason": "安全修复有必要，但属于依赖维护，不直接形成新的内容机会方案，不能占 Top。"
+    },
+    {
+      "name": "xpzouying/xiaohongshu-mcp 8月20日 README 二维码更新",
+      "reason": "只是文档图片更新，没有新的案例研究或运营能力信号，不作为今日新增价值。"
+    },
+    {
+      "name": "RedCube AI governance/profile updates",
+      "reason": "近期更新主要是治理、CI 和 profile pointer，没有出现比现有图文交付链更强的新用户价值，因此今日不重复上榜。"
+    },
+    {
+      "name": "521w/xiaohongshu-mcp",
+      "reason": "仍主要是本地写作模板和标签建议，没有真实平台案例、账号反馈或效果回流证据，无法进入有价值内容 Top。"
+    }
+  ]
+}
