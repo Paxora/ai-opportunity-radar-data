@@ -1,1 +1,50 @@
-{"date":"2026-07-28","version":"Open-source AI Opportunity V1.5","today_mission":"VALUE-FIRST V1.5：只推荐已经存在、可执行、有明确落地价值的项目方案，不推荐空泛方向或已验证项目。","summary":["抖音小红书热点与内容工具35%，DaVinci自动化20%，剪映批量生产20%，AI视频生成工作流20%，其他AI工具5%。","不重复推荐已验证项目：davinci-resolve-mcp、VectCutAPI。","不推荐只有概念的生态方向，必须有具体项目、模板或工作流。"],"projects":[{"rank":1,"name":"MediaCrawler","opportunity_title":"建立 AI 内容趋势采集系统：发现抖音、小红书热门内容","source_project":"MediaCrawler","category":["热点监控","内容生产"],"score":86,"github":"https://github.com/NanmiCoder/MediaCrawler","value_insight":"利用开源采集能力建立自己的内容趋势数据库，发现平台正在增长的话题，而不是依靠人工刷视频。","problem_solved":"解决不知道当前平台什么内容值得拍的问题。","mainstream_comparison":"商业工具如新抖、蝉妈妈已经验证需求，但开源方案可以搭建自己的数据流程。","today_action":"测试关键词采集流程，建立标题、互动数据、发布时间的选题数据库。","next_opportunity":"结合AI总结生成每日内容方向。"},{"rank":2,"name":"Video-LLaVA","opportunity_title":"AI 视频素材理解与自动标签","source_project":"Video-LLaVA","category":["AI视频","素材分析"],"score":84,"github":"https://github.com/PKU-YuanGroup/Video-LLaVA","value_insight":"让AI理解视频内容，帮助大量素材快速分类和检索。","problem_solved":"解决大量视频素材中寻找有效镜头的问题。","mainstream_comparison":"相比自动剪辑工具，更关注素材理解和辅助剪辑。","today_action":"测试视频理解能力，评估是否能生成适合DaVinci分类的标签。","next_opportunity":"连接素材库和剪辑流程。"}],"rejected_candidates":[{"name":"davinci-resolve-mcp","reason":"已经验证，不重复推荐。"},{"name":"VectCutAPI","reason":"正在验证，不重复推荐。"},{"name":"ComfyUI生态","reason":"方向过于宽泛，缺少具体Workflow项目，不进入推荐。"},{"name":"n8n","reason":"已知工具，需要具体视频生产Workflow后再推荐。"}]}
+{
+  "date": "2026-07-28",
+  "version": "Open-source AI Opportunity V1.6",
+  "today_mission": "VALUE-FIRST V1.6：每个推荐项目必须先说明它是什么、解决什么问题、为什么值得关注、如何开始使用。",
+  "summary": [
+    "固定项目解释模板：它是什么 → 为什么推荐 → 解决什么问题 → 今天怎么开始 → 什么时候不用看。",
+    "不重复推荐已验证项目：davinci-resolve-mcp、VectCutAPI。",
+    "不推荐只有概念的生态方向，必须有具体项目、模板或工作流。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "MediaCrawler",
+      "opportunity_title": "发现抖音、小红书正在爆火的内容方向",
+      "source_project": "MediaCrawler",
+      "category": ["热点监控", "内容生产"],
+      "score": 86,
+      "github": "https://github.com/NanmiCoder/MediaCrawler",
+      "what_is_it": "这是一个开源数据采集工具，可以抓取小红书、抖音等平台内容数据。",
+      "why_recommend": "可以自己建立热点内容数据库，不需要每天人工刷平台寻找选题。",
+      "value_insight": "适合搭建自己的内容趋势监控流程，发现哪些标题、话题、内容形式正在增长。",
+      "problem_solved": "解决不知道当前平台什么内容值得做的问题。",
+      "today_action": "输入AI视频、AI剪辑等关键词，采集热门内容并整理标题、互动数据、发布时间。",
+      "when_not_use": "如果已经购买新抖、蝉妈妈等成熟商业工具，不一定需要自建。",
+      "next_opportunity": "结合AI分析生成每日选题建议。"
+    },
+    {
+      "rank": 2,
+      "name": "Video-LLaVA",
+      "opportunity_title": "让AI理解和整理大量视频素材",
+      "source_project": "Video-LLaVA",
+      "category": ["AI视频", "素材分析"],
+      "score": 84,
+      "github": "https://github.com/PKU-YuanGroup/Video-LLaVA",
+      "what_is_it": "这是一个可以理解视频内容的开源AI模型，可以分析视频中的画面和信息。",
+      "why_recommend": "未来可以连接素材库，让AI帮助筛选、分类和检索视频素材。",
+      "value_insight": "重点不是生成视频，而是解决大量素材管理和查找效率问题。",
+      "problem_solved": "解决视频素材太多，人工寻找有效镜头效率低的问题。",
+      "today_action": "测试视频理解能力，观察是否能生成适合DaVinci素材管理的标签。",
+      "when_not_use": "如果只是剪辑少量短视频，目前手动管理素材即可。",
+      "next_opportunity": "连接素材库和自动化剪辑流程。"
+    }
+  ],
+  "rejected_candidates": [
+    {"name":"davinci-resolve-mcp","reason":"已经验证，不重复推荐。"},
+    {"name":"VectCutAPI","reason":"正在验证，不重复推荐。"},
+    {"name":"ComfyUI生态","reason":"方向过于宽泛，缺少具体Workflow项目，不进入推荐。"},
+    {"name":"n8n","reason":"已知工具，需要具体视频生产Workflow后再推荐。"}
+  ]
+}
