@@ -1,0 +1,100 @@
+{
+  "date": "2026-08-23",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先验证能形成闭环的方案：小红书把趋势证据、人工审批和发布后评估串起来；Resolve 继续以最终画面验收高风险写入；剪映先做兼容与 lint 门禁；内容推荐只把可解释行为写回长期画像；口播粗剪继续坚持真实转录约束。",
+  "summary": [
+    "运营：XhsGrowthAgent 8月23日仍在更新，公开 Replay 已能展示从趋势发现到审核的证据链，价值在可复盘而不是自动发帖。",
+    "剪辑：高风险自动化继续采用结果验收和草稿门禁，不因新工具增加写权限。",
+    "原则：今天拒绝仅因 fork、刚 push、功能多或热门就进入 Top；必须能直接减少返工或提高选题命中率。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "XhsGrowthAgent 证据链选题闭环",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["抖音/小红书运营", "内容研究"],
+      "score": 99,
+      "value_insight": "项目在2026-08-23仍持续更新，且公开 Showcase/Workflow Replay 已把趋势发现、受众洞察、定位、文案、视觉方向和人工 Review 串成可查看的证据链。真正价值不是多 Agent，而是每一步为什么得出这个选题都能回看，发布边界仍由人控制。",
+      "problem_solved": "解决选题、文案和复盘分散在多个提示词里，最后只剩一个成稿却不知道依据是什么，也无法把发布后的表现反馈回下一轮。",
+      "mainstream_comparison": "普通 AI 写小红书往往从一句需求直接生成成稿；该方案更慢，但保留研究证据、阶段输出、人工审批和 Analytics/Evaluation，更适合长期运营闭环。",
+      "today_action": "不要部署全套生产环境。先直接查看公开 Showcase 和 Workflow Replay，选一个与当前账号最接近的案例，只记录四项：趋势证据、目标受众、核心角度、Review 后的最终改动；判断这四项是否真的能帮助下一条内容决策。",
+      "next_opportunity": "如果证据链有用，再只接入 Trend Discovery + Review 两段，不先接自动发布；连续5条内容记录选题假设、审核修改和发布结果，验证是否提高命中率后再扩大。",
+      "evidence": [
+        {"type":"repo","title":"Repository pushed on 2026-08-23; AI-assisted Xiaohongshu growth engine","url":"https://github.com/JameryW/XhsGrowthAgent"},
+        {"type":"readme","title":"Public Showcase and Workflow Replay expose evidence from trend discovery to review","url":"https://github.com/JameryW/XhsGrowthAgent#live-product-showcase"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Resolve 高风险写入最终画面验收",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci自动化", "结果验收"],
+      "score": 98,
+      "value_insight": "近期连续修复 Fusion keyframe、source range、控制面板和写保护问题说明：Resolve 自动化最危险的不是缺工具，而是 API 返回成功却没有得到预期结果。高风险视觉修改必须以最终合成帧为最高级验收。",
+      "problem_solved": "避免 Fusion、Title、grade、关键帧等操作出现参数可读回、结构也存在，但实际画面不对或根本没变化的假成功。",
+      "mainstream_comparison": "普通 MCP 工作流通常以函数成功或状态回读作为结束；最终画面验收多一步，但只用于高风险动作即可显著降低正式时间线返工。",
+      "today_action": "在测试时间线做一个可见 Fusion 或 Title 修改，修改前后各取最终合成帧；只有画面差异与预期一致才标记成功。marker/bin 等非视觉动作继续只做结构回读，不增加无谓渲染。",
+      "next_opportunity": "把自动化动作分成结构级、时间码级、画面级三档，并给每档绑定最低验收标准；之后 Shot Mapping 和粗剪执行可以自动决定需要哪一级回读。",
+      "evidence": [
+        {"type":"release","title":"davinci-resolve-mcp v2.98.x recent fixes cover Fusion keyframes, guards and runtime correctness","url":"https://github.com/samuelgursky/davinci-resolve-mcp/releases"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "capcut-cli 草稿兼容门禁",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映批量生产", "可靠性"],
+      "score": 96,
+      "value_insight": "当前最有价值的不是继续增加剪映效果，而是把版本、草稿布局、素材存在性、字幕和 timeline drift 在打开剪映之前检查清楚。项目已经把 lint、version guard、info-primary 布局和 sync-timelines 做成确定性门禁。",
+      "problem_solved": "减少 AI 批量写草稿后才发现版本不兼容、镜像 timeline 未同步、素材丢失或字幕结构异常，导致整批草稿返工。",
+      "mainstream_comparison": "直接改 draft JSON 成本最低但容易静默失败；完整 API 服务更重。CLI 门禁适合保留可编辑草稿，同时在写入前后做确定性检查。",
+      "today_action": "拿一个现有测试草稿只跑 version/diagnose/lint，不先修改内容；确认当前 Mac 草稿布局、版本边界和素材引用全部通过后，再做一次最小字幕或片段修改并重新 lint。",
+      "next_opportunity": "把 diagnose + lint 固定成任何 AI 草稿生成后的验收步骤；只有失败类型连续出现且 CLI 无法修复时，再考虑更重的 CapCut API/MCP。",
+      "evidence": [
+        {"type":"changelog","title":"Version guard, info-primary layout, lint and sync-timelines are documented reliability gates","url":"https://github.com/renezander030/capcut-cli/blob/master/CHANGELOG.md"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "OpenBiliClaw 本地反馈画像",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["抖音/小红书运营", "偏好学习"],
+      "score": 94,
+      "value_insight": "其 Agent bridge 已把 recommend、submit-feedback、save-local、list-saved 与显式 allow-state-changing 的外部同步分开。价值是先在本地积累真实喜欢/不感兴趣和收藏证据，而不是让推荐系统直接改外部账号。",
+      "problem_solved": "解决跨平台案例研究时反馈散落、无法沉淀，同时避免自动化为了同步收藏或状态而拥有过大的外部写权限。",
+      "mainstream_comparison": "普通收藏夹只能保存内容，普通推荐器又常把隐式行为直接当偏好；本地显式反馈更慢，但可解释、可回滚，也更适合训练长期选题画像。",
+      "today_action": "只用本地 recommend + feedback + save-local，选10条候选并明确标记喜欢/不感兴趣及一句原因；不要开启 sync-saved 外部状态写入。",
+      "next_opportunity": "连续一周统计哪些反馈维度真的能提高可拍选题率；只保留有效维度，再决定是否接入更多平台来源。",
+      "evidence": [
+        {"type":"docs","title":"Agent bridge separates local save/feedback from explicit state-changing sync","url":"https://github.com/whiteguo233/OpenBiliClaw/blob/main/docs/openclaw-quickstart.md"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "StoryCut 真实转录约束口播粗剪",
+      "source_project": "cbalder0929/Story-Cut",
+      "github": "https://github.com/cbalder0929/Story-Cut",
+      "category": ["AI视频剪辑", "口播粗剪"],
+      "score": 92,
+      "value_insight": "继续保留它不是因为项目新，而是 clause-ID 约束非常适合口播粗剪：模型只能选择真实转录片段，再由确定性时间码执行，并在 render 前保留 review/veto。",
+      "problem_solved": "减少长口播人工找有效句的时间，同时避免 LLM 改写文本后无法准确映射回真实素材。",
+      "mainstream_comparison": "自由文本改稿更灵活但落不回时间码；全自动成片又过于黑盒。真实 clause ID + 人工 veto 是更低风险的中间方案。",
+      "today_action": "只拿一条3–5分钟口播测试 transcribe → refine → review，不改主工作流；以是否能在一次 review 内得到愿意继续精剪的结构作为唯一通过标准。",
+      "next_opportunity": "通过后只复用它的受约束 plan 思路到现有 DaVinci Shot Mapping，不切换主剪辑器。",
+      "evidence": [
+        {"type":"readme","title":"Transcript-driven editing with clause-ID constraint, review/veto and EDL output","url":"https://github.com/cbalder0929/Story-Cut"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"name":"chuno/NarratoAI 8月23日更新 fork","reason":"今天确实 push，但它是 linyqh/NarratoAI 的 fork，父仓库已有成熟信号；当前没有证据显示这个 fork 带来新的可验证剪辑能力，因此不因更新时间进入 Top。"},
+    {"name":"大量 video editor / creator 新仓库","reason":"GitHub 搜索出现多个刚更新的小项目，但缺 README 证据、真实案例或可编辑输出验证；仅有‘AI video editor’描述不能构成机会方案。"},
+    {"name":"capcut-cli mask-keyframe 文档更新","reason":"最新 Unreleased 只是记录公开生态没有可复用的 mask keyframe 编码，属于有价值的负面研究，但没有新增可执行能力，所以不单独进 Top。"},
+    {"name":"Resolve 继续扩充工具面","reason":"当前收益更高的是把现有高风险写入验收做好；在最终画面门禁稳定前，新增更多写工具会扩大失败面。"},
+    {"name":"小红书自动发布能力","reason":"今天的核心价值在研究证据、Review 和复盘闭环。自动发布不能直接提高选题质量，反而扩大账号风险，因此不作为 Top 的卖点。"}
+  ]
+}
