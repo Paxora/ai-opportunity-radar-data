@@ -1,0 +1,102 @@
+{
+  "date": "2026-08-25",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天不追求增加工具数量，优先建立三种低成本门禁：生成镜头先用便宜版本证明值得升级；研究链遇到配置错误要快速失败而不是无限等待；候选素材先 A/B 淘汰再进入昂贵后处理。小红书和 Resolve 只保留单变量实验与故障兜底，不扩张自动化范围。",
+  "summary": [
+    "生成：Palmier Pro 把高价 1080p 明确留给最终高价值镜头，适合建立“草图通过才升级”的成本门禁。",
+    "研究：OpenBiliClaw 把 no-provider 配置错误从无限 thinking 改成三次快速失败后显式终止，避免研究队列被一个坏配置阻塞。",
+    "原则：ComfyUI 先 A/B 淘汰候选；小红书只改一个瓶颈；Resolve 继续作为离线兜底，不因日报而强换新工具。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Palmier Pro 分层生成：低成本草图 → 时间线确认 → 只给最终镜头上 1080p",
+      "source_project": "palmier-io/palmier-pro",
+      "github": "https://github.com/palmier-io/palmier-pro",
+      "category": ["AI视频生成", "剪辑成本控制"],
+      "score": 99,
+      "value_insight": "Palmier Pro 近期把生成模型推荐直接写进 Agent 工作流：简单低运动镜头优先更便宜的 Grok Imagine，Seedance 2.5 的 1080p 被明确视为“极贵”，只保留给质量、参考一致性和最终分辨率要求高的镜头。真正价值不是模型推荐，而是把“先便宜验证、后昂贵精炼”固定在时间线内，避免每个候选都直接烧最高成本。",
+      "problem_solved": "解决 AI 缺镜头工作流一开始就用最高规格生成，导致大量未采用候选也支付高推理成本的问题。",
+      "mainstream_comparison": "常见做法是在 ComfyUI/模型网页里先生成一批高质量结果，再导入剪辑器挑选；Palmier 的优势是生成和时间线同处一个编辑环境，可以先在真实上下文里判断镜头是否值得继续投入。代价是目前只支持 macOS 26 Apple Silicon，且生成处理并非全部开源。",
+      "today_action": "只拿一个真实 3–5 秒缺镜头做三档测试：低成本草图、普通质量、1080p 高质量。先把三档都放进同一时间线看叙事是否成立；只有低成本版本已经证明镜头有必要，才升级到 1080p。",
+      "next_opportunity": "记录每档单次成本、生成次数、最终入片率；如果高质量升级只发生在少数已确认镜头上，就把“草图通过才升级”设成所有生成视频的默认门禁。",
+      "evidence": [
+        {"type":"commit","title":"Reserve Seedance 2.5 1080p for top quality; use cheaper generation for simple low-motion shots","url":"https://github.com/palmier-io/palmier-pro/commit/eee4d935981cc42ea3f074a1be70b5dc75fde8ed"},
+        {"type":"readme","title":"Palmier Pro integrates generative AI and MCP directly in the timeline editor","url":"https://github.com/palmier-io/palmier-pro"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "OpenBiliClaw 研究链故障快停：配置错误 → 明确失败 → 立即修路由，不再无限“思考中”",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["跨平台研究", "可靠性"],
+      "score": 97,
+      "value_insight": "2026-08-25 上海时间凌晨的新提交处理了 durable chat 在 LLM 路由配置失效时无限重试的问题：当自定义 module route 指向已删除/禁用实例，系统会在三次快速 no-provider 失败后把 turn 标成 terminal failure，并给出可操作修复信息。对日常选题研究，真正价值是把“假卡死”变成可诊断的短失败，避免一个坏配置头阻塞后续所有任务。",
+      "problem_solved": "解决跨平台内容发现正在运行时，因为模型路由配置失效导致界面一直显示 thinking、后续任务排队却没人知道为什么的问题。",
+      "mainstream_comparison": "无限退避适合网络抖动，但不适合确定性的配置错误；完全不重试又会误伤短暂切换窗口。三次快速失败再终止兼顾了短暂恢复与快速暴露配置问题。",
+      "today_action": "在测试环境故意把一个 module route 指向不存在的实例，确认 3 次内能收到 failed 状态和修复提示，并确认下一条推荐/研究请求不会被前一条卡住。",
+      "next_opportunity": "把 no_provider、auth、rate_limit、network 分成不同失败策略：配置错误快速终止，限流和网络问题才进入退避重试；日报研究链只在真正可恢复错误上等待。",
+      "evidence": [
+        {"type":"commit","title":"End durable chat no-provider stalls with visible terminal failure","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/3d0889e6f29bf2c47f57a430d4f087f0f17bbff7"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "ComfyUI 候选镜头 A/B 门禁：两版并排比较 → 先淘汰 → 再做高成本后处理",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "候选验收"],
+      "score": 95,
+      "value_insight": "ComfyUI 在 2026-08-25 上海时间凌晨把 Image Compare 从 experimental 状态移出。这个变化本身很小，但落地价值明确：生成侧最缺的不是再多一个模型，而是一个低成本淘汰环节。把同一缺镜头的两个候选并排滑动比较，先决定谁值得继续 upscale、extend、插帧或重编码，可以直接减少无效后处理。",
+      "problem_solved": "解决生成工作流一次产出多版后，所有候选都继续进入高成本增强，最后大部分结果仍被丢弃的问题。",
+      "mainstream_comparison": "把候选分别打开或全都送进后处理最省操作，但成本高、对细节差异判断慢；固定 A/B 比较节点增加一步人工判断，却能把昂贵计算集中到真正会入片的候选。",
+      "today_action": "对同一 3–5 秒缺镜头生成 4 个低成本候选，两两进入 Image Compare，只保留 1 个；只有胜出的版本继续做 upscale/extend，并记录节省了多少次后处理。",
+      "next_opportunity": "如果 A/B 淘汰能稳定减少 50% 以上后处理次数，就把“候选比较通过”写进缺镜头工作流的必经节点，而不是靠临时预览决定。",
+      "evidence": [
+        {"type":"commit","title":"Image Compare is no longer marked experimental","url":"https://github.com/Comfy-Org/ComfyUI/commit/eb8cad737517717b65244dd5ede09fb447f95cd7"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "小红书 AI Workbench：先诊断主页/选题/转化瓶颈 → 只调用对应 Skill → 形成一周实验",
+      "source_project": "mengke-wang/xiaohongshu-ai-workbench",
+      "github": "https://github.com/mengke-wang/xiaohongshu-ai-workbench",
+      "category": ["小红书运营", "最低成本执行"],
+      "score": 93,
+      "value_insight": "这个项目的价值不在“更多提示词”，而在于把主页、标题、选题、评论、转化拆成独立 workflow，并明确先诊断再执行。对账号运营来说，最低成本方案不是一次把所有模块重做，而是先找当前最大的单点瓶颈，只调用一个对应 skill 做 7 天实验。",
+      "problem_solved": "解决小红书运营常见的“主页、标题、选题、评论、转化同时改”，最后无法判断到底哪个动作产生效果的问题。",
+      "mainstream_comparison": "通用大模型通常一次给一整套运营建议，看起来完整但变量太多；模块化 skill 少做一些事，却更适合单变量实验和后续复盘。项目不提供外部案例或爆款承诺，因此仍需要真实平台证据作为输入。",
+      "today_action": "只做一次诊断：在主页、选题、转化三项中选出当前最弱的一项；只运行对应 skill，产出 7 天行动，不同时改另外两项。",
+      "next_opportunity": "7 天后只比较一个核心指标是否改善；有效再进入下一模块，无效则回到诊断，不新增复杂自动化。",
+      "evidence": [
+        {"type":"readme","title":"Each skill solves one stable workflow; diagnose first, then execute","url":"https://github.com/mengke-wang/xiaohongshu-ai-workbench"},
+        {"type":"commit","title":"Add xiaohongshu-magazine sub-skill for reusable topic library","url":"https://github.com/mengke-wang/xiaohongshu-ai-workbench/commit/464ccec036139f0d9bd2b31af9c7b75296f3161a"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "Resolve 离线粗剪兜底：在线 MCP 失败 → DRT/OTIO/EDL → 回到 Resolve 人工验收",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci自动化", "可回退工作流"],
+      "score": 92,
+      "value_insight": "今天没有新的 Resolve 提交足以取代昨日的 offline authoring 机会，因此不为了“上新”换项目。`timeline author_offline` 的价值仍然很直接：Resolve 不可达时把已经完成的 Shot Mapping 保留为 DRT/OTIO/EDL，而不是整段重做。",
+      "problem_solved": "解决 Resolve/MCP 连接故障让前面已经做完的镜头选择和时间线决策全部作废的问题。",
+      "mainstream_comparison": "持续重连最简单，但故障窗口内无法推进；独立开发新时间线引擎又过重。离线 authoring 只是故障兜底，不替代在线写入，工程成本最低。",
+      "today_action": "保留一个 20–30 秒测试 mapping，断开 Resolve 后导出 OTIO；重新连接后导入，只检查素材、切点、时长是否一致，不进入正式项目。",
+      "next_opportunity": "若连续三次导入一致，把 offline OTIO 设成连接失败后的标准手动兜底；只有出现真实缺失字段时才考虑增加转换逻辑。",
+      "evidence": [
+        {"type":"commit","title":"Author an importable timeline when Resolve is unreachable","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/6b9d8bd3251f7fa47b496b127435bbcbc9fbd3bf"},
+        {"type":"docs","title":"Project lifecycle kernel uses disposable projects and guarded export/import boundaries","url":"https://github.com/samuelgursky/davinci-resolve-mcp/blob/main/docs/kernels/project-lifecycle-kernel.md"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"name":"ComfyUI custom user-directory database path fix","reason":"是重要的数据路径/迁移正确性修复，但主要解决运行环境维护，不直接形成比“候选先淘汰再后处理”更高价值的内容生产方案。"},
+    {"name":"ComfyUI nightly PyAV ColorPrimaries crash issue","reason":"说明升级风险，需要 pin/回退，但当前更像兼容性告警而非新的机会方案；应作为环境升级门禁处理，不占 Top。"},
+    {"name":"Palmier Pro 作为 Resolve/剪映替代编辑器","reason":"虽然时间线内 Agent/MCP 和生成整合很强，但目前只支持 macOS 26 Apple Silicon，且切换主编辑器成本高；本次只提取其“分层生成成本控制”方法，不建议迁移主工作流。"},
+    {"name":"AiToEarn 全平台 AI 内容发布","reason":"最近主要是 README 更新，且抖音集成此前被隐藏；没有比当前只读研究+人工发布链更强的近期证据，不因功能多进入 Top。"},
+    {"name":"近期新 AI video editor 仓库","reason":"搜索到多个新仓库，但多数体量小、缺真实可编辑输出和长期使用证据；在现有 Resolve/剪映链能继续工作的前提下，不值得承担迁移成本。"}
+  ]
+}
