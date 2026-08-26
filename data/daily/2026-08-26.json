@@ -1,0 +1,108 @@
+{
+  "date": "2026-08-26",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先验证三类直接产出价值：长直播能否自动拆成有证据、可追溯的短视频；生成模型能否只补时间线真实缺口而不是整段重做；自动音频处理能否用实测响度闭环而不是只按理论增益。内容研究继续采用低部署成本的只读证据链，剪映侧继续把可编辑与可回退放在功能数量之前。",
+  "summary": [
+    "剪辑：OpenChatCut 新增 livestream-to-clips 工作流，并用真实浏览器 Agent 完成多序列导出验证，适合测试长素材批量拆条。",
+    "生成：ComfyUI 的 PixVerse V6 节点新增首尾帧、主体/背景参考、视频参考、Extend 与可选音频，更适合只修 2–5 秒真实缺口。",
+    "可靠性：Resolve rough mix 以实测 EBU R128 结果验收；小红书研究继续优先浏览器/只读证据卡；CapCut 只保留可编辑字幕往返链。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "OpenChatCut 直播拆条：长直播 → 多模态证据账本 → 多条独立短视频 → 人工验收",
+      "source_project": "0xsline/OpenChatCut",
+      "github": "https://github.com/0xsline/OpenChatCut",
+      "category": ["AI剪辑", "长视频拆条", "内容生产"],
+      "score": 99,
+      "value_insight": "2026-08-25 的 livestream-to-clips 工作流不是简单按转录切片，而是先建立 stream map，再用语音、画面、音频、互动和元数据生成候选，先做硬性拒绝门禁，再评分和去重。随后新增多序列独立导出、来源区间 provenance、后台进度和可选保存到 My Media，并明确记录完成了真实浏览器 Agent 运行验证。真正价值是把“长直播找高光”从黑盒摘要变成可追溯的候选选择与批量交付。",
+      "problem_solved": "解决直播、访谈、长口播素材需要人工从头看片找高光，且模型只看转录容易错过视觉反应、音乐峰值、产品演示和上下文的问题。",
+      "mainstream_comparison": "常见 AI clipping 工具直接给一组自动高光，速度快但选择理由和上下文边界不透明；OpenChatCut 的成本更高一些，但每个候选保留 source range、证据、缺失证据与风险标记，并要求最终看时间线帧，不把工具成功当成成片成功。对正式内容生产更可控。",
+      "today_action": "只用一段 20–40 分钟真实长素材做测试：要求生成 3 条 30–60 秒候选；检查每条是否都有 setup/peak/payoff、来源时间码和至少两类证据；先只导出最高分一条人工验收，再决定是否批量导出剩余候选。",
+      "next_opportunity": "记录人工最终保留率、每条人工修剪时间和重复候选率；如果 3 次测试中候选保留率稳定超过 50%，再把它接到现有 DaVinci/剪映精剪流程，而不是直接迁移主编辑器。",
+      "evidence": [
+        {"type":"commit","title":"Add livestream clipping skill with evidence-backed multimodal selection and final frame verification","url":"https://github.com/0xsline/OpenChatCut/commit/e305a444353d1bb0177790f3f79c6eee09477de5"},
+        {"type":"commit","title":"Complete multi-sequence Agent exports with provenance and real browser validation","url":"https://github.com/0xsline/OpenChatCut/commit/7f64544f8f6749a0359f4097f904956bdd48bf74"},
+        {"type":"commit","title":"Auto-save approved livestream clips to My Media","url":"https://github.com/0xsline/OpenChatCut/commit/cff1ec0321a197dfe5a851bf6af0bc85ca074a1c"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Resolve 实测响度粗混：对白/音乐 → dry-run 增益计划 → 实际渲染复测 → 再决定是否采用",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci自动化", "音频", "交付验收"],
+      "score": 97,
+      "value_insight": "Resolve MCP 的 mix_plan 把已有的响度测量、静音检测和交付标准连成闭环：先根据对白建立增益和音乐 ducking，再实际渲染 premix、重新测 EBU R128，并把 achieved LUFS、true peak、LRA 和目标差值返回。后续还修复了 ffmpeg ebur128 解析可能误读单帧进度行的问题。价值在于不再相信“理论上应该到 -14/-16 LUFS”，而是用真实输出验收。",
+      "problem_solved": "解决 vlog/口播批量剪辑中对白和音乐响度靠经验手调、不同视频结果波动，以及自动增益看似正确但最终 true peak 或综合响度仍不合格的问题。",
+      "mainstream_comparison": "传统 Normalize 或固定压低 BGM 操作最简单，但只处理单一指标；完整 Fairlight 自动混音工程又过重。这个方案只做 gain staging、music bed 和 ducking，并默认 dry-run，不自动做 EQ/压缩/限制器，适合作为低风险第一层自动化。",
+      "today_action": "取一条已完成的 45–60 秒口播/探店视频，分出对白与 BGM 两轨，先只运行 dry-run 查看建议；再在副本上应用一次，比较处理前后 integrated LUFS、true peak 和对白清晰度，不改正式时间线。",
+      "next_opportunity": "若连续 3 条视频都能把响度拉进目标区间且人工只需微调音乐电平，就把 rough mix 设成时间线交付前的固定预检；若经常失败，再针对失败项补压缩/限制器，而不是先搭完整自动混音系统。",
+      "evidence": [
+        {"type":"commit","title":"Rough mix that measures the achieved loudness after rendering","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/ecb998bad88f5263ebf665a549abe08e85b4f3bc"},
+        {"type":"commit","title":"Fix loudness parser so a delivery measurement cannot silently become one frame's reading","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/07a636b6665fc652d6d2b17f8a3a629a592a6444"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "PixVerse V6 缺镜头修补：前后镜头约束 + 主体参考 → 只生成 2–5 秒连接段 → 入片率验收",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "缺镜头", "ComfyUI"],
+      "score": 96,
+      "value_insight": "2026-08-25 ComfyUI 官方 Partner Nodes 加入 PixVerse V6，新增 first/last-frame transition、Extend、Fusion，多达主体/背景图片参考与视频参考，并可选择生成音频。真正可用的机会不是“多一个视频模型”，而是把真实时间线前后镜头、人物和场景作为约束，只生成中间缺失段，减少人物漂移和整段重生成。",
+      "problem_solved": "解决旅行/Vlog 时间线已经基本成立，但缺少一个承上启下的 2–5 秒镜头时，重新生成整段既贵又容易破坏人物、场景和动作连续性的问题。",
+      "mainstream_comparison": "纯文生视频最省输入，但连续性最弱；单张 I2V 能锁住一端但难保证另一端。V6 transition + references 可以同时约束前后边界和主体/背景，不过属于 Partner API 节点，需要额外服务成本，也不能视为本地开源模型。",
+      "today_action": "从一条真实时间线截取前镜尾帧和后镜首帧，再加入 1 张人物参考；只生成 3 个 2–5 秒 transition 候选，不做 upscale。放回时间线后只按人物一致性、运动衔接和是否愿意真实入片三项验收。",
+      "next_opportunity": "如果三次不同缺口测试中至少有一半能直接入片，再比较 Extend 与 Transition 哪一种成本更低；达不到就停止，不继续堆节点或追更高分辨率。",
+      "evidence": [
+        {"type":"commit","title":"ComfyUI Partner Nodes add PixVerse V6 with transition, extend, fusion, image/video references and optional audio","url":"https://github.com/Comfy-Org/ComfyUI/commit/7d9d0c391b90b3d89c2ec880a870bb34236a417c"},
+        {"type":"release","title":"ComfyUI v0.34.0 released after the V6 node addition","url":"https://github.com/Comfy-Org/ComfyUI/commit/12d5279438bfefc058a269eae805ceab6047777f"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "小红书低成本证据卡：浏览器插件/搜索 → 互动数据与评论 → 只生成可拍选题，不自动发布",
+      "source_project": "xpzouying/xiaohongshu-mcp",
+      "github": "https://github.com/xpzouying/xiaohongshu-mcp",
+      "category": ["小红书", "选题研究", "最低成本"],
+      "score": 94,
+      "value_insight": "xiaohongshu-mcp 已覆盖搜索、首页推荐、帖子详情、互动数据、评论和子评论；README 同时明确推荐不想维护 Docker 的用户使用 x-mcp 浏览器插件，零配置、本地浏览器运行。今天的价值不是扩大自动发布，而是用最低部署成本把“我觉得这个选题火”变成有收藏、评论、具体用户反馈的证据卡。",
+      "problem_solved": "解决选题依赖个人感觉或只看点赞数，无法知道用户为什么收藏、争论什么、实际想解决什么，从而导致翻拍有流量但与账号定位或商业价值不匹配的问题。",
+      "mainstream_comparison": "手动刷小红书最自然但难结构化复盘；完整 Docker/MCP 自动化能力更强但维护成本更高。浏览器侧只读研究足够完成当前问题，且不需要先开发数据系统。",
+      "today_action": "围绕一个准备拍的主题搜索 10 条同类笔记，只保留 3 条：要求收藏/评论信号明显且评论里至少出现一个重复需求或疑问。每条记录 Hook、内容结构、用户为什么收藏/质疑、可拍改法；不执行自动发布。",
+      "next_opportunity": "连续一周累计 20–30 张证据卡后，只统计重复出现的需求和结构；只有当人工整理明显成为瓶颈时，再考虑自动聚类或账号级数据库。",
+      "evidence": [
+        {"type":"readme","title":"Search, recommendations, post details, engagement metrics, comments and sub-comments","url":"https://github.com/xpzouying/xiaohongshu-mcp"},
+        {"type":"readme","title":"x-mcp browser plugin is recommended as a zero-config lower-maintenance option","url":"https://github.com/xpzouying/x-mcp"},
+        {"type":"commit","title":"Optional Bearer Token authentication for HTTP API and MCP endpoints","url":"https://github.com/xpzouying/xiaohongshu-mcp/commit/16ec75c7a3ee8602095dd010392be4fc1ca9b5c4"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "capcut-cli 品牌字幕往返：剪映草稿 → Styled ASS → 外部修改 → 回到可编辑草稿 → lint 验收",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映批量", "字幕", "可编辑交付"],
+      "score": 92,
+      "value_insight": "v0.20.0 已支持把剪映字幕的字体大小、颜色、透明度、粗斜体、下划线、对齐、边框/阴影、局部 range 样式以及 karaoke timing 导出为 ASS，并在导回时恢复局部 bold/italic/color/size 样式。相比直接烧成视频，真正价值是让品牌字幕可以经过外部批处理后仍回到可编辑草稿。",
+      "problem_solved": "解决批量字幕一旦导出到外部工具处理就丢失关键词高亮、局部样式或逐字效果，最后只能重新手工套样式的问题。",
+      "mainstream_comparison": "直接 SRT 往返兼容性最好但几乎不保留视觉样式；直接渲染字幕最稳定却失去可编辑性。Styled ASS 往返处在两者之间，适合已经固定品牌字幕规范的批量口播。",
+      "today_action": "拿一个 15–20 秒测试草稿，设置 2 处关键词高亮和一段逐字字幕；导出 ASS 后只改一处文本，再导回新草稿，打开剪映核对时间、颜色、局部样式和逐字效果是否一致。",
+      "next_opportunity": "如果往返 3 次都不丢样式，就把品牌字幕模板固化为 ASS/草稿双向资产；如果仍有 CapCut 版本差异，只修真实失败字段，不开发新的字幕引擎。",
+      "evidence": [
+        {"type":"release","title":"v0.20.0 adds styled ASS export/import round-trip with per-range overrides and karaoke timing","url":"https://github.com/renezander030/capcut-cli/commit/7d9ce47f67e9941c2609c61bf8a712c1dec0c2bf"},
+        {"type":"commit","title":"Modern >=8.7 nested Timelines layout is reported without inventing unsupported write hazards","url":"https://github.com/renezander030/capcut-cli/commit/c472c79642b30adc9a09c5a456b8f3a7349dadc1"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"name":"ComfyUI PixVerse V6 作为新模型本身","reason":"单纯“支持 V6”只是工具能力更新，不能直接进入 Top；本次只提取其 transition/extend/reference 能解决真实时间线缺口的方案。"},
+    {"name":"ComfyUI v0.34.0 版本发布","reason":"版本号本身没有独立价值，只有其中能形成明确落地方案的能力才进入 Top。"},
+    {"name":"samuelgursky/davinci-resolve-mcp Windows Python 3.12/3.13 安装修复","reason":"2026-08-25 的修复很具体，但主要解决 Windows 安装探测与 access violation 诊断；对当前 macOS/Resolve 工作流没有比音频实测闭环更高的直接价值。"},
+    {"name":"Agent-Reach README Star History 修复","reason":"只是文档展示维护，没有改变跨平台研究能力，不构成新的机会方案。"},
+    {"name":"capcut-cli README 30 秒结果说明优化","reason":"最新提交只改善 README 表达，不改变剪映草稿能力；不因为提交新就进入 Top。"},
+    {"name":"xiaohongshu-mcp 微信群二维码更新","reason":"纯文档/社群维护信号，与内容研究或发布能力无关。"},
+    {"name":"近期新 AI video editor 小仓库","reason":"搜索到多个 8 月 25–26 日仍在推送的新编辑器仓库，但多数缺真实可编辑输出、用户案例或与现有 Resolve/剪映链相比的明显迁移收益，因此不纳入正式 Top。"}
+  ]
+}
