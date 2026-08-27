@@ -1,0 +1,107 @@
+{
+  "date": "2026-08-27",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天不追新工具数量，优先验证五个能直接降低内容研究、素材安全、候选池失真、生成视频交付兼容和短片动效返工的具体方案。判断标准仍是：先证明结果更可靠或更省时间，再决定是否接入现有工作流。",
+  "summary": [
+    "内容研究：把小红书/B站视频从‘收藏链接’蒸馏成转录+关键帧+个人适配结论的可检索证据库。",
+    "素材安全：相机卡 offload 强制双目的地、hash 回读、可恢复重跑，格式化仍保留人工批准。",
+    "可靠性：OpenBiliClaw 把探索与趋势刷新时钟拆开；ComfyUI 修 HEVC hvc1 封装兼容；video-shotcraft 用真实渲染冒烟和剪映可编辑交付约束动效生产。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "小红书/B站视频蒸馏：收藏链接 → 转录+关键帧 → 个人适配证据卡 → 可检索案例库",
+      "source_project": "etherimirr/xhs-bilibili-distill",
+      "github": "https://github.com/etherimirr/xhs-bilibili-distill",
+      "category": ["小红书", "B站", "内容研究", "案例库"],
+      "score": 99,
+      "value_insight": "这个项目解决的不是‘再做一次摘要’，而是把视频同时拆成 faster-whisper 转录和场景切换+周期采样关键帧，再要求 LLM 输出 body、takeaways 与 for_you，并明确允许判断‘这条内容不适合你’。报告自包含关键帧，LLM 供应商不被硬编码，失败项可单独重试。真正价值是把人工收藏变成之后能搜索、比较和复盘的证据资产。",
+      "problem_solved": "解决小红书/B站收藏越积越多、需要反复看片、纯转录看不到画面证据，以及通用摘要无法判断一个案例到底是否适合自己的账号和工作流的问题。",
+      "mainstream_comparison": "Watch Later/收藏夹成本最低但几乎不可检索；只跑 Whisper 仍要读长转录；通用视频总结工具通常给一段结论但视觉证据和个人适配弱。这个方案多一步关键帧与 profile-aware 判断，但保留来源证据且可本地批量跑，更适合作为长期案例库。",
+      "today_action": "只取 10 条已经收藏的真实样本（小红书 5 条、B站 5 条），写一段固定 profile：目标受众、内容方向、可用拍摄条件。跑完后人工只打一个指标：每份报告是否至少产出 1 个愿意复用的 Hook/结构/镜头做法；低于 60% 就先不扩库。",
+      "next_opportunity": "如果 10 条里至少 6 条产生可复用结论，再做每周一次的增量蒸馏，并给案例增加 Hook、结构、场景、商业意图标签；只有人工检索开始成为瓶颈时，再接选题聚类，而不是先开发数据库。",
+      "evidence": [
+        {"type":"commit","title":"Add key-frame extraction plus body/takeaways/for_you report generation","url":"https://github.com/etherimirr/xhs-bilibili-distill/commit/5a23c847d261d12134577ca6bfe9b7ee1637db32"},
+        {"type":"commit","title":"Shared XHS/Bilibili pipeline with resumable failures, audio-only Bilibili fetch and one Whisper load","url":"https://github.com/etherimirr/xhs-bilibili-distill/commit/04e4c3f179c3f85c21b7a84d265e55b1d383532e"},
+        {"type":"commit","title":"Name Xiaohongshu and Bilibili explicitly while keeping one shared adapter pipeline","url":"https://github.com/etherimirr/xhs-bilibili-distill/commit/effb2c3e214abdd4006f4988493f702e6c9d431e"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "相机卡安全 Offload：源卡 → 双目的地复制 → hash 回读 → manifest → 人工批准格式化",
+      "source_project": "Norbertojr26/duckstudios",
+      "github": "https://github.com/Norbertojr26/duckstudios",
+      "category": ["视频生产", "DIT", "素材安全", "自动化"],
+      "score": 98,
+      "value_insight": "Duck Studios 最新 DIT 链把最容易造成不可逆损失的素材导入做成确定性流程：强制至少两个目的地、每份文件始终从源卡读取、写后重新读取 hash、保存 manifest、支持幂等续跑，并能发现尺寸异常后修复；项目还明确删除了不符合真实工作习惯的自动代理生成，卡格式化必须在 CRM 中人工批准。相比更炫的剪辑 Agent，这类门禁对真实拍摄素材的价值更直接。",
+      "problem_solved": "解决 Finder 手拖素材或单份拷贝中断后难确认哪些文件完整、二次拷贝可能从第一份副本继续传播损坏，以及自动化过早格式化卡导致原始素材不可恢复的问题。",
+      "mainstream_comparison": "手工复制到硬盘最快，但没有强制双备份、逐文件回读验证和可恢复状态；完整商业 DIT 软件更成熟但对轻量个人/小团队可能过重。这个实现更像可审计 SOP：自动化只处理确定性复制与验证，最终格式化留给人。",
+      "today_action": "不要碰真实未备份素材。先拿一个 5–10GB 测试目录模拟相机卡，复制到两个临时目的地；完成后手动破坏其中一个文件再重跑，确认它能发现并修复、已验证文件不重复复制，并且没有任何自动格式化动作。",
+      "next_opportunity": "连续 3 次测试卡都能正确续传、发现损坏并生成一致 manifest 后，再把 manifest 接到 Resolve 素材导入/Inventory；卡格式化继续维持人工确认，不把这一步自动化。",
+      "evidence": [
+        {"type":"commit","title":"DIT pipeline: copy from source to >=2 destinations, re-read hashes, manifest, idempotent resume and human format approval","url":"https://github.com/Norbertojr26/duckstudios/commit/3a78cb41e74c4a381e0ae498b638291b20d45411"},
+        {"type":"readme","title":"CRM is the agents' memory; agents run locally with auditable actions and human approvals","url":"https://github.com/Norbertojr26/duckstudios"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "OpenBiliClaw 候选池分频：探索补货与趋势刷新独立调度 → 不被池容量误伤 → 人工只看近窗高信号",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["内容研究", "选题雷达", "推荐系统", "可靠性"],
+      "score": 97,
+      "value_insight": "v0.3.212 把 explore 与 trending 的调度时钟和执行条件拆开：探索只有真正 dispatch 才更新 last_explore_refresh_at；候选池满时也不再阻断到期的趋势/探索任务，而补货任务仍受容量限制。价值不是更多推荐，而是避免一个看似‘池子很满’的状态让系统停止发现新机会，导致旧候选长期占位。",
+      "problem_solved": "解决长期运行的内容雷达中，候选池容量、补货和趋势刷新耦合后出现‘已有很多候选，所以不再探索’，最终列表数量正常但新鲜度越来越差的问题。",
+      "mainstream_comparison": "一个 cron 同时做搜索、趋势和补货最简单，但任一容量/失败条件都可能影响整轮；完全实时搜索又成本高。独立时钟让低频探索、高频趋势刷新和按需补货各自运行，成本可控且更容易定位哪一层失效。",
+      "today_action": "先不扩大平台数量。把 explore 设为低频、trending 设为高频，并人为把候选池填到上限；验证到期的 explore/trending 仍会运行，同时 replenishment 会尊重容量停止。记录一次 24 小时内的新候选占比。",
+      "next_opportunity": "如果新候选占比提高但人工有效率不下降，再分别统计 explore、trending、related-chain 的入选率；长期只保留能贡献 Top 候选的来源，低价值来源直接降频或关闭。",
+      "evidence": [
+        {"type":"commit","title":"Split explore scheduling clock and keep periodic sweeps independent of pool cap","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/7fad6e417baf9309b67d15b2ef92b7a5bd9930ad"},
+        {"type":"release","title":"v0.3.212 release: explore scheduling fix","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/046a46f27e8ba64eb8d78d4a0e8803dcb7277c6c"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "ComfyUI HEVC 交付门禁：生成视频 → hvc1 兼容封装 → macOS/剪辑软件实开 → 再进入正式时间线",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "交付兼容", "ComfyUI", "剪辑工作流"],
+      "score": 96,
+      "value_insight": "2026-08-27 的修复把 HEVC remux 到 mp4/mov 时明确处理为 hvc1。对视频生成工作流，这种改动比又增加一个模型更有价值：生成成功并不等于 QuickTime、DaVinci、剪映等下游能稳定识别同一封装。把兼容性问题在资产进入正式时间线前解决，可以避免后面才发现需要批量转码。",
+      "problem_solved": "解决 AI 生成视频文件本身能播放或 ffmpeg 能读取，但因为 HEVC sample entry/封装兼容差异，在 macOS 或 NLE 中出现不能导入、黑屏、重新转码或媒体离线的问题。",
+      "mainstream_comparison": "最稳妥的通用做法是所有生成结果先转 ProRes/H.264，但会增加时间、体积和代际损耗；直接原样拖进剪辑软件最快但容易把兼容问题拖到后期。先做无重编码的 hvc1 remux/验收，成本低于全量转码。",
+      "today_action": "拿 3 个 HEVC 生成样本做小测试：原文件和 hvc1 remux 版分别在 QuickTime、Resolve、剪映各打开一次，只记录能否导入、首尾帧、时长和音频是否一致；不要先做全库转码。",
+      "next_opportunity": "如果 hvc1 版稳定通过而原版存在失败，就把这一步设为 AI 视频资产入库门禁；如果原版已经全部兼容，则不增加任何额外处理。",
+      "evidence": [
+        {"type":"commit","title":"Remux HEVC to mp4/mov as hvc1","url":"https://github.com/Comfy-Org/ComfyUI/commit/d8e7bbc9d586d95f758d6b0ed23d519088be578a"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "video-shotcraft 受验动效：只复用已验证镜头卡 → 渲染冒烟 → 导出可编辑剪映工程 → 人工精剪",
+      "source_project": "Vincentwei1021/video-shotcraft",
+      "github": "https://github.com/Vincentwei1021/video-shotcraft",
+      "category": ["剪映批量", "Remotion", "动效", "可编辑交付"],
+      "score": 94,
+      "value_insight": "项目已经把大量镜头做法从‘提示词灵感’收敛成 self-contained Remotion demo，并加入首帧渲染冒烟测试；最近 review 又实际发现计数器永远滚不完、blur 层级错误、转场方向与纯黑死帧等肉眼问题并修复。更关键的是此前已在 Mac 剪映 11.2 实测可编辑工程导出、媒体打包、注册表回滚与 donor fingerprint 门禁。价值在于只复用经过真实渲染和编辑器验收的镜头配方，而不是让 Agent 每次从零写动画。",
+      "problem_solved": "解决高级感短片中 AI 每次临时写动效容易出现‘能编译但画面不对’，以及渲染成片后无法回剪映继续修改字幕、音效和节奏的问题。",
+      "mainstream_comparison": "纯 AI 视频生成能快速给效果但难精确改；从零写 Remotion 灵活但工程时间高；现成 AE 模板成熟但自动化和参数化弱。镜头卡+冒烟测试+可编辑剪映导出把复用性、确定性和后期可改结合起来，但不值得迁移整个剪辑流程。",
+      "today_action": "只挑一个正在做的视频里的 1 个明确镜头需求，从现成卡里选一张，不新增自定义动画；先跑 still/smoke 检查关键帧，再导出 10–15 秒剪映测试工程，确认媒体、字幕、SFX 和镜头边界可继续编辑。",
+      "next_opportunity": "如果 3 个真实项目都能把单镜头制作时间明显压低，再维护自己的 10–20 张高频镜头子集；不要复制整个 152 卡库，也不要为了模板体系重做主剪辑链。",
+      "evidence": [
+        {"type":"commit","title":"Real review fixes for counter completion, blur hierarchy and transition continuity/black frames","url":"https://github.com/Vincentwei1021/video-shotcraft/commit/d9ffa6d30c227b76f24fa5728fbc55f34b741d82"},
+        {"type":"commit","title":"Self-contained Remotion demos with still-frame verification","url":"https://github.com/Vincentwei1021/video-shotcraft/commit/80b3f5d8fa4cc6b4933331ea2efa52c4d39ad028"},
+        {"type":"commit","title":"Mac Jianying 11.2 editable project export validated with media bundling, rollback and safety fixes","url":"https://github.com/Vincentwei1021/video-shotcraft/commit/0d6f0b57f0d4d6700761644c07f7ef03c3e50234"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"name":"suimi8/xhs-studio","reason":"2026-08-27 首次开源，覆盖 AI 选题、成稿、配图、排版、协议签名、扫码登录和一键发布，能力面很大，但目前缺少独立真实使用/发布稳定性证据；对当前需求而言，全自动发布的维护与账号风险高于只读研究价值，所以先观察，不进 Top。"},
+    {"name":"ComfyUI WAN3-Prime Partner Node","reason":"只是新增模型接入信号；没有比今天 HEVC 交付兼容修复更直接的可验证价值，也没有形成针对真实时间线问题的新落地闭环。"},
+    {"name":"ComfyUI AVIF Save Image Advanced","reason":"图片格式支持属于能力补全，对当前视频剪辑/内容研究的直接收益有限。"},
+    {"name":"OpenBiliClaw SenseNova free-tier preset","reason":"真实接口已验证且能降低 LLM 成本，但它主要解决供应商成本，不解决今天更关键的候选新鲜度与调度失真，所以不进入 Top。"},
+    {"name":"davinci-resolve-mcp Windows Python setup fix","reason":"修复 Windows 多 Python 版本与 access violation 诊断很实用，但对以 macOS 为主的现有剪辑链价值低于今天其他候选，而且不形成新的剪辑机会方案。"},
+    {"name":"OpenChatCut livestream-to-clips","reason":"仍是高价值方案，但核心能力已在 2026-08-26 日报进入 Top 1；截至本轮检索未发现 8 月 26–27 日足以改变价值判断的新实质提交，因此不重复占用今日 Top。"},
+    {"name":"ComfyUI frontend package bump","reason":"纯依赖/前端版本更新，没有独立用户价值。"}
+  ]
+}
