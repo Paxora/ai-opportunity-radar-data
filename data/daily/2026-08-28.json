@@ -1,0 +1,105 @@
+{
+  "date": "2026-08-28",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天不追工具数量，优先验证五个低成本闭环：AI 缺镜头先低清淘汰、内容候选用手机快速复核、抖音对标必须带评论与转录证据、Resolve 响度只认最终 Summary、剪映草稿先诊断版本再最小修改。",
+  "summary": [
+    "AI 视频：Gemini Omni 1.1 + ComfyUI 的价值不是 4K，而是先用 360p 与首尾帧约束证明镜头值得生成，再升级分辨率。",
+    "内容研究：OpenBiliClaw 把跨平台候选送到手机做显式反馈；抖音 MCP 只做近窗小样本，把指标、评论和口播合成证据卡。",
+    "剪辑可靠性：Resolve 响度 QC 防止把单帧读数当整段结果；capcut-cli 先识别现代草稿布局，避免自动修复本身制造故障。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Gemini Omni 1.1 低成本缺镜头门禁：360p 草图 → 首尾帧约束 → 只给入选镜头升 1080p/4K",
+      "source_project": "Comfy-Org/ComfyUI + Google Gemini Omni 1.1 Flash",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "ComfyUI", "缺镜头", "成本控制"],
+      "score": 99,
+      "value_insight": "ComfyUI 在 2026-08-27 接入 Google Omni 1.1；Google 同日发布的 1.1 把 360p 低成本草图、首尾帧插值、场景延长、视频参考和 1080p/4K 输出放进同一条模型能力链。真正值得用的不是又一个新模型，而是先用更快更便宜的 360p 判断镜头构图、运动和人物连续性，只有愿意入片的候选才进入高分辨率阶段。",
+      "problem_solved": "解决 AI 缺镜头一开始就按高分辨率反复生成，最后才发现运动、人物或镜头衔接不对的浪费，同时补足前后真实镜头之间的可控连接镜头。",
+      "mainstream_comparison": "直接 720p/1080p 连续抽卡判断慢且成本高；纯 I2V 只锁首帧，尾端容易漂。Omni 1.1 可用首尾帧和既有视频上下文约束，再用 360p 做低成本淘汰；但它仍是付费 API，高分辨率输出也不能替代 NLE 最终验收。",
+      "today_action": "只挑 1 个真实 2–5 秒缺口，截前镜尾帧和后镜首帧，先生成 4 个 360p 候选；只有至少 1 个愿意入时间线，才对该候选做 1080p/4K 输出，不先搭复杂节点链。",
+      "next_opportunity": "若连续 3 个真实缺口都能用低清淘汰减少高分辨率重跑，再固化为 ComfyUI 模板；若入片率没有明显提升，就停在单次调用，不工程化。",
+      "evidence": [
+        {"type":"commit","title":"ComfyUI adds Google Omni 1.1 partner-node support on 2026-08-27","url":"https://github.com/Comfy-Org/ComfyUI/commit/4c6359f2e39df5ac075d556acb7ccd49a91f7181"},
+        {"type":"official","title":"Google Omni 1.1: scene extension, start/end frames, 360p drafts and high-resolution output","url":"https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "OpenBiliClaw 手机选题复核：电脑后台发现 → 手机刷候选 → 喜欢/不感兴趣 → 反哺下一轮",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["小红书", "抖音", "内容研究", "手机工作流"],
+      "score": 98,
+      "value_insight": "OpenBiliClaw 已提供移动端 Web，用手机直接查看推荐、稍后、收藏、画像与对话；2026-08-27 又修复手动后端地址应优先于二维码自动探测局域网 IP。价值不是多一个 UI，而是把电脑负责跨平台发现、手机负责碎片时间人工筛选变成最低摩擦闭环。",
+      "problem_solved": "解决候选持续累积但最终仍要坐在电脑前审核、显式反馈回不去、系统不知道哪些方向真正值得继续找的问题。",
+      "mainstream_comparison": "直接刷平台 App 最自然但跨平台证据和长期反馈分散；桌面 Dashboard 完整但复核成本高。移动端只做推荐查看与反馈，登录和 Cookie 留在电脑浏览器，比把采集搬到手机更简单。",
+      "today_action": "不改发现算法。手机打开 /m/，15 分钟处理 20 条候选，只做喜欢、不感兴趣、稍后、收藏四个动作；第二轮推荐后观察明显无关内容是否减少。",
+      "next_opportunity": "若每天 20 条候选能稳定清完，再统计收藏/喜欢最终转成实际拍摄选题的比例；只有转化率稳定后才增加栏目标签。",
+      "evidence": [
+        {"type":"commit","title":"Manual backend address overrides QR auto-detected LAN IP","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/a464929c3f983475365e2821af7d1c4f0036a27a"},
+        {"type":"readme","title":"Mobile Web supports recommendations, watch-later, favorites, profile and chat","url":"https://github.com/whiteguo233/OpenBiliClaw"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "抖音对标证据包：近 7 天高赞搜索 → 评论痛点 → 视频 ASR → 只产出可复刻结构",
+      "source_project": "pazwusimple-netizen/douyin-mcp",
+      "github": "https://github.com/pazwusimple-netizen/douyin-mcp",
+      "category": ["抖音", "内容研究", "竞品分析", "ASR"],
+      "score": 97,
+      "value_insight": "项目把抖音搜索、详情、评论、下载和 ASR 放进一个只读研究链，并支持按点赞/最新和时间窗口过滤；搜索还有频率控制、verify_check 重试和 Playwright 回退。机会不是让 AI 看抖音，而是一次拿到表现、评论反馈和完整口播文本，最后只保留可复刻的 Hook、信息顺序和证明动作。",
+      "problem_solved": "解决只看热门列表不知道为什么火、只看评论不知道原视频结构、人工逐条转写又太慢的问题，同时避免把发布权限混入研究任务。",
+      "mainstream_comparison": "人工刷抖音最直观但证据难沉淀；下载+Whisper 只有文本；通用爬虫有指标但评论与口播分离。该方案维护和风控成本更高，所以只适合小样本研究，不应无人值守大规模抓取。",
+      "today_action": "只搜一个直接相关关键词，限定近 7 天、按点赞取 5 条；每条只输出前 3 秒 Hook、30 秒内结构、评论区反复需求/质疑、一个可拍改写版本，不做自动发布。",
+      "next_opportunity": "若 5 条里至少 2 条能直接转成拍摄方案，再固定为每周一次小样本对标包；若只是泛泛总结，就保留人工刷视频，不继续投入部署维护。",
+      "evidence": [
+        {"type":"readme","title":"Douyin search, detail, comments, download and ASR with time/rank filters","url":"https://github.com/pazwusimple-netizen/douyin-mcp"},
+        {"type":"readme","title":"Search protection uses rate control, verify-check retry and Playwright fallback","url":"https://github.com/pazwusimple-netizen/douyin-mcp"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "Resolve 响度交付门禁：粗混方案 → 最终渲染 → EBU R128 Summary → 不接受单帧假读数",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "音频", "QC", "自动化"],
+      "score": 96,
+      "value_insight": "davinci-resolve-mcp 2.103.1 修复典型自动化陷阱：ffmpeg ebur128 每帧进度行也会出现 I/LRA/Peak，旧解析可能把最后一帧当整段 Summary，而且数值看起来完全合法。现在只认 Summary block，缺 Summary 直接返回无测量。价值是把有数字升级为数字有交付语义。",
+      "problem_solved": "解决自动响度粗混中最危险的静默错误：系统报告看似正常的 LUFS/Peak，实际只是某一帧，错误增益继续进入最终导出。",
+      "mainstream_comparison": "人工用 Resolve/Fairlight 看响度表可靠但不便批量；直接正则抓 ffmpeg stderr 快却可能读错。只解析最终 Summary 并把缺失视为失败，几乎不增加成本却更适合自动 QC。",
+      "today_action": "拿一个已有 30–60 秒成片导出，分别用 Resolve/Fairlight 与 ebur128 Summary 测 Integrated LUFS 和 True Peak；两者差异明显就停止自动增益，不继续批量。",
+      "next_opportunity": "连续 5 个真实成片 Summary 与人工测量一致后，再把响度 QC 放到最终导出门禁；门禁只报错/阻止交付，不自动无限改音量。",
+      "evidence": [
+        {"type":"commit","title":"Parse only the ebur128 Summary block; missing summary returns no measurement","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/07a636b6665fc652d6d2b17f8a3a629a592a6444"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "capcut-cli 草稿兼容门禁：先识别现代 Timelines/ 布局 → diagnose/lint → 只修真实错误",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "草稿自动化", "可靠性"],
+      "score": 94,
+      "value_insight": "capcut-cli 最近明确区分 CapCut ≥8.7 常见的嵌套 Timelines/ 现代布局与旧版高风险布局：看到嵌套目录本身不能再自动推断草稿危险，也不应每次写入都报警。价值是从看到异常结构就修，改成先识别版本和证据再决定是否动草稿。",
+      "problem_solved": "解决版本布局变化被误判为损坏而触发不必要迁移/重写，反而增加草稿打不开、字段丢失和返工风险。",
+      "mainstream_comparison": "完全手工剪映最安全但失去批量能力；固定 schema 重写最快却脆弱。version/diagnose/lint 先判断、最小修复后再人工打开，是更适合真实项目的中间路线。",
+      "today_action": "只复制一个测试草稿，先跑 version/diagnose/lint，记录现代 Timelines/ 识别及实际 error/warning，只修明确 error；最后用剪映打开检查时长、字幕、素材引用和首尾帧。",
+      "next_opportunity": "若连续 3 个不同来源草稿都能诊断、最小修复并正常打开，再接到批量草稿生成前；若只是 warning 且画面正常，就不自动修。",
+      "evidence": [
+        {"type":"commit","title":"Diagnose modern nested Timelines/ layout on CapCut >=8.7 without assuming legacy risk","url":"https://github.com/renezander030/capcut-cli/commit/c472c79642b30adc9a09c5a456b8f3a7349dadc1"},
+        {"type":"repo","title":"capcut-cli repository","url":"https://github.com/renezander030/capcut-cli"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"source_project":"suimi8/xhs-studio","reason":"8 月 27 日新开源且覆盖选题、写作、配图、排版和自动发布，但仍缺独立真实使用与发布稳定性证据；当前研究需求用只读链更低风险。"},
+    {"source_project":"Comfy-Org/ComfyUI Google-Omni 1.1 partner node 本身","reason":"模型接入本身不能直接进入 Top；只有转成 360p 低成本筛选 → 首尾帧约束 → 高分辨率只给入选镜头的具体方案后才有价值。"},
+    {"source_project":"whiteguo233/OpenBiliClaw v0.3.213 domestic download docs","reason":"国内下载文档与镜像可用性提升属于分发维护，不直接改变内容发现质量或执行效率。"},
+    {"source_project":"samuelgursky/davinci-resolve-mcp Windows setup fix","reason":"Windows Python launcher/doctor 修复很实用，但当前主要工作链是 macOS，且属于安装可靠性，不如最终响度 QC 直接。"},
+    {"source_project":"renezander030/capcut-cli README outcome rewrite","reason":"最新提交主要是文档表达改进，没有新增可验证的剪映自动化能力。"},
+    {"source_project":"Comfy-Org/ComfyUI cgroup memory-limit fix","reason":"对容器化云端部署有价值，但当前本地视频链路受益有限。"},
+    {"source_project":"各种小红书/抖音自动发布 MCP fork","reason":"发布自动化能力重复，账号风控、Cookie/验证码和维护成本高；没有证据证明比只读研究 + 人工发布更有价值。"}
+  ]
+}
