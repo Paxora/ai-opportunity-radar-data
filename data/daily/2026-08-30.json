@@ -1,0 +1,101 @@
+{
+  "date": "2026-08-30",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先解决“假成功”和“流程断层”：Resolve 渲染必须用真实时间线/输出反查，小红书内容按状态进入安全下一步；案例入库与 AI 补镜头只做小样验收，不扩大系统。",
+  "summary": [
+    "DaVinci：RenderJobStatus=Complete 不再等于成功；今天最值得做的是把输出时长/范围与真实时间线交叉验证。",
+    "内容运营：小红书草稿历史直接进入发布预览或真实帖子 analytics，但发布仍必须人工 confirm；案例库只收已经人工筛过的高价值样本。",
+    "AI 视频/剪映：H3 只测试真实 2–5 秒缺镜头；CapCut 没有更强新信号，继续验证可迁移草稿，不为更新而更新。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 渲染真实性门禁：时间线真实范围 → render job → 输出文件反查 → 拒绝“Complete 但只有 1 帧”",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "自动化", "渲染QC", "可靠性"],
+      "score": 99,
+      "value_insight": "8 月 29 日的 live validation 暴露了一个高价值问题：Resolve 可能把原本 96 帧的 MarkIn/MarkOut 重写成 1 帧，RenderJobStatus 仍返回 Complete 100%，最终得到 1 帧黑色 stub。最新 verify_output 不再相信 render job 自己的范围，而是回到时间线 item 的真实位置交叉检查，并允许显式传 expected_frames / expected_duration_seconds。价值是把“API 成功”升级为“输出文件真的覆盖了应该覆盖的时间线”。",
+      "problem_solved": "解决自动粗剪/批量导出里最危险的静默失败：任务状态看起来成功，但输出时长塌缩、内容缺失，直到人工打开文件才发现。",
+      "mainstream_comparison": "只检查 JobStatus 最省事，但它会对坏输出报 Complete；只检查文件存在也抓不到 1 帧 stub。用时间线真实范围 + 预期帧数 + 输出文件结果做三方校验，成本很低，却能在交付前阻断假成功。",
+      "today_action": "拿一个 5–10 秒测试时间线，显式设置约 90–150 帧的渲染范围；正常渲染一次，再人为构造错误 mark range 或异常记录帧；调用 verify_output，并核对它是否对塌缩输出给出 warning/fail，而正常片通过。",
+      "next_opportunity": "如果 3 类输出（正常、范围塌缩、时间线缺失）都能稳定区分，就把 verify_output 放到所有自动导出的最后一步；以后任何“Complete”都不能直接视为交付成功。",
+      "evidence": [
+        {"type": "commit", "title": "verify_output no longer trusts the job's own mark range after live 1-frame stub validation", "url": "https://github.com/samuelgursky/davinci-resolve-mcp/commit/190fe2c62b881870a7eb6add90c660f4bf811a25"},
+        {"type": "commit", "title": "readback symmetry and initial render.verify_output loop", "url": "https://github.com/samuelgursky/davinci-resolve-mcp/commit/08413931bd6b60677138b729bcaeb5420634cdd2"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "小红书状态驱动下一步：草稿历史 → 发布预览/数据回收 → 仍保留人工确认",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["小红书", "内容运营", "发布门禁", "复盘闭环"],
+      "score": 98,
+      "value_insight": "8 月 29 日新增的 History next-step actions 把不同草稿状态直接映射到安全下一步：已通过未发布/上次发布失败进入 /publish 预览但绝不携带 confirm；只有已发布且存在真实 post_id 的内容才进入 analytics；普通草稿、需修订草稿和 mock 发布仍只看详情。价值不是“自动发布更顺”，而是让每条内容从历史状态自然进入下一步，同时不扩大账号写权限。",
+      "problem_solved": "解决内容团队常见的断层：草稿做完后不知道下一步该复查、发布还是复盘；同时避免一键动作误把 dry-run、失败稿或错误账号送进真实发布/统计链。",
+      "mainstream_comparison": "手工在草稿列表、发布页和数据页之间切换最稳但容易漏；完全自动 next action 省操作却容易误发。白名单 action + 先显示详情 + 发布只到预览 + analytics 只接受真实帖子，是更适合真实账号运营的中间态。",
+      "today_action": "拿 4 种状态各 1 条测试数据：普通草稿、审核通过未发布、发布失败、已发布真实帖子。确认点击后的行为分别只到详情、发布预览、发布预览、analytics；重点检查任何路径都不会自动 confirm 发布。",
+      "next_opportunity": "若状态映射稳定，把“发布后 24h/72h analytics → 回写选题假设”接到复盘规则；若状态经常错判，只保留发布预览深链，不做自动数据回收。",
+      "evidence": [
+        {"type": "commit", "title": "Free Creation history deep links map safe next-step actions", "url": "https://github.com/JameryW/XhsGrowthAgent/commit/05c47b39b1d9bf792d99d325e8bf8b5a4a232adc"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "小红书案例稳定入库：收藏/账号链接 → 缓冲下载 → 完整性检查 → 元数据持久化 → 再做案例蒸馏",
+      "source_project": "JoeanAmier/XHS-Downloader",
+      "github": "https://github.com/JoeanAmier/XHS-Downloader",
+      "category": ["小红书", "案例研究", "内容资产", "数据采集"],
+      "score": 96,
+      "value_insight": "XHS-Downloader 8 月 29 日加入文件下载缓冲机制，而现有链路已经支持下载完整性处理、跳过已下载作品、记录作品 ID、持久化作品信息，以及从账号发布/收藏/点赞/搜索结果提取链接。真正的机会不是“更好下载小红书”，而是把已经人工筛过的高价值案例稳定沉淀成本地证据资产，再交给后续转录、关键帧和结构分析。",
+      "problem_solved": "解决收藏夹/竞品账号里的高价值案例因为批量下载中断、重复抓取或文件不完整而难以长期沉淀；也避免每次做选题都重新打开平台人工找旧案例。",
+      "mainstream_comparison": "浏览器收藏零成本，但搜索、批量比较和后续 AI 分析很差；一次性脚本下载快但中断后易产生半文件和重复项。缓冲 + 完整性 + ID 去重 + 元数据持久化更适合长期案例库，但不应扩大成大规模无差别抓取。",
+      "today_action": "只选 10 条已经明确有参考价值的收藏/点赞/竞品作品，跑一次入库；中途主动中断再恢复，检查是否出现重复文件、半文件和元数据缺失；通过后再接现有转录/关键帧蒸馏，不先做大规模抓取。",
+      "next_opportunity": "如果 10 条测试能稳定恢复且元数据可追踪，就把“收藏/竞品 → 入库 → 蒸馏 → 选题卡”做成每周一次；如果只是下载稳定但后续无法转成选题决策，就停止继续扩库。",
+      "evidence": [
+        {"type": "commit", "title": "XHS-Downloader adds file download buffering", "url": "https://github.com/JoeanAmier/XHS-Downloader/commit/3a8849c7afb215085b32da84bcdbeb7c6d26880e"},
+        {"type": "readme", "title": "README lists integrity handling, persistent metadata, ID tracking, account favorites/likes/search link extraction and MCP/API", "url": "https://github.com/JoeanAmier/XHS-Downloader"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "MiniMax H3 连续镜头修补：真实前镜/动作/音频参考 → 2–5 秒续接 → 保留时长与口型 → 入片率验收",
+      "source_project": "tritant/ComfyUI_MiniMax_H3_Extender",
+      "github": "https://github.com/tritant/ComfyUI_MiniMax_H3_Extender",
+      "category": ["AI视频生成", "ComfyUI", "缺镜头修补", "连续性"],
+      "score": 94,
+      "value_insight": "MiniMax H3 Extender 当前把 video/audio references、Motion Context、multi-clip generation、disk cache 和连续解码整合到同一工作流；更关键的是对非 24fps 参考视频会按原始 FPS 重采样到 H3 所需 24fps，同时保持原时长，并可把原视频音频作为 lip-sync/timing guidance。真正值得测的是“用已有真实镜头的动作和声音约束，只补短缺口”，而不是生成整段影片。",
+      "problem_solved": "解决 AI 补镜头常见的动作衔接断裂、参考视频非 24fps 导致时长/尾帧错位，以及人物口型和原声音轨节奏不一致。",
+      "mainstream_comparison": "纯文本生成最便宜但连续性最差；整段视频重生成成本高且容易把已经正确的部分一起改坏。把前后真实镜头/动作/音频作为约束，只生成 2–5 秒缺口，更符合真实剪辑中的返修逻辑。",
+      "today_action": "选一个真实时间线里缺 2–5 秒的镜头，输入前镜或参考动作视频及原 FPS，必要时带匹配音频；最多生成 3 次。只有至少 1 条能无明显跳变接入时间线，才记录为可用方案。",
+      "next_opportunity": "若 3 个不同缺口的入片率达到约 50% 以上，再考虑把它接到 Shot Mapping 的“缺镜头”分支；低于此水平则只保留手动个案，不工程化。",
+      "evidence": [
+        {"type": "readme", "title": "MiniMax H3 Extender: video/audio refs, original-FPS correction to 24fps, motion/timing/lip-sync guidance and portable projects", "url": "https://github.com/tritant/ComfyUI_MiniMax_H3_Extender"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "capcut-cli 可迁移草稿交付：先诊断 → 素材 stage → 隐私检查 → 换目录实开，不为“新功能”重做链路",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "草稿自动化", "交付可靠性"],
+      "score": 92,
+      "value_insight": "过去 24 小时未发现比 v0.21 更强的新剪映信号，因此今天不为“日报必须上新”强换项目。当前最高价值仍是把新版 Timelines 布局识别、relink --stage、privacy fixture 和写入拒绝原因当成交付门禁：目标不是生成更多草稿，而是确保草稿换目录/换机器仍可打开。",
+      "problem_solved": "解决 AI/CLI 批量草稿在另一目录或另一台机器出现素材失联、版本布局误修、隐私信息残留和写入失败原因不透明。",
+      "mainstream_comparison": "直接复制草稿最快但不可控；完全人工重连可靠但重复劳动大。先 diagnose，再最小修复、stage 依赖素材、做隐私检查和真实打开测试，是更低成本的可靠交付方式。",
+      "today_action": "沿用昨天方案，只做 1 个真实草稿的跨目录复测；如果已经通过，就不再增加命令或包装功能，直接把结果记为“可交付/不可交付”。",
+      "next_opportunity": "连续 3 个草稿通过后才固定为批量交付门禁；否则保持人工打开验收，不继续扩大自动修复范围。",
+      "evidence": [
+        {"type": "release", "title": "capcut-cli v0.21 portable relink, nested timeline repair and privacy checks", "url": "https://github.com/renezander030/capcut-cli/commit/ace5b80751f434b644a9f37a2559c33a9eabad41"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"source_project": "whiteguo233/OpenBiliClaw", "reason": "8 月 29 日可见的新提交只是 download/star badges 文档更新，没有形成新的真实用户价值；现有时效/候选池能力仍可继续观察，但本次不因为活跃度进入 Top。"},
+    {"source_project": "white0dew/XiaohongshuSkills", "reason": "8 月 29 日更新为 GitHub Actions 自动更新 star history，属于指标维护，不是内容生产或运营能力增量。"},
+    {"source_project": "jub0t/WolfCut", "reason": "8 月 29 日 alpha 连续加入真实 effect preview、portrait import、on-device TTS/translation 等能力，产品进展明显，但它是独立 NLE；当前已有 DaVinci/剪映主链，迁移成本高于这些功能带来的直接收益。"},
+    {"source_project": "SubtitleEdit/subtitleedit", "reason": "8 月 29 日有新构建且支持 Apple Silicon，但主要仍是通用字幕编辑器；当前需求更需要可编辑剪映草稿与 Resolve 交付门禁，没有足够证据证明迁入会减少现有流程成本。"},
+    {"source_project": "MartinDelophy/ai-video-editor 等近期更新仓库", "reason": "GitHub 搜索能看到近期更新，但缺少足够 README/demo/真实交付证据证明比现有 Resolve/CapCut/ComfyUI 链路更有价值，因此不以“刚更新”作为入选理由。"}
+  ]
+}
