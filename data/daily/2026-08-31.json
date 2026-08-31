@@ -1,0 +1,119 @@
+{
+  "date": "2026-08-31",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天不追更多工具：优先把 AI 粗剪真正推进到“多轨+变速可交接”，再验证口播高级包装能否独立生成可回剪素材；内容研究与 AI 补镜头都只做最小证据闭环。",
+  "summary": [
+    "DaVinci：最新 live proof 已覆盖 V2+ 多轨、正向变速和倒放的离线 conform；今天最值得做的是用真实素材验证 OTIO/DRT → Resolve 的复杂切点交接。",
+    "高级感口播：HyperFrames 新开源 talking-head-recut / motion-graphics 工作流，可把动态图形包装独立生成确定性 MP4，再回到 Resolve/剪映叠加，不需要迁移主剪辑器。",
+    "内容与 AI 视频：跨平台案例先统一成 transcript/comments/keyframes 证据包；H3 只补真实 2–5 秒缺口，并用无损中间文件验收入片率。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 复杂粗剪交接：AI Shot Mapping → 多轨/正反变速 OTIO → DRT → Resolve 实际渲染验收",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "OTIO", "自动化"],
+      "score": 99,
+      "value_insight": "8 月 31 日连续三组 live proof 把离线 conform 从简单单轨硬切推进到真正有生产价值的几何：V2+ 多视频轨可叠加、正向 constant-speed retime 可写入、倒放也可写入，而且都经过 Resolve 导入、readback 与真实 render 验证。最关键的不是“又多三个 API”，而是 AI Shot Mapping 现在有机会把镜头层级、B-roll 叠层、慢放/快放/倒放直接交成 Resolve 可继续编辑的时间线，而不是只输出 JSON 后再人工重建。",
+      "problem_solved": "解决 AI 粗剪在复杂时间线上的最后一公里：模型能决定镜头，但多轨 B-roll、速度变化和倒放仍需要人工在 Resolve 里重搭，导致自动化只能停留在简单硬切。",
+      "mainstream_comparison": "直接让 MCP 在线逐条改 Resolve 最直观，但连接状态、版本差异和大量原子写入会增加失败面；只导 EDL 又会丢多轨和 retime。先生成受约束 OTIO/assemble spec，再离线 author DRT、导入 Resolve 并做 readback/render，是更可回退、也更适合批量验证的中间方案。",
+      "today_action": "用一个 15–30 秒测试序列做 5 个镜头：V1 主线 3 段、V2 B-roll 2 段，其中 1 段 50% 慢放、1 段倒放。由现有 Shot Mapping 生成对应 OTIO/assemble spec，导出 DRT 后进 Resolve；只检查四件事：轨道位置、源范围、速度方向、最终渲染帧数是否全部正确。",
+      "next_opportunity": "如果同一测试能连续 3 次无人工修复导入并渲染正确，就把“AI_analysis/Shot Mapping → OTIO/DRT”升级为粗剪主出口；如果 retime 或 V2 仍有版本差异，就只自动 hard cut + multi-track，把速度效果保留为人工标记。",
+      "evidence": [
+        {"type": "commit", "title": "Reverse retimes authored and readback/render verified", "url": "https://github.com/samuelgursky/davinci-resolve-mcp/commit/f07acfa85d88aa6df4a009a1f7a50056168a7e33"},
+        {"type": "commit", "title": "Forward retimes authored with generation-specific timemap and full-route proof", "url": "https://github.com/samuelgursky/davinci-resolve-mcp/commit/c22c7d03d7e185d54a75172ed80133657b5b90bb"},
+        {"type": "commit", "title": "Multi-track V2+ authoring render-verified from OTIO/XMEML", "url": "https://github.com/samuelgursky/davinci-resolve-mcp/commit/2fcb6514abc850bed219bcbc9219cee228607a95"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "高级感口播包装：成片口播 → AI 生成动态图形覆盖层 → 确定性 MP4 → 回 Resolve/剪映精剪",
+      "source_project": "heygen-com/hyperframes",
+      "github": "https://github.com/heygen-com/hyperframes",
+      "category": ["口播剪辑", "Motion Graphics", "AI视频", "内容生产"],
+      "score": 98,
+      "value_insight": "HyperFrames 刚开源的价值不在于再做一个 AI 视频编辑器，而是它明确提供 talking-head-recut、embedded-captions、motion-graphics 等 Agent workflow，把 HTML/CSS/GSAP 动画渲染为确定性 MP4。对现有 DaVinci/剪映主链，最低成本用法是把它限定成“高级包装素材生成器”：让 Agent 根据口播文稿和时间点生成 lower-third、数据卡、关键词动效、侧栏、PiP 或透明/独立覆盖层，再回主时间线人工决定是否采用。",
+      "problem_solved": "解决高级感口播里最耗时间、又高度重复的包装工作：字幕以外的数据卡、金句、动态图形、标题、侧栏和 PiP 往往需要手工搭动画，但又不值得为了这些元素迁移到另一个完整编辑器。",
+      "mainstream_comparison": "直接在 Resolve Fusion/剪映里手做自由度最高但耗时；Remotion/AE 模板自动化能力强但需要维护 React/AE 工程。HyperFrames 用普通 HTML 作为 source of truth，并提供 lint、snapshot、preview、render 和专门的 talking-head workflow，更适合先做单个包装镜头的小成本验证。",
+      "today_action": "从一条现有正面口播里截 20 秒，只选 3 个包装点：开头标题、一个数据/事实卡、一个关键词金句。不要让它重剪原片，只生成 3 个可独立叠加的 MP4/透明素材；回 Resolve 对齐原时码，比较手工制作时间与实际视觉质量。",
+      "next_opportunity": "如果 3 个包装点里至少 2 个无需重做即可入片，就沉淀一套固定 frame.md/品牌规范，把“文稿标记 → 包装素材”变成口播剪辑前置工序；如果视觉仍像模板或改稿成本高，就只保留标题/数据卡两类确定性元素。",
+      "evidence": [
+        {"type": "readme", "title": "HyperFrames: deterministic HTML/CSS/media to MP4 with agent skills, including talking-head-recut and motion-graphics", "url": "https://github.com/heygen-com/hyperframes"},
+        {"type": "commit", "title": "Runtime/player timeline rebinding and trusted runtime-source fixes", "url": "https://github.com/heygen-com/hyperframes/commit/61ba800a5db0825afb40f061fb6df5498dfdb37d"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "跨平台对标证据包：抖音/小红书/B站/YouTube 链接 → transcript/评论/元数据统一 → 只输出可复刻结构",
+      "source_project": "JNHFlow21/social-media-toolkit",
+      "github": "https://github.com/JNHFlow21/social-media-toolkit",
+      "category": ["抖音", "小红书", "内容研究", "MCP"],
+      "score": 96,
+      "value_insight": "social-media-toolkit 把 Douyin、RedNote、Bilibili、YouTube 的元数据、文本、时间戳转录、媒体和受支持评论统一到 SDK/CLI/MCP 层，并在近期修复了 MCP initialize handshake、增加 Douyin fallback。真正有价值的方案不是批量爬平台，而是把每天人工挑中的少量爆款链接转成统一 evidence schema，让后续模型只比较 Hook、结构、场景、评论需求和 CTA，而不用为每个平台分别维护一套读取脚本。",
+      "problem_solved": "解决做内容对标时最浪费精力的格式碎片：同一条研究任务在不同平台要分别找字幕、评论、视频和互动数据，最后还要人工整理成可比较文本。",
+      "mainstream_comparison": "浏览器逐条看几乎零部署成本，适合 1–2 条；平台专用下载器对单平台更深，但跨平台比较时维护成本迅速上升。统一 toolkit 更适合每天 5–10 条的小样本证据包，但不应拿它做全网大规模抓取。",
+      "today_action": "各取 1 条抖音、小红书、B站、YouTube 已确认值得参考的视频，共 4 条；统一导出 title/creator/duration/transcript/comments/source_url，再让 AI 只输出 5 个字段：3 秒 Hook、叙事结构、证明动作、观众痛点、可复刻拍摄动作。",
+      "next_opportunity": "如果 4 条样本能在一个 schema 内稳定比较，就把它接到每周选题流程；如果小红书/抖音经常因登录或反爬失效，立即退回浏览器人工取证，不继续投入抓取工程。",
+      "evidence": [
+        {"type": "commit", "title": "Restore MCP startup with real initialize-handshake regression", "url": "https://github.com/JNHFlow21/social-media-toolkit/commit/e06e3647866e3bc0ec9fddd95ed5651db2c44741"},
+        {"type": "readme", "title": "Unified SDK/CLI/MCP for Douyin, RedNote, Bilibili and YouTube metadata, timed transcripts, media and supported comments", "url": "https://github.com/JNHFlow21/social-media-toolkit"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "H3 缺镜头返修：真实前镜+音频/多参考 → 2–5 秒续接 → FFV1 无损中间件 → Resolve 入片验收",
+      "source_project": "seitanism/ComfyUI-H3-Motion-Context-MultiRef",
+      "github": "https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef",
+      "category": ["AI视频生成", "ComfyUI", "缺镜头修补", "连续性"],
+      "score": 95,
+      "value_insight": "8 月 31 日该 fork 连续修复 FFV1 output 和 AV source loading，前一轮又加入 lossless FFV1 final output。结合已有 multi-reference、AV extension、timeline audio、latent masking，最值得利用的是“生成完成后不再先压成有损交付文件”，而是用无损中间件回 Resolve 判断连续性、色彩和二次处理空间。它把 AI 生成从 demo 输出推进到更接近 NLE 素材的返修链。",
+      "problem_solved": "解决 AI 补镜头即使内容可用，也可能在二次压缩、音画参考加载或多段延长时损失质量/连续性，导致回 Resolve 后无法自然调色、裁切和再次编码。",
+      "mainstream_comparison": "直接输出 H.264 最省空间，适合预览；但用于最终入片会叠加压缩损失。整段重新生成又浪费已经正确的内容。只补短区间并用 FFV1 无损中间文件进入 NLE，磁盘更大，但验证阶段成本可控。",
+      "today_action": "选 1 个真实 2–5 秒缺口，输入前镜尾段和需要的音频/人物参考，最多生成 3 个候选；最终候选统一输出 FFV1，再进 Resolve 做一次正常调色/缩放/二次 H.264 导出，检查接缝、音画连续性和二压差异。",
+      "next_opportunity": "只有当无损中间件明显改善二次处理质量且至少 1/3 候选真正入片，才把它加入缺镜头分支；否则继续用低成本预览编码，不增加磁盘和流程复杂度。",
+      "evidence": [
+        {"type": "commit", "title": "Fix FFV1 output and improve AV source loading", "url": "https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef/commit/2ed4b27e5e262a996ad2670ac6d2fd2e505cf3a3"},
+        {"type": "commit", "title": "Add lossless FFV1 final output option", "url": "https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef/commit/4a925ca8000a35c4a7064104224099a466393d22"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "剪映草稿写入安全门：精确检测 CapCut/剪映进程 → 关闭后再写 → lint/实开验收",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "草稿自动化", "可靠性"],
+      "score": 92,
+      "value_insight": "8 月 30 日 capcut-cli 修复了编辑器进程检测逻辑：不再把整个进程列表拼起来做 substring 匹配，而是逐个精确比较进程名。这个改动本身不炫，但它对应一个直接的生产风险——自动脚本如果误判编辑器未运行，可能在 CapCut/剪映仍打开时写草稿；误判已运行则会无意义阻塞。今天的价值是把“编辑器必须关闭”做成确定性写入门禁，而不是继续增加批量功能。",
+      "problem_solved": "解决批量写草稿前的并发风险和误判：编辑器正在读写同一草稿时，外部 CLI 再修改文件可能造成覆盖、缓存不同步或无法复现的问题。",
+      "mainstream_comparison": "人工记得先关剪映最简单，但自动批量流程无法依赖记忆；直接强杀进程风险又太高。精确检测 → 明确提示关闭 → 写入 → lint → 人工打开，是最低成本的安全门。",
+      "today_action": "准备 1 个测试草稿：剪映开启时执行一次写入命令，确认必须被阻断；关闭剪映后再执行，确认写入成功；随后跑 lint 并实际打开草稿。不要测试更多效果功能。",
+      "next_opportunity": "若门禁稳定，就把它固定在所有批量草稿写入前；若 macOS 中文版进程名仍有差异，只补进程名映射，不扩展成复杂进程管理器。",
+      "evidence": [
+        {"type": "commit", "title": "Compare editor process names exactly instead of substring matching", "url": "https://github.com/renezander030/capcut-cli/commit/a4f51f3619c9c12abb5f4fd49cc5294e74a019e2"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "reason": "最近可见提交主要是下载/Star badge 与发行文档同步；已有跨平台推荐能力仍有价值，但今天没有形成比现有候选池/时效分层更强的新落地增量，因此不因活跃度重复进 Top。"
+    },
+    {
+      "source_project": "pireel/pireel",
+      "reason": "新开源且主打 Agent/MCP 可驱动视频编辑，但它是独立 NLE。当前已经有 DaVinci + 剪映主链，切换编辑器的迁移成本明显高于短期收益；除非后续证明可无损 OTIO/工程交接，否则不进入正式推荐。"
+    },
+    {
+      "source_project": "keepongo/video-summarizer",
+      "reason": "多平台字幕+关键帧总结思路直接，但仓库目前只有早期单次提交，维护和真实稳定性证据弱；作为轻量参考可以手动试，不值得压过已有可维护的跨平台 toolkit。"
+    },
+    {
+      "source_project": "Jalen-Brunson/ComfyUI-MiniMax-H3-PDD-Acc",
+      "reason": "8-step PDD 加速对生成速度有吸引力，但当前更缺的是‘真实缺镜头能否入片’而不是单纯更快。没有先证明质量/连续性不下降前，不把加速节点列入 Top。"
+    },
+    {
+      "source_project": "MoonshotAI/kimi-code",
+      "reason": "近期新开源且热度高，但属于通用 coding agent；今天的具体瓶颈在视频剪辑交接、内容证据和生成镜头 QC，没有直接解决这些问题，因此不因 GitHub 热门进入 Top。"
+    }
+  ]
+}
