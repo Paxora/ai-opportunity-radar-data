@@ -1,0 +1,103 @@
+{
+  "date": "2026-09-01",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天不追新工具数量：优先验证 Resolve 复杂粗剪是否已能稳定承载速度坡度、转场、嵌套和空隙；剪映侧只验证 Agent 在受限沙箱里生成/检查草稿的安全性；内容与生成侧继续做最小闭环。",
+  "summary": [
+    "DaVinci：v2.139–2.141 已把 speed ramp、OTIO transition、四层嵌套和 record gap 推到真实渲染验证，复杂粗剪交接价值显著上升。",
+    "剪映：capcut-cli 新增 capability-free Wasm agent tools，值得验证“Agent 可计算/检查但默认无宿主权限”的草稿自动化边界。",
+    "内容与生成：小红书审稿要保留上下文而不是每次重来；AI 补镜头仍以短缺口+无损回 NLE 的真实入片率决定是否继续。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 复杂粗剪升级：Shot Mapping → speed ramp/转场/嵌套/空隙 → OTIO/DRT → 真渲染验收",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "OTIO", "自动化"],
+      "score": 99,
+      "value_insight": "9 月 1 日最新 v2.139–2.141 连续把复杂时间线能力从“能描述”推进到“真实渲染验证”：线性 speed ramp 已按预测 cadence 渲染；OTIO Transition 可映射 dissolve/wipe；四层 nested compound 可渲染；record gap 可正确输出黑场。更重要的是项目同时记录了边界：eased ramp 在 Resolve 19.1.3 会导致崩溃、原生 XMEML transition 可读回却可能渲染无效。价值在于明确知道哪些复杂编辑可以自动交接、哪些必须拒绝。",
+      "problem_solved": "解决 AI Shot Mapping 只能输出简单硬切的问题，让 B-roll、多段速度变化、转场、嵌套结构和稀疏时间线有机会直接进入可继续编辑的 Resolve 工程。",
+      "mainstream_comparison": "直接在线 MCP 逐项改时间线灵活但失败面大；EDL 无法保留这些复杂几何。受约束 assemble spec/OTIO → DRT → Resolve readback + render 既保留复杂结构，又能在导入前拒绝已知危险参数。",
+      "today_action": "做一个 20–30 秒测试：V1 三段主线、V2 两段 B-roll；加入一个 50%→100% 线性 speed ramp、一个 Cross Dissolve、一个 1 秒 gap、一个两层 compound。导入 Resolve 后只核验源帧、轨道、速度 cadence、转场中点、gap 黑场和最终帧数。不要测试 easing。",
+      "next_opportunity": "若连续 3 次真实素材测试全部正确，把复杂 OTIO/DRT 设为 AI 粗剪主出口；若某类 transition 或 nesting 在当前 Resolve 版本不稳定，就把它降级为 marker 建议而非自动写入。",
+      "evidence": [
+        {"type":"commit","title":"v2.141 OTIO transitions, depth-4 nesting and record gaps render-verified","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/929daee3f7f5b264a0716050a03a4960e422f49e"},
+        {"type":"commit","title":"v2.140 transition style registry and host XMEML importer failure proof","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/be9b007a00e845bda95d4b06a24fa7df4d9da598"},
+        {"type":"commit","title":"v2.139 linear speed ramps render-verified; easing recorded as crasher","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/6eb0361cd1bffb12be2875bd4df45144f0d1938f"}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "剪映 Agent 安全草稿：Wasm 沙箱计算/检查 → 显式能力边界 → draft 写入前 lint → 人工实开",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "Agent", "安全自动化"],
+      "score": 98,
+      "value_insight": "8 月 31 日新增 capability-free Wasm agent tools，并专门补充文档解释 Wasm sandbox 的价值。真正机会不是“让 Agent 做更多”，而是相反：让 Agent 在默认拿不到宿主文件系统/网络等能力的环境里先做时间、字幕、结构计算和检查，再通过明确的 CLI 写入边界进入草稿。对批量剪映自动化，这是比继续增加特效 API 更重要的权限收敛。",
+      "problem_solved": "解决把 LLM/Agent 直接接到本地草稿时权限过宽的问题：一个错误计划不应顺带拥有任意本机读写或执行能力。",
+      "mainstream_comparison": "直接给 Agent shell 权限最省开发，但风险最大；完全不用 Agent 又失去结构化批量能力。Wasm 沙箱适合承担纯计算/校验，再把真正写草稿交给已有 version/diagnose/lint/relink 等确定性命令。",
+      "today_action": "只做一个 15 秒测试草稿：让 Agent 在 Wasm 中生成 3 段字幕时间和两个 B-roll 区间，确认其无法自行访问宿主能力；随后由 CLI 接收结构化结果写入测试草稿，跑 lint 后人工打开剪映检查。",
+      "next_opportunity": "如果 Agent 计划与宿主写入可以稳定分离，就把后续批量化统一成“沙箱规划 → schema 校验 → CLI 写入”；否则继续使用固定脚本，不为 Agent 化增加复杂度。",
+      "evidence": [
+        {"type":"commit","title":"Add capability-free Wasm agent tools","url":"https://github.com/renezander030/capcut-cli/commit/3c2f2b5be5d7e7ff609f23f7da276cb69f54c8f7"},
+        {"type":"commit","title":"Explain why the Wasm sandbox matters","url":"https://github.com/renezander030/capcut-cli/commit/ed73af74d5bad7efa520e9578444675ec26d26a6"}
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "小红书审稿不重来：选题/草稿上下文 → review 修改 → 返回原任务上下文 → 再决定发布",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["小红书", "内容运营", "Human-in-the-loop"],
+      "score": 96,
+      "value_insight": "8 月 31 日合并的改动专门解决 free draft review 返回时的上下文保留。它看起来只是状态修复，但对真实内容流程很关键：审稿后不应该丢掉原始目标、选题理由和上下文，再让 AI 从头生成。价值是把人工 review 变成同一任务内的增量修改，而不是一次次重启 Agent。",
+      "problem_solved": "解决 AI 内容工作流中最常见的返工：人工提出一处修改后，系统丢失前文约束，导致标题、结构、语气或原始选题理由一起漂移。",
+      "mainstream_comparison": "直接 Chat 对话改稿最低成本但难追踪状态；全自动发布又风险过高。保留 draft review context + 显式人工确认，正好覆盖“AI 产初稿、人工定方向”的现实流程。",
+      "today_action": "拿一篇真实草稿做两轮 review：第一轮只改 Hook，第二轮只改 CTA；检查第二轮是否仍保留原始选题、目标受众和第一轮已确认部分。不要测试自动发布。",
+      "next_opportunity": "如果两轮局部修改都不破坏已确认内容，就把 review context 作为账号内容生产的默认机制；若仍漂移，只保留它做草稿记录，不让 Agent自行续写。",
+      "evidence": [
+        {"type":"commit","title":"Preserve draft review return context","url":"https://github.com/JameryW/XhsGrowthAgent/commit/4fc451daf9f48506ef66391db876d51f77f95e57"}
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "AI 缺镜头无损返修：真实短缺口 → 多参考/音频约束 → FFV1 → Resolve 二次处理验收",
+      "source_project": "seitanism/ComfyUI-H3-Motion-Context-MultiRef",
+      "github": "https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef",
+      "category": ["AI视频生成", "ComfyUI", "缺镜头修补"],
+      "score": 94,
+      "value_insight": "今天没有比 8 月 31 日的 FFV1/AV source 修复更强的新生成信号，因此不为了上新换模型。当前最有价值的仍是：只补真实 2–5 秒缺口，并把最终候选用 FFV1 无损中间文件交回 NLE，验证接缝、调色和二次编码，而不是看网页预览就判断成功。",
+      "problem_solved": "解决生成镜头内容勉强可用但回 NLE 后因二压、参考加载或音画连续性问题无法真正入片。",
+      "mainstream_comparison": "整段重生成本高；H.264 直接预览适合淘汰但不适合精细 QC。少量候选先低成本生成、最终入选项再用 FFV1 回 Resolve，是更合理的成本分层。",
+      "today_action": "只选一个真实缺口，最多生成 3 条；淘汰后仅给最佳候选输出 FFV1，回 Resolve 做裁切、调色、缩放和最终 H.264，再与直接 H.264 候选比较。",
+      "next_opportunity": "只有当 FFV1 版本在二次处理后明显更稳且候选真实入片，才保留无损分支；否则继续用普通预览编码。",
+      "evidence": [
+        {"type":"commit","title":"Fix FFV1 output and improve AV source loading","url":"https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef/commit/2ed4b27e5e262a996ad2670ac6d2fd2e505cf3a3"},
+        {"type":"commit","title":"Add lossless FFV1 final output option","url":"https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef/commit/4a925ca8000a35c4a7064104224099a466393d22"}
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "OpenBiliClaw 收藏确认门：候选发现 → 原生保存动作 → 明确确认 → 再进入长期案例池",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["内容研究", "选题", "跨平台"],
+      "score": 91,
+      "value_insight": "8 月 31 日最新提交是 harden native save confirmation。它不是值得单独追的功能，但正好补内容雷达长期运行里的数据质量边界：只有平台原生保存动作得到确认，才应把候选当成真实正反馈写进长期画像，避免 UI 点击、网络失败或假成功污染偏好数据。",
+      "problem_solved": "解决长期案例池把“尝试收藏”误当成“成功收藏”的问题，避免推荐系统依据错误正反馈持续放大偏差。",
+      "mainstream_comparison": "简单本地按钮状态最快，但不能证明平台动作成功；完全依赖平台 API 又经常不可用。将原生动作确认作为强证据、本地收藏作为弱证据，是更稳妥的分层。",
+      "today_action": "对 5 个候选做一次真实保存/取消保存测试，记录 native confirmation、页面状态和本地状态是否一致；任何不一致都不写入长期偏好。",
+      "next_opportunity": "若确认逻辑稳定，就把长期偏好训练限制为可追溯的显式反馈；若平台确认经常漂移，则退回本地收藏，不继续为平台自动化投入。",
+      "evidence": [
+        {"type":"commit","title":"Harden native save confirmation","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/c14f38f98606567a460e553297da4ffa8f4a63f1"}
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {"source_project":"heygen-com/hyperframes","reason":"最新可见提交主要是 Windows 子进程/CI 稳定性修复；口播包装方向仍有价值，但今天没有形成比昨日方案更强的新落地增量，因此不重复占 Top。"},
+    {"source_project":"MartinDelophy/ai-video-editor","reason":"近期活跃，但属于独立 AI 编辑器路线；在已有 DaVinci/剪映主链下，迁移与验证成本高，未看到足够证据证明能解决当前更优先的交接/QC问题。"},
+    {"source_project":"VelornLabs/velorn","reason":"项目体量和功能较大，但同样属于新编辑器/生产平台范式；当前没有必要为已有主链可解决的问题切换 NLE。"},
+    {"source_project":"Adobe Premiere Pro MCP 类项目","reason":"与当前 DaVinci/剪映工作流不匹配；即使功能有更新，也不解决现阶段主路径瓶颈。"},
+    {"source_project":"capcut-cli 文档更新本身","reason":"单纯文档解释不能进入 Top；只有其背后的 capability-free Wasm 执行边界被转成具体安全草稿方案后才有价值。"}
+  ]
+}
