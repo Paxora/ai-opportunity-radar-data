@@ -1,0 +1,108 @@
+{
+  "date": "2026-09-02",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天不追新工具数量：优先把 Resolve 的跨时间线 roundtrip 校验做成可信门禁；AI 视频只用 H3 Max 首尾帧补真实短缺口；剪映和小红书继续验证已经最接近实际生产的最小闭环。",
+  "summary": [
+    "DaVinci：v2.201–2.203 把统一 timecode offset、retime 1 帧舍入和素材重命名从大量假 mismatch 中分离，roundtrip QC 比继续堆编辑能力更值得先验证。",
+    "AI 视频：ComfyUI 今天加入 H3 Max first-last-frame，最适合直接测试真实 2–5 秒镜头桥接，而不是做模型 Demo。",
+    "内容/剪映：没有为“每日上新”强换项目；继续用最小权限草稿写入、局部审稿和参考视频先样片后全量的低成本验证链。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 往返一致性门禁：Premiere/旧时间线 → 多切点 offset 拟合 → 只标真实 trim 漂移 → 再交 AI 粗剪",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "Conform", "QC"],
+      "score": 99,
+      "value_insight": "9 月 2 日早间最新 v2.201–2.203 针对真实 reel 的 roundtrip 校验继续收敛误报：同一 source 的统一 timecode offset 不再由第一条 cut 决定，而是对全部 paired cuts 拟合 offset 并取众数；retime pair 允许 1 帧舍入容差；重命名素材还可通过重叠窗口推断 alias。价值不是“多一个 diff”，而是把几十个假漂移从真实 trim 问题里剥离，让自动粗剪/跨 NLE 交接的 QC 更可信。",
+      "problem_solved": "解决 Premiere/Resolve 或旧新时间线往返时，同一素材因统一 TC rebase、retime 舍入、素材重命名而产生大量假 mismatch，人工很难从报警里找到真正改坏的切点。",
+      "mainstream_comparison": "只按 clip name + source in/out 精确比较实现简单，但真实工程里非常容易被 TC rebase、重命名和 retime rounding 淹没。按 source 聚合拟合 offset，再只暴露离群 cut，更接近人工 conform 的判断方式，也更适合做自动门禁。",
+      "today_action": "拿一个真实多切点 reel 做 A/B：原时间线与一个统一平移 source TC 的副本比较，再故意把其中 2 个 cut 各改 2–3 帧。运行 roundtrip verify，目标是统一 offset 不报警、真正改动的 2 个 cut 被保留为 mismatch；通过后才把它接到 AI 粗剪验收。",
+      "next_opportunity": "若 3 个真实项目都能把假报警压低且不漏掉人工植入的 trim 错误，就把 roundtrip verify 固定到“AI Shot Mapping → OTIO/DRT → Resolve”交付前；否则只作为诊断报告，不自动阻断。",
+      "evidence": [
+        {"type":"commit","title":"v2.203 fit per-source TC offset from all cuts using the mode","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/0b00099de5398f91825992ae8866c4018c788e16"},
+        {"type":"commit","title":"v2.202 majority-based TC rebase and one-frame retime tolerance","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/784b2ae6dbee670cd1fa4179ca733b3af3a17f9b"},
+        {"type":"commit","title":"v2.201 infer source aliases from overlapping windows","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/056acf217fef21370cf7e82a61f0c27692a17908"}
+      ],
+      "status": "待验证"
+    },
+    {
+      "rank": 2,
+      "name": "H3 Max 缺镜头小样：前镜尾帧 + 后镜首帧 → 2–5 秒桥接 → 只给入选镜头做高质量交付",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "ComfyUI", "缺镜头修补"],
+      "score": 97,
+      "value_insight": "ComfyUI 9 月 2 日新增 MiniMax H3 Max 选项，并直接接入 text-to-video 与 first-last-frame 节点。真正有价值的不是追新模型，而是把首尾帧约束用于真实时间线缺口：前镜尾帧固定起点、后镜首帧固定终点，只生成中间 2–5 秒，先看接缝是否能入片。",
+      "problem_solved": "解决旅行/口播成片里“前后两个镜头都对，但中间缺 2–5 秒连接动作”的问题，避免为了一个短缺口整段重拍或整段重生成。",
+      "mainstream_comparison": "纯 prompt T2V 自由度高但连续性差；只给单张参考图也无法约束落点。first-last-frame 把镜头两端锁住，更适合作为 NLE 中的局部补洞，而不是独立生成完整视频。",
+      "today_action": "从现有时间线挑一个真实 2–4 秒缺口，截前镜最后一帧和后镜第一帧；最多生成 3 条 H3 Max 候选，只检查动作连续、主体一致、光线跳变和是否愿意入片，不做整片 Demo。",
+      "next_opportunity": "若 3 条里至少 1 条能真实进 Resolve/剪映，就建立“时间线缺口 → 首尾帧生成 → 入片率”小样模板；否则停止继续调参，回到真实素材/B-roll 方案。",
+      "evidence": [
+        {"type":"commit","title":"ComfyUI adds MiniMax H3 Max to text-to-video and first-last-frame nodes","url":"https://github.com/Comfy-Org/ComfyUI/commit/624f56565b55ecea83a724683818c1beb368e796"}
+      ],
+      "status": "待验证"
+    },
+    {
+      "rank": 3,
+      "name": "剪映 Agent 最小权限闭环：Wasm 只做规划/校验 → CLI 写草稿 → lint → 人工实开",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "Agent", "安全自动化"],
+      "score": 95,
+      "value_insight": "今天没有比 8 月 31 日 Wasm sandbox 更强的新剪映信号，所以不为了“日报上新”替换方案。它的核心价值仍是把 LLM 的结构规划和本机草稿写权限拆开：Agent 默认只做纯计算/检查，真正写入由已有 version/diagnose/lint/relink 等确定性命令承担。",
+      "problem_solved": "解决直接给 Agent shell/文件系统权限后，一个错误规划就可能破坏本地剪映草稿、素材路径或其他文件的问题。",
+      "mainstream_comparison": "让 Agent 直接操作本机最省步骤但风险最大；完全固定脚本又缺少内容级灵活性。Wasm 负责无宿主能力的规划、CLI 负责受控写入，是当前成本与安全边界更平衡的组合。",
+      "today_action": "继续只用 15 秒测试草稿：让 Wasm 生成字幕区间/B-roll 区间的结构化结果，由 CLI 写入后跑 lint，再人工打开剪映。任何一步需要 Agent 直接拿 shell 写草稿，都视为测试失败。",
+      "next_opportunity": "如果连续 3 个测试草稿都能保持“沙箱规划 → schema 校验 → CLI 写入”，再把它接到批量草稿；否则维持固定脚本，不做 Agent 化。",
+      "evidence": [
+        {"type":"commit","title":"Add capability-free Wasm agent tools","url":"https://github.com/renezander030/capcut-cli/commit/3c2f2b5be5d7e7ff609f23f7da276cb69f54c8f7"},
+        {"type":"commit","title":"Explain why the Wasm sandbox matters","url":"https://github.com/renezander030/capcut-cli/commit/ed73af74d5bad7efa520e9578444675ec26d26a6"}
+      ],
+      "status": "继续验证"
+    },
+    {
+      "rank": 4,
+      "name": "小红书局部审稿：保留选题/受众上下文 → 只改 Hook 或 CTA → 人工确认 → 再决定发布",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["小红书", "内容运营", "Human-in-the-loop"],
+      "score": 93,
+      "value_insight": "今日未出现更强的小红书新信号，因此继续保留“review 不重来”这一低成本闭环。项目已修复 free draft review 的 return context：人工要求只改一处时，系统应继续携带原始任务上下文，而不是把已确认的选题、受众和结构一起重写。",
+      "problem_solved": "解决 AI 改稿最常见的二次返工：修改 Hook 后正文漂移，修改 CTA 后前面已确认的表达又被重写。",
+      "mainstream_comparison": "普通 Chat 手改最快，但没有任务状态和版本约束；全自动发布风险过高。保留上下文的局部 review + 人工确认更符合真实账号生产。",
+      "today_action": "拿一篇真实草稿做两次最小改动：第一轮只改前 2 句 Hook，第二轮只改最后 CTA；比较两轮前后的其余段落，任何非必要漂移都记为失败。",
+      "next_opportunity": "若局部 review 能稳定保持已确认内容，再将其作为账号周更的默认审稿方式；如果仍频繁漂移，就只把 Agent 用于初稿，不负责增量修改。",
+      "evidence": [
+        {"type":"commit","title":"Preserve draft review return context","url":"https://github.com/JameryW/XhsGrowthAgent/commit/4fc451daf9f48506ef66391db876d51f77f95e57"}
+      ],
+      "status": "继续验证"
+    },
+    {
+      "rank": 5,
+      "name": "对标视频先拆解再制作：参考视频 → transcript/节奏/关键帧 → 2–3 个差异化方案 → 先做样片再全量生产",
+      "source_project": "calesthio/OpenMontage",
+      "github": "https://github.com/calesthio/OpenMontage",
+      "category": ["内容研究", "AI视频", "对标拆解", "生产决策"],
+      "score": 91,
+      "value_insight": "OpenMontage 的高价值点不是“一句话自动做完整视频”，而是它已经把 reference-video 路线写成明确流程：先解析 transcript、pacing、scenes、keyframes、style，再输出 2–3 个差异化概念、工具路径、成本估算和 sample，最后才决定是否全量生成。这个顺序比先搭整套 AI 视频生产链更符合低成本验证。",
+      "problem_solved": "解决看到一个爆款后直接模仿制作、做到一半才发现结构不可复用或生成成本过高的问题。",
+      "mainstream_comparison": "直接把参考视频丢给 LLM 只得到文本印象；直接全量生成又把成本押在未验证方案上。先做结构拆解、差异化方案和单段 sample，把失败提前到最便宜阶段。",
+      "today_action": "只拿 1 条真正想复刻的短视频：输出 Hook、节奏节点、场景类型、关键帧风格，再强制生成 2 个不同选题/视觉方案；只制作其中一个 8–12 秒 sample，不做 60 秒完整片。",
+      "next_opportunity": "只有 sample 在画面、节奏和成本三项都通过，才进入完整脚本和资产生成；否则保留拆解结论，换方案而不是继续烧生成费用。",
+      "evidence": [
+        {"type":"readme","title":"Reference-video workflow: analyze transcript, pacing, scenes and keyframes before sample/full production","url":"https://github.com/calesthio/OpenMontage#start-from-a-video-you-already-love"},
+        {"type":"readme","title":"Storyboard approval gate pauses asset generation for scene-by-scene review","url":"https://github.com/calesthio/OpenMontage#watch-it-happen--the-backlot-living-storyboard"}
+      ],
+      "status": "可低成本试验"
+    }
+  ],
+  "rejected_candidates": [
+    {"source_project":"whiteguo233/OpenBiliClaw","reason":"9 月 2 日可见的新提交主要是 tailnet host/settings、CI 与 heartbeat 稳定性。远程访问候选池有便利性，但会引入网络暴露、身份和部署复杂度；当前用本地/普通网页复核已经能完成选题，不值得为便利性进入 Top。"},
+    {"source_project":"AkariLabs/akari-video","reason":"今天新增共享 undo/redo history service，工程验证很扎实，但它仍属于独立编辑器内部能力。迁移现有 DaVinci/剪映链路的成本远高于“统一撤销栈”带来的收益，因此不进入 Top。"},
+    {"source_project":"Laihiujin/Prism","reason":"多平台投放、账号身份、代理、数据回收能力完整，但系统过重且自动发布/浏览器身份维护面大。当前更需要验证内容和剪辑闭环，不需要先建设矩阵投放中台。"},
+    {"source_project":"Comfy-Org/ComfyUI workflow templates v0.11.52","reason":"模板版本更新本身只是维护信号，不能单独转化为高价值机会；只有同日新增的 H3 Max first-last-frame 能直接解决真实时间线缺口，所以仅后者进入 Top。"},
+    {"source_project":"新建 AI video editor / auto-video-generator 仓库","reason":"今天搜索到的多个新仓库缺少独立使用证据、稳定交付记录或可编辑 NLE 交接能力；仅凭新建或功能描述不足以进入 Top。"}
+  ]
+}
