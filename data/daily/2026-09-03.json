@@ -1,0 +1,110 @@
+{
+  "date": "2026-09-03",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先验证能形成真实闭环的增量：小红书把纠正反馈变成需人工审核的长期学习；长口播/采访用实时说话人转录提前生成可剪索引；AI 补镜头只测试多参考约束；Resolve 与剪映继续保留已验证的交付门禁。",
+  "summary": [
+    "内容运营：XhsGrowthAgent 新增 Creator Agent learning review loop，差评或人工纠正先生成 learning signal，只有显式批准且版本一致时才写回 Creator Model。",
+    "AI 剪辑：VibeVoice-ASR-Streaming 于 2026-09-03 发布，可持续输出 who/when/what、热词和 10 种语言，适合把长采访/直播先变成带说话人的可剪索引。",
+    "视频生产：H3 Max 已从首尾帧扩展到 reference-to-video；Resolve/CapCut 今日没有更强替代信号，因此继续执行低成本验收门禁，不为上新而换工具。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "小红书可审计学习闭环：发布/审稿反馈 → 学习信号 → 人工批准 → 才写入长期 Creator Model",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["小红书", "内容运营", "Creator Agent", "Human-in-the-loop"],
+      "score": 99,
+      "value_insight": "9 月 2 日晚的新 learning review loop 把“Agent 从反馈里学习”从黑箱自动更新改成可审计流程：dissatisfied 或人工 correction 会生成 account-scoped learning signal；批准前必须有完整 Creator Model 和 expected_revision，旧版本会冲突并回滚；dismiss 只处理该 signal。真正的价值是长期个性化终于有了人工审核门，而不是让一次错误反馈永久污染账号画像。",
+      "problem_solved": "解决内容 Agent 长期运行后最危险的问题：一次误判、情绪化反馈或旧上下文被直接吸收到长期偏好，导致后续选题、语气和结构持续漂移。",
+      "mainstream_comparison": "普通聊天记忆通常直接吸收用户纠正，简单但难追溯；完全不学习又会反复犯同一类错。将反馈先变成 proposal，再人工批准写入长期模型，成本略高但更适合真实账号运营。",
+      "today_action": "拿 1 篇真实小红书草稿做 3 次反馈：一次满意、一次不满意、一次带明确 correction。检查只有后两类产生 learning signal；只批准真正希望长期保留的一条，再确认 Creator Model revision 发生一次且可追溯的更新。",
+      "next_opportunity": "若连续一周能把“临时改稿意见”和“长期偏好”稳定分开，就把学习审核固定到每周复盘；否则长期模型保持只读，Agent 只做单次上下文内修改。",
+      "evidence": [
+        {"type":"commit","title":"Creator Agent learning review loop","url":"https://github.com/JameryW/XhsGrowthAgent/commit/63894d80baa6b706d61dfdc8518208caa86344f4"},
+        {"type":"commit","title":"Creator Agent decision core","url":"https://github.com/JameryW/XhsGrowthAgent/commit/1169f0337af61e72dedc9c6d98e05dbd066cbb60"}
+      ],
+      "status": "优先验证"
+    },
+    {
+      "rank": 2,
+      "name": "长口播/采访可剪索引：实时音频 → who/when/what → 说话人段落 → 只精转高价值区间 → Shot Mapping",
+      "source_project": "microsoft/VibeVoice",
+      "github": "https://github.com/microsoft/VibeVoice",
+      "category": ["AI剪辑", "ASR", "口播", "采访", "素材检索"],
+      "score": 98,
+      "value_insight": "Microsoft 在 2026-09-03 正式发布 VibeVoice-ASR-Streaming：音频仍在进入时即可持续输出“谁说了什么”，并支持自定义 hotwords 和 10 种语言。对剪辑最有价值的不是直播字幕，而是边录边建立带 speaker/timestamp 的粗索引，录完即可搜索人物、关键词和段落，再只对候选区间做精细转录和镜头选择。",
+      "problem_solved": "解决长采访、播客、直播或多人 Vlog 素材必须等完整转录后才能开始筛选，以及多人说话时普通 ASR 只有文本、缺少稳定说话人信息的问题。",
+      "mainstream_comparison": "Whisper 类离线转录成熟、成本低，但常需要额外 diarization 且要等文件形成；流式 who/when/what 能更早形成编辑索引。它不应替代最终字幕校对，而应作为粗筛和 Shot Mapping 的前置层。",
+      "today_action": "选一段 20–30 分钟双人对话，只做一次低成本测试：启用 5–10 个专有名词 hotwords，输出 speaker + timestamp + text；随机抽查 10 个换人点和 10 个关键词命中。通过后再把高价值区间交给现有精转/剪辑链。",
+      "next_opportunity": "若说话人切分和热词在真实中文/英文混合素材中可用，就把实时索引接入 AI_analysis/Shot Mapping；若 diarization 不稳定，则只保留它作为低延迟粗转录，不替换现有离线精转。",
+      "evidence": [
+        {"type":"readme","title":"2026-09-03 VibeVoice-ASR-Streaming release: who said what, hotwords, 10 languages","url":"https://github.com/microsoft/VibeVoice#-news"},
+        {"type":"commit","title":"Fix streaming release defaults and ffmpeg setup","url":"https://github.com/microsoft/VibeVoice/commit/505653d3873b065a488aea551c6ee3dc51d3062f"},
+        {"type":"docs","title":"Streaming ASR documentation","url":"https://github.com/microsoft/VibeVoice/blob/main/docs/vibevoice-asr-streaming.md"}
+      ],
+      "status": "可低成本试验"
+    },
+    {
+      "rank": 3,
+      "name": "H3 Max 多参考缺镜头：真实主体参考 + 前后镜约束 → 2–5 秒候选 → 只按入片率决定是否保留",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "ComfyUI", "缺镜头修补", "人物一致性"],
+      "score": 96,
+      "value_insight": "昨天 H3 Max 先进入 text-to-video/first-last-frame，随后同日又进入 H3 reference-to-video 节点。这个增量比单纯换模型更有用：补镜头时不仅能锁起止状态，还能给主体/视觉参考，降低人物、服装和场景在短桥接镜头里的漂移。",
+      "problem_solved": "解决真实成片里缺 2–5 秒 B-roll/连接动作时，首尾帧虽然接得上，但中间主体脸、服装、车或环境特征漂移，最终仍无法入片的问题。",
+      "mainstream_comparison": "纯 T2V 最自由但一致性最低；首尾帧只约束两端；reference-to-video 增加主体参考后更适合真实素材补洞。代价是工作流复杂度更高，因此只应针对真实缺口测试。",
+      "today_action": "从现有时间线选 1 个真实缺口，准备前镜尾帧、后镜首帧和 1 张清晰主体参考；最多生成 3 个候选。只按主体一致、运动连续、光线衔接和愿不愿意入片四项评分，不做模型 Demo。",
+      "next_opportunity": "若 3 个真实缺口中至少 2 个能得到可入片候选，就固化成“缺口截图 + 主体参考 → 3 候选”模板；否则继续优先真实 B-roll，不追加复杂节点。",
+      "evidence": [
+        {"type":"commit","title":"Add H3 Max to reference-to-video node","url":"https://github.com/Comfy-Org/ComfyUI/commit/ec803fc97ee3e5a923a90753ab3620d431109f85"},
+        {"type":"commit","title":"Add H3 Max to text-to-video and first-last-frame nodes","url":"https://github.com/Comfy-Org/ComfyUI/commit/624f56565b55ecea83a724683818c1beb368e796"}
+      ],
+      "status": "待入片验证"
+    },
+    {
+      "rank": 4,
+      "name": "Resolve 往返 QC：AI 粗剪 → 多切点 source offset 拟合 → 排除 TC/retime 假报警 → 只阻断真实 trim 漂移",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "Conform", "QC"],
+      "score": 94,
+      "value_insight": "今日未发现比 v2.201–2.203 更强的新 Resolve 信号，因此不为上新替换方案。现有 roundtrip verify 已能对同一 source 的全部 paired cuts 拟合统一 offset、对 retime 允许 1 帧舍入，并用窗口重叠推断重命名 alias；它仍然直接解决 AI/跨 NLE 交付里的假 mismatch。",
+      "problem_solved": "解决 AI 粗剪或 Premiere/Resolve 往返后，大量 TC rebase、retime rounding、素材重命名假报警把真正的 2–3 帧 trim 错误淹没。",
+      "mainstream_comparison": "逐 cut 精确比对最简单，但真实项目噪音大；按 source 聚合后再找离群 cut 更接近人工 conform，也更适合自动门禁。",
+      "today_action": "继续用昨天的 A/B 方法，但换第二个真实 reel：统一平移 source TC，再人为改坏 2 个切点。只有假报警明显下降且 2 个植入错误都保留，才认为门禁可用。",
+      "next_opportunity": "通过 3 个真实项目后再接到 AI Shot Mapping → OTIO/DRT → Resolve 的交付前；任何漏检都保留为诊断报告，不自动阻断。",
+      "evidence": [
+        {"type":"commit","title":"Fit per-source TC offset from all cuts using mode","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/0b00099de5398f91825992ae8866c4018c788e16"},
+        {"type":"commit","title":"Majority TC rebase and retime one-frame tolerance","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/784b2ae6dbee670cd1fa4179ca733b3af3a17f9b"}
+      ],
+      "status": "继续验证"
+    },
+    {
+      "rank": 5,
+      "name": "剪映 Agent 最小权限：Wasm 只规划 → schema 校验 → CLI 写草稿 → lint/实开后才批量",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "Agent", "安全自动化"],
+      "score": 92,
+      "value_insight": "9 月 2 日以来没有新的 capcut-cli 提交，因此今天不制造“新功能”叙事。当前仍最值得验证的是 capability-free Wasm：LLM 只做纯计算规划，真正写本地草稿仍由 version/diagnose/lint/relink 等确定性 CLI 承担，符合低成本自动化同时限制 Agent 写权限。",
+      "problem_solved": "解决给 Agent shell/文件系统权限后，一个错误决策直接破坏剪映草稿、素材路径或其他本地文件的问题。",
+      "mainstream_comparison": "Agent 直接写草稿步骤少但风险大；固定脚本安全但内容适应性差。沙箱规划 + CLI 受控写入是更合理的中间层，而且失败时容易退回固定脚本。",
+      "today_action": "不扩工程，只再做 1 个 15–30 秒测试草稿：Wasm 输出结构化字幕/B-roll 时间，CLI 写入，跑 lint 后人工打开。Agent 任何一步需要 shell 直接改草稿即判失败。",
+      "next_opportunity": "连续 3 个测试都稳定再进入批量；否则停止 Agent 化，保留现有固定脚本。",
+      "evidence": [
+        {"type":"commit","title":"Add capability-free Wasm agent tools","url":"https://github.com/renezander030/capcut-cli/commit/3c2f2b5be5d7e7ff609f23f7da276cb69f54c8f7"},
+        {"type":"commit","title":"Explain Wasm sandbox security boundary","url":"https://github.com/renezander030/capcut-cli/commit/ed73af74d5bad7efa520e9578444675ec26d26a6"}
+      ],
+      "status": "继续验证"
+    }
+  ],
+  "rejected_candidates": [
+    {"source_project":"whiteguo233/OpenBiliClaw","reason":"9 月 2 日可见新提交主要是 tailnet credential fixture 测试，属于测试/远程访问维护，不直接改善选题质量或闭环产出；当前本地候选池已能满足需求，不进入 Top。"},
+    {"source_project":"Comfy-Org/ComfyUI ResolutionSelector preview","reason":"实时分辨率预览改善 UI 易用性，但不直接提高生成镜头的入片率、连续性或交付可靠性，因此不是机会方案。"},
+    {"source_project":"mvanhorn/last30days-skill","reason":"跨 Reddit/X/YouTube/HN 的近 30 天研究能力有价值，但当前缺少小红书/抖音原生信号，且现有内容研究痛点更适合优先用中文平台证据，不进入今日 Top。"},
+    {"source_project":"microsoft/VibeVoice TTS","reason":"今日价值来自 ASR-Streaming 的 who/when/what 索引，不是 TTS；语音生成与当前剪辑/内容机会无直接增量。"},
+    {"source_project":"new AI video editor repositories","reason":"今日检索到的新建/小体量 AI video editor 仍缺少真实 NLE 交接、稳定输出或独立使用证据；仅凭功能描述和 GitHub 新鲜度不足以进入 Top。"}
+  ]
+}
