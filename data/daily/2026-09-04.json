@@ -1,0 +1,127 @@
+{
+  "date": "2026-09-04",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先做低成本、可验收的闭环：Resolve 统一读取工具操作是否真实成功；B站直接利用字幕轨生成案例证据；Mac 本地视频生成只做真实缺镜头小样；小红书长期学习继续保留人工批准；剪映 Agent 继续限制写权限。",
+  "summary": [
+    "AI剪辑：Resolve MCP 新增统一 _operation 结果封装，把 success / partial / blocked / failed、verification、changes、warnings 放进每个复合工具结果，适合直接做 Agent 写入后的统一验收门禁。",
+    "内容研究：OpenBiliClaw v0.3.216 已把 B站字幕轨并入 play-url 响应，可先拿原生字幕做结构/金句/关键词证据，再决定是否下载视频或跑 ASR。",
+    "AI视频生成：FastH3 已可通过 MLX 在 Apple Silicon 本地运行；今天只验证 2–5 秒真实缺镜头，避免先搭云 GPU 或复杂生成平台。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 统一操作验收：Agent 写入 → _operation 状态/变更/验证证据 → 只接受真实成功的剪辑结果",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "MCP", "可靠性"],
+      "score": 99,
+      "value_insight": "9 月 3 日新增的标准 _operation envelope 解决了自动剪辑里最麻烦的协议层问题：过去不同工具用不同字段表达成功、阻断或未验证，Agent 必须逐工具猜；现在 compound tool 统一给出 status、operation、execution_id、verification、changes、warnings，而且明确区分 unverified 与 checked-and-clean。真正的机会不是多一个 MCP 功能，而是让整个自动剪辑链终于能用同一套门禁判断‘到底有没有改成功’。",
+      "problem_solved": "解决 Resolve 自动化中 API 没报错、返回结构不同、局部成功或未验证却被上层 Agent 当成完整成功，最终把错误时间线继续传到后续步骤的问题。",
+      "mainstream_comparison": "逐工具写 if/else 最快但维护成本高，新增工具就容易漏判断；只看异常/HTTP 成功又无法识别 partial、blocked 和 unverified。统一 operation envelope 稍增加协议约束，却显著降低 Agent 对工具语义的猜测。",
+      "today_action": "在现有测试项目只挑 3 类动作：一个纯读取、一个确定性写入、一个可能被门禁阻断的写入。记录三次 _operation.status、verification、changes、warnings；只有写入动作能明确给出变更与验证状态，才考虑接入现有 Blueprint → Shot Mapping → Timeline 链。",
+      "next_opportunity": "若 10 次真实写入都能被同一套状态机可靠分类，就把 _operation 设成 Resolve MCP 的统一确认门；任何 unverified 或 partial 默认停在人工复核，不再继续级联执行。",
+      "evidence": [
+        {"type":"commit","title":"Standard operation envelope on every tool result","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/1a200a8148b222a80514b1d0943414dedb1de4cd"},
+        {"type":"commit","title":"Run suite and drift guards on pull requests","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/440e8f0b70c67aaf759f17b9a3cf03aa44aa48d9"},
+        {"type":"commit","title":"Managed install can boot the advanced server","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/619d4735effac97bd23ef18510abca01618f500a"}
+      ],
+      "status": "优先验证"
+    },
+    {
+      "rank": 2,
+      "name": "B站字幕优先案例蒸馏：候选视频 → 原生字幕轨 → Hook/结构/金句证据卡 → 只对高价值样本下载画面",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["内容运营", "B站", "案例研究", "字幕"],
+      "score": 98,
+      "value_insight": "OpenBiliClaw v0.3.216 的关键增量是 play-url 响应现在同时返回可用字幕轨。对内容研究最有价值的用法不是‘播放器更完整’，而是先用平台原生字幕低成本提取开场 Hook、段落结构、关键词、金句和 CTA，再只为真正值得复刻的少量视频下载画面做关键帧分析，直接减少下载与 ASR 成本。",
+      "problem_solved": "解决每天看大量 B站案例时，为了判断一个视频值不值得研究就先下载完整视频、抽音频、转录，导致前置成本远高于筛选本身的问题。",
+      "mainstream_comparison": "全量下载 + Whisper 最通用，也能处理无字幕视频，但筛选阶段成本高；只看标题/简介又缺少正文证据。原生字幕作为第一层证据最便宜，命中高价值样本后再升级到视频/画面分析更合理。",
+      "today_action": "从一个目标赛道选 10 条候选，只读取字幕轨，不下载视频。让 AI 输出每条的前 15 秒 Hook、3 段结构、1 个可复刻动作和 1 个淘汰理由；人工只保留 2 条，再下载这 2 条做关键帧复核。",
+      "next_opportunity": "若 10 条里能在不下载视频的情况下稳定淘汰 70% 以上低价值样本，就把‘字幕先筛 → 画面后验’固定成 B站案例研究默认链；无字幕视频再回退 ASR。",
+      "evidence": [
+        {"type":"commit","title":"Include Bilibili subtitle tracks in play-url response","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/9422c35ec472e56be2ef1fef22d096f6a233eb12"},
+        {"type":"commit","title":"Add Bilibili mobile native player API endpoints","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/950c5f885e2f235b6c7ff5c29c5f90a997f643bf"},
+        {"type":"commit","title":"Release v0.3.216","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/873a5176927fe39d1c7d1f7bfb015763770a18ac"}
+      ],
+      "status": "可立即试验"
+    },
+    {
+      "rank": 3,
+      "name": "M1 Max 本地补镜头试验：真实 2–5 秒缺口 → FastH3/MLX 三候选 → 只按入片率决定是否继续",
+      "source_project": "hao-ai-lab/FastVideo",
+      "github": "https://github.com/hao-ai-lab/FastVideo",
+      "category": ["AI视频生成", "Apple Silicon", "本地生成", "缺镜头修补"],
+      "score": 96,
+      "value_insight": "FastVideo 9 月 1 日已经把 FastH3 带到 Apple Silicon 的 MLX 本地路径，且仓库本身给出 Mac 安装方式。对当前设备最有价值的不是建立新的生成平台，而是用现有 M1 Max 做一次零云 GPU 的真实缺镜头验证：如果本地质量和速度足够做候选筛选，就能避免先购买云算力或维护复杂 ComfyUI 节点链。",
+      "problem_solved": "解决 AI 补镜头每次都要依赖云模型、上传素材、付生成成本，导致只是验证一个镜头想法也需要较高时间和金钱成本的问题。",
+      "mainstream_comparison": "云端旗舰模型通常质量更高、部署最省事，但每次试错都产生费用且素材需上传；完整 ComfyUI 本地链控制强但配置复杂。FastH3 + MLX 更适合作为 Mac 上的低成本草稿层，最终镜头仍可升级到更高质量模型。",
+      "today_action": "只选 1 个真实时间线缺口，先按官方 Apple Silicon 路径跑通 FastH3；最多生成 3 条候选，记录单条耗时、内存峰值、主体一致性和是否愿意入片。不要先做 LoRA、节点封装或批量任务。",
+      "next_opportunity": "若 M1 Max 能在可接受时间内得到至少 1 条可作为剪辑候选的结果，就把它定位成‘本地草图层’，只把入选镜头升级云端高质量版本；若速度或质量不达标，立即回到现有云模型，不继续工程化。",
+      "evidence": [
+        {"type":"readme","title":"2026-09-01 FastH3 runs locally on Apple Silicon through MLX","url":"https://github.com/hao-ai-lab/FastVideo#news"},
+        {"type":"docs","title":"FastVideo Apple Silicon installation guide","url":"https://hao-ai-lab.github.io/FastVideo/getting_started/installation/mps/"},
+        {"type":"github","title":"FastVideo repository","url":"https://github.com/hao-ai-lab/FastVideo"}
+      ],
+      "status": "低成本验证"
+    },
+    {
+      "rank": 4,
+      "name": "小红书长期偏好审核：改稿反馈 → learning signal → 周期性人工批准 → 才更新 Creator Model",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["小红书", "内容运营", "Human-in-the-loop", "长期学习"],
+      "score": 95,
+      "value_insight": "今天没有比 9 月 2 日 learning review loop 更强的新小红书信号，因此不为上新更换项目。这个方案仍然直接解决长期账号运营的核心风险：一次临时纠正不会自动写入长期画像，只有显式批准且 expected_revision 一致才更新 Creator Model。今天应从‘功能存在’进入‘连续使用是否真的减少偏好污染’的验证阶段。",
+      "problem_solved": "解决临时改稿意见、单条内容例外、误反馈被长期记忆吸收，导致后续选题和语气越来越偏离真实账号定位的问题。",
+      "mainstream_comparison": "自动吸收所有反馈学习最快但不可控；完全关闭长期学习最稳却重复犯错。学习信号先进入审核队列，再周期性批准，是更适合真实账号运营的中间方案。",
+      "today_action": "今天不开发新功能，只累计 5 条真实改稿反馈，并给每条标注‘仅本条适用 / 可长期保留’。检查 Agent 产生的 learning signal 是否与人工分类一致；今天先不批准，集中到一次复盘再处理。",
+      "next_opportunity": "若一周累计 20 条反馈后，learning signal 对‘长期偏好’的判断准确率足够高，再把审核频率固定为每周一次；否则继续人工标签，不让模型自动更新。",
+      "evidence": [
+        {"type":"commit","title":"Creator Agent learning review loop","url":"https://github.com/JameryW/XhsGrowthAgent/commit/63894d80baa6b706d61dfdc8518208caa86344f4"},
+        {"type":"commit","title":"Creator Agent decision core","url":"https://github.com/JameryW/XhsGrowthAgent/commit/1169f0337af61e72dedc9c6d98e05dbd066cbb60"}
+      ],
+      "status": "继续验证"
+    },
+    {
+      "rank": 5,
+      "name": "剪映 Agent 最小权限：Wasm 只做时间线规划 → schema 校验 → CLI 写草稿 → lint/人工实开",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "Agent", "安全自动化"],
+      "score": 92,
+      "value_insight": "9 月 1–4 日 capcut-cli 没有新的功能提交，因此今天不制造‘新版本’叙事。当前 capability-free Wasm 仍是最符合低成本原则的方向：让 LLM 只在沙箱里计算字幕/B-roll/时间位置，真正文件写入继续走已验证的 CLI 和 lint，而不是让 Agent 获得 shell 后直接修改本地草稿。",
+      "problem_solved": "解决 AI 规划一旦出错就直接损坏剪映草稿、素材路径或本地文件，以及事后很难定位是模型决策还是写入器错误的问题。",
+      "mainstream_comparison": "LLM 直接拿 shell 写草稿步骤最少但故障面最大；固定脚本最可靠却不够灵活。沙箱规划 + 确定性写入把创意决策和高风险文件操作拆开，失败也容易回退。",
+      "today_action": "只再验证 1 个 20–30 秒草稿：Wasm 输出结构化 timeline plan，CLI 执行并 lint，然后人工打开剪映。任何需要 Agent 绕过 CLI 直接改 JSON 的步骤都判为失败，不继续扩功能。",
+      "next_opportunity": "连续 3 个真实草稿都能做到计划、写入、lint、实开一致，再把同一边界用于批量字幕/B-roll；否则退回固定脚本，不追加 Agent 工程。",
+      "evidence": [
+        {"type":"commit","title":"Add capability-free Wasm agent tools","url":"https://github.com/renezander030/capcut-cli/commit/3c2f2b5be5d7e7ff609f23f7da276cb69f54c8f7"},
+        {"type":"commit","title":"Explain why the Wasm sandbox matters","url":"https://github.com/renezander030/capcut-cli/commit/ed73af74d5bad7efa520e9578444675ec26d26a6"}
+      ],
+      "status": "继续验证"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "source_project": "Comfy-Org/ComfyUI MiniMax-H3 LoRA support",
+      "reason": "9 月 3 日已支持 DiffSynth-Studio / ModelScope 训练的 MiniMax-H3 LoRA，也允许 text-encoder-only references；能力真实，但对当前缺镜头任务先训练 LoRA 的工程与数据成本高于直接参考图/本地候选验证，因此今天不进入 Top。"
+    },
+    {
+      "source_project": "jd-opensource/JoyAI-Video-Edit",
+      "reason": "实时开放式视频编辑和参考图引导很有吸引力，但当前公开消费级实时部署路径以 RTX 5090 32GB 为主，与现有 Apple Silicon 设备不匹配；为一个试验单独增加高端 NVIDIA 环境不符合低成本优先。"
+    },
+    {
+      "source_project": "Panniantong/Agent-Reach",
+      "reason": "跨 X/Reddit/YouTube/GitHub/B站/小红书的统一访问和 health-check 很适合内容研究，但本轮没有新的核心运行时增量，而且与现有多源研究链功能重叠；先不为统一入口增加一层工具。"
+    },
+    {
+      "source_project": "Comfy-Org/ComfyUI Recraft V4 Styles Pro",
+      "reason": "9 月 4 日新节点主要增强图像风格创建，不直接提升当前视频缺镜头入片率、剪辑交付可靠性或内容选题证据，因此不进入 Top。"
+    },
+    {
+      "source_project": "近期新 AI video editor repositories",
+      "reason": "检索到多项近期更新的视频编辑器/Agent 项目，但缺少真实 NLE 往返、稳定导出、可编辑工程或独立使用证据；仅凭仓库更新频率不足以超过当前已验证链路。"
+    }
+  ]
+}
