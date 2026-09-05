@@ -1,0 +1,124 @@
+{
+  "date": "2026-09-05",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先验证能直接减少剪辑返工和内容判断污染的低成本闭环：剪映先自动识别重拍并保留字幕跨 NLE；Resolve 把多步 Agent 编辑汇总成可审计执行；口播包装只验证可复用动效与局部重渲；小红书把判断依据与执行意图分开；跨平台研究严格隔离机器任务与真人行为。",
+  "summary": [
+    "剪映自动化：capcut-cli v0.22.0 新增 detect-retakes、脚本词文+Whisper 时间对齐、字幕随 OTIO 往返和 draft_materials 注册，最适合先解决口播多次重拍与字幕交接。",
+    "AI剪辑可靠性：Resolve MCP 新增 execution traces，把一次 Agent 任务中的多次 _operation 汇总成同一执行，能累计变更量并区分验证冲突。",
+    "内容与口播：video-talkcraft 已给出 79 张参数化动效卡、字级同步、局部重渲和独立审片；XhsGrowthAgent/OpenBiliClaw 则继续把证据、意图和真人行为从自动任务中拆开。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "剪映口播重拍自动粗剪：字幕/脚本 → detect-retakes → 保留后一次 → OTIO 字幕往返 → lint/人工实开",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "口播剪辑", "自动粗剪"],
+      "score": 99,
+      "value_insight": "9 月 4 日发布的 v0.22.0 不是普通功能堆叠：detect-retakes 能从字幕 cue 或 SRT 找重复 take，并默认保留后一次；caption --script 用 Whisper 的时间、脚本的正确文字；字幕还能通过 OTIO marker 跨 NLE 导出再回到文字轨。对真人口播最有价值的是把‘重复说了几遍、哪遍保留、字幕是否还能继续编辑’放进同一条确定性链，而不是让 LLM 直接猜切点。",
+      "problem_solved": "解决口播素材里同一句多次重录需要人工反复听、自动粗剪误删正确版本，以及剪映与其他 NLE 往返时字幕丢失或变成不可编辑资产的问题。",
+      "mainstream_comparison": "直接用转录文本让 LLM 自由删句灵活但容易误判重拍边界；纯静音检测只能找停顿，识别不了重复语义。基于字幕 cue 的重拍检测更受约束，再配合人工实开，风险更低。",
+      "today_action": "拿一段 3–5 分钟真实口播，先生成带词级时间的字幕，再跑 detect-retakes；只检查 10 个候选重拍是否正确保留后一次。随后 export-timeline → import-timeline 做一次字幕往返，最后 lint 并在剪映人工打开，不先批量处理素材库。",
+      "next_opportunity": "如果 10 个重拍候选中至少 8 个判断正确，且字幕 OTIO 往返不丢 cue，就把它接到口播初筛之后，作为‘重拍清理 → 字幕交接’固定前置步骤；准确率不足则只把 detect-retakes 当提示，不自动执行删除。",
+      "evidence": [
+        {"type":"commit","title":"capcut-cli v0.22.0: retake detection, caption NLE handoff and draft_materials","url":"https://github.com/renezander030/capcut-cli/commit/88ea562153bfb65a4ebd190485baea0b0e3468d8"},
+        {"type":"github","title":"capcut-cli repository","url":"https://github.com/renezander030/capcut-cli"}
+      ],
+      "status": "优先验证"
+    },
+    {
+      "rank": 2,
+      "name": "Resolve 多步编辑审计：begin execution → 多次 Agent 写入 → 累计 changes/verification → end execution 后统一验收",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "MCP", "可观测性"],
+      "score": 98,
+      "value_insight": "昨天的 _operation 只能告诉你一次调用是否成功；9 月 4 日新增 execution traces 后，可以把一次编辑任务里的十几次工具调用归到同一 execution，累计 items_deleted 等变更、总耗时与 verification rollup，并保持验证矛盾可见。真正机会是让‘删 17 个停顿’这种多步 Agent 操作第一次能按任务级而不是单调用级验收。",
+      "problem_solved": "解决复杂自动剪辑里单次调用都看似正常，但整次编辑任务漏执行、重复执行、部分验证冲突时很难追溯的问题。",
+      "mainstream_comparison": "只保留聊天日志最省事，但无法稳定计算真实改了多少素材；逐条保存 _operation 又需要人工拼接上下文。execution trace 把工具、状态、累计变更和验证集中到一次任务里，同时刻意不记录文件路径、clip/project 名等敏感参数。",
+      "today_action": "在测试项目执行一个真实但可回退的任务，例如删除 5–10 个明确停顿：begin_execution → 多次写入 → end_execution。核对最终 trace 的累计删除数是否与时间线回读一致，并检查任何 partial/unverified 是否被保留而不是被汇总成成功。",
+      "next_opportunity": "若 5 次完整编辑任务的 trace 都能和最终时间线一致，就把 execution trace 作为 Blueprint 之后每次自动执行的任务级审计记录；失败时优先从 trace 找缺失步骤，不再靠回忆聊天过程。",
+      "evidence": [
+        {"type":"commit","title":"Agent execution traces across multiple operation calls","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/cb71cccc0f826d4aa2a35328845aaa9ae107cbe0"},
+        {"type":"github","title":"davinci-resolve-mcp repository","url":"https://github.com/samuelgursky/davinci-resolve-mcp"}
+      ],
+      "status": "高价值验证"
+    },
+    {
+      "rank": 3,
+      "name": "高级感口播包装小样：成品配音+口播稿 → 字级同步 → 3种高价值动效 → 局部重渲 → 回 Resolve/剪映精剪",
+      "source_project": "Vincentwei1021/video-talkcraft",
+      "github": "https://github.com/Vincentwei1021/video-talkcraft",
+      "category": ["口播剪辑", "动态设计", "Remotion", "内容生产"],
+      "score": 97,
+      "value_insight": "这个新项目值得看的不是‘AI 一键做视频’，而是它把 79 张动效配方卡、字级配音同步、人物安全区、机器闸和局部重渲做成可拆用的包装层。README 还给出 201 秒竖屏片的实测：改一个镜头无需整片重渲，只重渲该段及邻段。对已有 Resolve/剪映主链，最低成本机会是只借它做高价值动态字卡、证据截图、数据镜头和转场，不迁移剪辑器。",
+      "problem_solved": "解决高级感口播里动态字卡、数据卡、证据镜头和节奏动效每条都手工搭建，改一个镜头却要大范围返工的问题。",
+      "mainstream_comparison": "剪映模板最快但视觉同质化、节奏控制有限；After Effects 自由度最高但人工成本大。参数化 Remotion 动效位于中间：可复用、可代码化，还能把最终素材回到现有 NLE 继续精剪。",
+      "today_action": "不要做整条片。拿一段 20–30 秒已经剪好的口播，只选 3 个场景：一句核心观点动态字卡、一个数据镜头、一个证据截图转场。生成后只评估是否比现有手工包装更快、视觉是否愿意直接入片、修改一次的重渲成本。",
+      "next_opportunity": "如果 3 个动效中至少 2 个愿意直接入片，就只沉淀这 2 类为个人高频包装组件，再接入现有口播剪辑流程；如果必须大量二次修改，就把它当灵感/动效代码库，不引入完整工作台。",
+      "evidence": [
+        {"type":"readme","title":"79 motion recipes, word-level sync, segmented rerender and three-stage QA","url":"https://github.com/Vincentwei1021/video-talkcraft"},
+        {"type":"commit","title":"Workbench guide and measured segmented-render workflow","url":"https://github.com/Vincentwei1021/video-talkcraft/commit/0e11d24efd330ed462e0d9de55915c50c9a6f443"}
+      ],
+      "status": "可立即做小样"
+    },
+    {
+      "rank": 4,
+      "name": "小红书决策可追溯：趋势/历史反馈 → Evidence Graph → 明确 action intent → 人工确认后执行",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "github": "https://github.com/JameryW/XhsGrowthAgent",
+      "category": ["小红书", "内容运营", "决策证据", "Human-in-the-loop"],
+      "score": 95,
+      "value_insight": "9 月 4 日连续新增 Evidence Graph 与 Creator Agent action intents。Evidence Graph 是对当前 Creator Model、不可变 Decision Record 和 Learning Signal 的只读投影，原始决策证据不会被当前模型改写；随后 action intent 又把‘建议做什么’显式化。价值在于把‘为什么推荐这个选题’与‘接下来准备执行什么动作’拆成两层，避免 Agent 直接从模糊判断跳到发布或改稿。",
+      "problem_solved": "解决内容 Agent 给出建议后难以追溯依据、长期模型更新后历史理由被覆盖，以及建议和执行动作混在一起导致误操作的问题。",
+      "mainstream_comparison": "普通聊天式 Agent 直接输出建议最快，但几天后很难回答当时为什么这样判断；完整数据仓库又过重。只读证据图 + 显式意图保留最必要的审计性，同时仍可把最终执行留给人工确认。",
+      "today_action": "只拿 3 个真实选题决策，检查每个 Evidence Graph 是否能追到趋势/历史决策/学习信号，再看 action intent 是否准确表达‘研究、改稿、发布预览、数据复盘’中的哪一种。今天不自动发布。",
+      "next_opportunity": "如果 3 个决策都能在 30 秒内回答‘依据是什么、准备做什么’，就把 Evidence Graph 作为周复盘依据，并把 action intent 接到人工确认门；证据过于冗长则只保留影响最终判断的最小节点。",
+      "evidence": [
+        {"type":"commit","title":"Expose Creator Agent evidence graph","url":"https://github.com/JameryW/XhsGrowthAgent/commit/a68ff598faa29e65c316e986e930b9657bb75633"},
+        {"type":"commit","title":"Add Creator Agent action intents","url":"https://github.com/JameryW/XhsGrowthAgent/commit/6bfe5b8c225d337f0d9d8eacb7ad9baa90ede399"}
+      ],
+      "status": "值得验证"
+    },
+    {
+      "rank": 5,
+      "name": "跨平台偏好防污染：自动发现任务页 → task-tab 标记 → 丢弃机器滚动/加载事件 → 只学习真人行为",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["内容研究", "推荐系统", "小红书", "抖音", "B站", "YouTube"],
+      "score": 94,
+      "value_insight": "9 月 4 日的新修复把 XHS、抖音、B站、YouTube 自动 discovery/bootstrap/native-save 打开的任务 tab 统一加标记，并阻止这些页面的 load、scroll、operation 被记录成用户行为；还增加真实浏览器 B站 E2E，确认一次搜索任务结束后后台行为事件为 0。这个改动看似底层，但它直接决定长期偏好画像是否可信。",
+      "problem_solved": "解决系统为了帮你找内容而自动打开、滚动、保存页面，却把这些机器动作误认为你本人感兴趣，长期把推荐画像越训越偏的问题。",
+      "mainstream_comparison": "把所有浏览器事件都当反馈实现最简单，但自动化越强污染越严重；完全不采行为又失去隐式偏好。任务页显式隔离后，真人浏览仍可学习，同时机器工作不进入偏好层。",
+      "today_action": "跑一次跨平台自动发现任务，前后分别查看行为事件数量；自动任务产生的 load/scroll 必须为 0，再手动打开一条真实感兴趣内容并确认它能正常留下真人行为。只验证隔离，不扩展更多平台。",
+      "next_opportunity": "若连续 20 次自动任务都不产生伪行为，同时真人浏览仍能被记录，就把 task-tab isolation 视为所有内容研究 Agent 的基础门禁；以后新增平台先通过这一测试再进入推荐画像。",
+      "evidence": [
+        {"type":"commit","title":"Isolate discover task tabs from user behavior events","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/3c53294e7679f9947498e584f60e941dc8aa8211"},
+        {"type":"github","title":"OpenBiliClaw repository","url":"https://github.com/whiteguo233/OpenBiliClaw"}
+      ],
+      "status": "可靠性验证"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "source_project": "hao-ai-lab/FastVideo / FastH3 MLX",
+      "reason": "昨天已经进入 Top，今天没有发现比 Apple Silicon 本地运行更强的新证据；继续重复会把日报变成固定工具榜。"
+    },
+    {
+      "source_project": "Blizaine/Maestro",
+      "reason": "本地一体化 AI 视频/图像/音乐工作室方向完整，但当前证据更偏产品能力展示，缺少与现有 Resolve/剪映链路的可编辑工程往返或真实入片收益，暂不值得迁移主工作流。"
+    },
+    {
+      "source_project": "Panniantong/Agent-Reach",
+      "reason": "跨平台搜索读取覆盖面大，但与当前 OpenBiliClaw/小红书研究链能力重叠，今天没有出现足够强的新增量证明应再引入一层工具。"
+    },
+    {
+      "source_project": "wuyoscar/GPT-Image2-Skill",
+      "reason": "今天新出现且有 prompt gallery/skill/CLI，但核心仍是图像生成与提示词资产，未直接解决当前视频剪辑、内容研究或账号运营的高优先级瓶颈。"
+    },
+    {
+      "source_project": "Comfy-Org/ComfyUI / 新模型节点",
+      "reason": "今日未发现能明显提高真实缺镜头入片率、NLE 交付可靠性或成本门禁的新信号，因此不因节点更新进入 Top。"
+    }
+  ]
+}
