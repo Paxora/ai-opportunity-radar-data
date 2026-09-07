@@ -1,1 +1,113 @@
-PLACEHOLDER
+{
+  "date": "2026-09-07",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先验证“自动化先设安全边界，再解决真实交付摩擦”：Resolve 给破坏性操作加明确风险门；AI 补镜头先把色彩空间交接标准化；生成型视频工具只看能否控制成本并回到剪映继续编辑；内容研究优先保证手机审候选不卡；口播粗剪继续用字幕约束而不是放任模型自由删片。",
+  "summary": [
+    "AI剪辑：Resolve MCP 已把 destructive actions 的风险评级和 safe mode 真正接到执行门上，今天最值得验证的是‘低风险自动做、高风险默认挡住’。",
+    "AI视频生成：ComfyUI 新增 sRGB/HLG/HDR PQ 色彩转换；ArcReel 的价值在可审核生成、费用追踪和剪映草稿交接，而不是一键成片。",
+    "内容运营与剪映：OpenBiliClaw 把重型发现/评估从前台拆开；capcut-cli 今天没有有效新功能，继续只验证 v0.22 的口播 retake 粗剪。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 安全自动剪辑门：先判操作风险 → 高风险动作默认阻断 → 审计后再执行",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "MCP", "安全门禁"],
+      "score": 99,
+      "value_insight": "9 月 7 日最新提交把 108 个已注册破坏性动作逐项评级，不再让未知动作落入不可执行的模糊区；safe mode 现在能实际阻断更多 HIGH/CRITICAL 操作，并把风险是否经过明确评估单独记录。对 AI 自动剪辑而言，价值不是“更安全”这句口号，而是可以让 Agent 自动做低风险编辑，同时把删除源素材、覆盖范围、应用批量调色、最终化 take 等不可逆或高影响动作留给人工确认。",
+      "problem_solved": "解决 AI 剪辑执行链里“API 能调用”与“应该自动调用”混在一起的问题，避免一次错误规划直接删除、覆盖或写坏真实项目与相机侧车文件。",
+      "mainstream_comparison": "完全关闭自动写入最安全但失去提效；所有动作都人工确认又会把 Agent 退化成遥控器。按实际 handler 对动作做风险评级，让 LOW/MEDIUM 自动通过、HIGH/CRITICAL 在 safe mode 下阻断，是成本更低的中间方案。",
+      "today_action": "在 Resolve 测试项目开启 safe mode，跑一组包含普通剪切、加轨、移动片段、删除/覆盖类动作的 10 步任务。只验三件事：低风险操作是否正常执行；高风险操作是否被拒绝且时间线不变；审计记录能否明确说明风险级别和是否经过正式评估。",
+      "next_opportunity": "若测试通过，把 safe mode 固定为 AI 粗剪默认模式；后续只为少数明确需要的 HIGH 操作建立一次性人工确认，不再让 Agent 获得整套无差别写权限。",
+      "evidence": [
+        {"type":"commit","title":"Rate every destructive action; safe mode blocks established HIGH/CRITICAL","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/4c42f429298ec63fd793e7a9d16bd7994d16f307"},
+        {"type":"commit","title":"Merge safe operations policy into unified risk classification","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/f98da378ddd2df5fea806feb8c83114703e91435"}
+      ],
+      "status": "最高优先验证"
+    },
+    {
+      "rank": 2,
+      "name": "AI 补镜头色彩交接：生成结果 → sRGB/HDR 明确转换 → Resolve 同色彩空间验收",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "ComfyUI", "DaVinci Resolve", "色彩管理"],
+      "score": 98,
+      "value_insight": "ComfyUI 9 月 7 日加入 sRGB、HLG 与 HDR PQ 之间的 color space conversion node，并明确只有无法无损映射时才做 tonemap。它解决的不是生成质量，而是 AI 镜头进入真实剪辑后最常见却容易被忽略的交付问题：生成画面与 S-Log/HDR/SDR 时间线之间颜色、亮度和高光响应不一致。把色彩空间转换显式放进生成工作流，比在 Resolve 里凭眼睛补救更可重复。",
+      "problem_solved": "解决 AI 生成补镜头、动态背景或包装素材进入 Resolve 后出现发灰、过曝、高光截断或与相邻实拍镜头观感明显不一致的问题。",
+      "mainstream_comparison": "直接把生成 MP4 拖进 Resolve 最省事，但颜色问题通常到成片阶段才暴露；手工节点调色可救单条镜头但不可复用。生成端先明确目标色彩空间，再由 Resolve 做最后匹配，链路更稳定。",
+      "today_action": "用同一个 AI 补镜头分别输出原始版本、显式 sRGB 版本和目标 HDR/HLG 转换版本，导入同一 Resolve 测试时间线；只比较 scopes、高光和肤色，不追求主观“更好看”，确认哪种交付能最少额外调色。",
+      "next_opportunity": "如果能稳定减少 AI 镜头的二次调色，把目标色彩空间写进补镜头 workflow preset；以后生成任务直接按项目交付空间输出，而不是每条成片临时修色。",
+      "evidence": [
+        {"type":"commit","title":"Add color space conversion node for sRGB, HLG and HDR PQ","url":"https://github.com/Comfy-Org/ComfyUI/commit/7b3b262bcb9d8b8fefd987eb199954e37c5bd9d2"},
+        {"type":"commit","title":"Fix RGB/YUV conversion on alpha images","url":"https://github.com/Comfy-Org/ComfyUI/commit/07dd46dc4abd9b6af81aae7c590a9a30d5a096c8"}
+      ],
+      "status": "高价值验证"
+    },
+    {
+      "rank": 3,
+      "name": "可控 AI 视频生产到剪映：脚本/商品素材 → 人工审核节点 → 成本计账 → 剪映草稿继续精剪",
+      "source_project": "ArcReel/ArcReel",
+      "github": "https://github.com/ArcReel/ArcReel",
+      "category": ["AI视频生成", "剪映", "内容生产", "成本控制"],
+      "score": 96,
+      "value_insight": "ArcReel 已把内容分析、角色/场景资产、分镜、视频与旁白生成、费用追踪和剪映草稿导出放进同一条可暂停、可审核、可重做的生产链。真正有价值的点不是“一键 AI 视频”，而是生成环节保留人工确认、历史版本与成本可见，并且最后不是锁死在自己的播放器里，而是能回到剪映继续调整字幕、节奏和转场。",
+      "problem_solved": "解决 AI 视频流水线常见的三个断点：角色/场景一致性靠人工记忆、生成费用到最后才知道、生成完成后难以回到熟悉 NLE 做最终精修。",
+      "mainstream_comparison": "直接用多个模型网站拼接最快启动，但资产、成本和版本散落；自己开发完整工作流成本又高。ArcReel 已有可审核工作台和剪映导出，适合先验证成片交接价值，而不是先自研。",
+      "today_action": "拿一条 45–60 秒的真实口播/商品短片脚本做最小样片，只走脚本→分镜→3–5 个生成镜头→剪映草稿导出，不做整套小说漫剧。记录生成成本、人工介入次数，以及导出的字幕/素材在剪映里是否仍可继续编辑。",
+      "next_opportunity": "如果剪映草稿能稳定打开且关键元素可编辑，可把它定位成“AI 素材与分镜生产层”，而不是替代剪映；后续再评估是否适合批量口播包装、广告素材或剧情短片。",
+      "evidence": [
+        {"type":"github","title":"ArcReel README: controllable pipeline, cost tracking and JianYing draft export","url":"https://github.com/ArcReel/ArcReel"},
+        {"type":"commit","title":"Release 0.29.0","url":"https://github.com/ArcReel/ArcReel/commit/6ddedc775e7fe5f398b10081ab741985f7dceda7"},
+        {"type":"commit","title":"Migration fix validated on a real legacy project with 43 videos","url":"https://github.com/ArcReel/ArcReel/commit/11f77f8f43a4ce21e59674cfe5b1e3bc8e9922cb"}
+      ],
+      "status": "值得做小样"
+    },
+    {
+      "rank": 4,
+      "name": "跨平台选题研究不卡前台：后台 discovery/eval 独立进程 → 内存快照 → 手机只负责刷候选与反馈",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["内容研究", "小红书", "抖音", "B站", "YouTube"],
+      "score": 94,
+      "value_insight": "OpenBiliClaw 9 月 7 日前后连续把 discovery/eval 与 recommendation API 从主 API 热路径拆开，并改为独立进程、Unix socket 和内存快照，同时缓存 B站 related videos。对实际内容运营的价值不是服务架构本身，而是让后台持续抓取/评估候选时，前台手机审片和反馈不必跟着模型推理一起卡住。",
+      "problem_solved": "解决多平台选题系统一边跑发现与 LLM 评估、一边又要让用户快速浏览候选时，前台响应被后台重任务拖慢，最终用户懒得每天清候选池的问题。",
+      "mainstream_comparison": "单进程最简单，但模型评估慢时直接影响浏览体验；完整微服务拆分又过度工程化。独立 recommendation worker + Unix socket + snapshot 是不额外暴露服务端口的轻量隔离方案。",
+      "today_action": "只做体验验证：后台开启候选发现/评估，同时在手机或 Web 连续翻 20 条候选并做收藏/不感兴趣反馈。记录首屏、下一条和 related videos 的响应是否仍稳定；如果体验没有明显改善，不继续折腾架构。",
+      "next_opportunity": "若前台稳定后，把 OpenBiliClaw 固定成“发现机器”，每天只在人机界面清一轮候选；后续再接结构化对标证据包，而不是继续扩大抓取规模。",
+      "evidence": [
+        {"type":"commit","title":"Dedicated recommendation process on Unix socket","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/002b50f65bc3a1395239ca8a7f282f6d35bf3fb1"},
+        {"type":"commit","title":"Run discovery/eval in dedicated worker process","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/2005f0444b128f9e644380aa3eab1f988d788f06"},
+        {"type":"commit","title":"Serve repeated requests from in-memory snapshot","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/f56440ba995bbcf2eda080b7dabc53c3fa7bfb83"},
+        {"type":"commit","title":"Cache Bilibili related videos","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/514acfa2f18bbaf69520549f3ccba5ff26f8498f"}
+      ],
+      "status": "体验优先验证"
+    },
+    {
+      "rank": 5,
+      "name": "剪映口播重拍粗剪：脚本正确文字 + Whisper 时间 → detect-retakes → 只删候选 → OTIO 字幕往返",
+      "source_project": "renezander030/capcut-cli",
+      "github": "https://github.com/renezander030/capcut-cli",
+      "category": ["剪映", "CapCut", "口播剪辑", "自动粗剪"],
+      "score": 92,
+      "value_insight": "9 月 6 日 capcut-cli 的新变化主要是依赖和 CI，不足以单独进榜，因此不把“有提交”当价值。继续保留 v0.22.0 真正解决人工看片成本的链路：用 Whisper 负责时间、脚本提供正确文字，再基于字幕 cue 识别重复 take，并让字幕随 OTIO 往返。它仍是当前最低成本的口播粗剪验证点。",
+      "problem_solved": "解决同一句话连续录多遍时，需要人工从头听到尾才能保留最后/最好一次，以及自动剪后字幕无法继续编辑的问题。",
+      "mainstream_comparison": "静音检测只能找到停顿，无法理解“这两段其实是同一句重拍”；让 LLM 自由删除风险又高。字幕约束的重复 take 检测把自动化限制在可核对的候选层。",
+      "today_action": "拿 3–5 分钟真实口播，人工先标出真实 retake，再跑 detect-retakes 对照；准确率至少 80% 才执行删除候选，并完成一次 OTIO 字幕导出→导入→剪映实开。",
+      "next_opportunity": "达到 80% 且字幕不丢后，再接到口播初筛流程；未达到就只做候选提示，不继续开发自动删除或全自动口播剪辑。",
+      "evidence": [
+        {"type":"commit","title":"v0.22.0: retake detection, script-aligned captions and NLE caption handoff","url":"https://github.com/renezander030/capcut-cli/commit/88ea562153bfb65a4ebd190485baea0b0e3468d8"},
+        {"type":"commit","title":"Sep 6 changes are dependency/CI maintenance rather than new user workflow value","url":"https://github.com/renezander030/capcut-cli/commit/a9f46e111ea9d039c71e402c8b518886380345d4"}
+      ],
+      "status": "继续小样"
+    }
+  ],
+  "rejected_candidates": [
+    {"name":"ComfyUI Sparse Attention node","source_project":"Comfy-Org/ComfyUI","reason":"属于通用推理/显存优化信号，今天没有足够证据证明它能直接提高当前 M1 Max 或真实补镜头链路的入片率；不因底层性能更新单独进 Top。"},
+    {"name":"HyperFrames v0.8.30 最新一批安全与文件读取修复","source_project":"heygen-com/hyperframes","reason":"修复本身重要，但主要集中在 checked descriptors、缓存原子发布和资源读取硬化；相较现有口播包装方案，今天没有新增足以改变用户执行方式的功能。"},
+    {"name":"XhsGrowthAgent execution receipts / decision dataset","source_project":"JameryW/XhsGrowthAgent","reason":"方案仍有价值，但最新有效产品提交停在 9 月 5 日，且已连续进入前几日日报；今天没有比 Resolve 安全门、AI 色彩交接和剪映生产交接更强的新证据，因此不重复占 Top。"},
+    {"name":"OpenShorts","source_project":"mutonby/openshorts","reason":"下载门禁、代理预算和 cookie 复用仍值得保留，但今天未发现新的强信号；继续作为长视频拆条备选，不重复入 Top。"},
+    {"name":"HyperFrames / ArcReel 以外的新 AI video editor 热门仓库","source_project":"GitHub candidate pool","reason":"多数候选只有仓库热度、功能描述或 Demo，没有足够的真实 NLE 交接、成本、失败边界或可继续编辑证据；按 V1.5 规则拒绝把工具热度直接转换成 Top。"},
+    {"name":"capcut-cli 9 月 6 日依赖与 CI 更新","source_project":"renezander030/capcut-cli","reason":"属于维护信号，本身不能进入 Top；Top 5 中保留的是此前 v0.22 已有真实工作流价值的口播重拍方案，而不是这些维护提交。"}
+  ]
+}
