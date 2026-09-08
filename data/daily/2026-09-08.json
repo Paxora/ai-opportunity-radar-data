@@ -1,0 +1,136 @@
+{
+  "date": "2026-09-08",
+  "version": "Open-source AI Opportunity V1.5",
+  "today_mission": "今天优先解决自动化的‘可信执行’和‘真实成本’：Resolve 不允许假 dry-run，更不让网络令牌落日志；AI 视频生产先把每次模型调用的费用、失败原因和输入追溯清楚；多参考图工作流必须保证提示词只引用真正发给模型的图；M1 Max 本地生成先消灭已知 MPS 崩溃；内容研究则把评论时间与元数据转成可排序的真实痛点证据。",
+  "summary": [
+    "AI剪辑：Resolve MCP 今天最有价值的不是新动作，而是明确拒绝‘看似 dry-run、实际真写入’，并继续收紧网络令牌泄露面。",
+    "AI视频生成：ArcReel 把供应商调用成本、失败类型和来源任务做成可追溯账本，同时修正多参考图超限后提示词仍指向未发送图片的问题。",
+    "本地生成与内容研究：ComfyUI 修复无 torch._int_mm 设备的 MPS 崩溃；OpenBiliClaw 补齐评论时间/元数据，适合把评论区从文本堆变成时效化选题证据。"
+  ],
+  "projects": [
+    {
+      "rank": 1,
+      "name": "Resolve 真实预演门：Agent 先 dry-run → 不支持原生预演就拒绝 → 再决定是否真写时间线",
+      "source_project": "samuelgursky/davinci-resolve-mcp",
+      "github": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "category": ["DaVinci Resolve", "AI剪辑", "MCP", "安全门禁"],
+      "score": 99,
+      "value_insight": "最新修复确认 108 个破坏性动作里有 102 个此前根本不读取 dry_run；显式传 dry_run=true 仍可能执行真实写入。现在这些动作会在进入 handler 前直接返回 DRY_RUN_UNAVAILABLE，只有真正实现原生 dry-run 的 6 个动作允许预演。对 AI 自动剪辑而言，这比继续新增剪辑动作更重要：‘预演成功’终于不能再被误当成‘只是模拟，项目没变’。同日网络 transport 还修复了自动生成 bearer token 写入 server.log 的问题，进一步减少远程控制链的凭证暴露。",
+      "problem_solved": "解决 AI 在高风险剪辑前调用 dry-run 却实际修改项目的假安全问题，也减少网络化 Resolve MCP 在本机日志里长期残留访问令牌的风险。",
+      "mainstream_comparison": "最保守方案是所有写入都人工确认，但自动化价值会大幅下降；默认相信工具的 dry_run 标志又会产生不可见风险。更低成本的方案是只认可原生 dry-run，其他动作直接标记不可预演，再交 safe mode / 人工确认。",
+      "today_action": "在测试项目选 8–10 个常用写操作分别传 dry_run=true。验收标准只有两个：支持原生 dry-run 的动作时间线不变并返回 simulated；不支持的动作必须明确返回 DRY_RUN_UNAVAILABLE 且 executed=false。若使用 network transport，再检查 logs/server.log 不包含新生成 token。",
+      "next_opportunity": "通过后，把‘native dry-run 可用性’加入 Shot Mapping → Timeline 执行前门禁：能预演的先预演；不能预演且风险为 HIGH/CRITICAL 的动作一律人工确认。",
+      "evidence": [
+        {"type":"commit","title":"Refuse dry_run on destructive actions without a native dry-run path","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/07aef785d46cbc6e55890a1c76f5dae824221060"},
+        {"type":"commit","title":"Generated bearer token no longer lands in server.log","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/9f955ab5814dc7bc5bb291a14dad386cd5468376"},
+        {"type":"commit","title":"Graph risk follows actual target graph scope","url":"https://github.com/samuelgursky/davinci-resolve-mcp/commit/4884379b540493f63e2ad55affe2c0cfc57814dc"}
+      ],
+      "status": "最高优先验证"
+    },
+    {
+      "rank": 2,
+      "name": "AI 视频真实成本账本：每次模型调用 → 任务/输入/供应商归因 → 失败分类 → 每日成本与异常复盘",
+      "source_project": "ArcReel/ArcReel",
+      "github": "https://github.com/ArcReel/ArcReel",
+      "category": ["AI视频生成", "成本控制", "工作流", "可观测性"],
+      "score": 98,
+      "value_insight": "ArcReel 最新 usage 链路把供应商调用关联到真实任务与输入，成功、取消、失败分开记账；失败可结构化区分限流、内容策略、超时、下载失败；summary 还能按项目/供应商/模型汇总 KPI、趋势和高失败率异常。价值不是做一个漂亮 Dashboard，而是第一次能回答‘这条 60 秒视频究竟哪一步最烧钱、哪家模型失败最多、重跑的钱花在哪里’。",
+      "problem_solved": "解决多模型 AI 视频生产中费用散落、失败重试成本不可见、同一镜头多次生成后无法回溯具体供应商和输入的问题。",
+      "mainstream_comparison": "只看各模型平台账单能知道总额，却无法映射到具体项目/镜头；自己手工表格记账成本低但很快失真。把调用账本直接接到生成任务是更可靠的最小闭环。",
+      "today_action": "用一条 30–60 秒样片跑 3–5 个生成镜头，至少故意制造一次取消或失败。只看四项：单镜头真实成本、重试额外成本、失败类型是否可定位、项目总成本能否一次汇总。不要先做复杂报表。",
+      "next_opportunity": "如果账本可靠，把‘单个可用镜头成本’和‘每分钟成片生成成本’作为以后选择 H3/Kling/Vidu/其他模型的核心指标，而不是只比较单次 API 标价。",
+      "evidence": [
+        {"type":"commit","title":"Usage summary with KPI, trends, composition and alerts","url":"https://github.com/ArcReel/ArcReel/commit/ed62ff9f123ceefdc4f4c879fb89a1cde1e7a7b0"},
+        {"type":"commit","title":"Provider calls trace source, task and inputs; cancellation is not failure","url":"https://github.com/ArcReel/ArcReel/commit/eef3374231b96d01d032b3f5cd77a1df4ed61529"},
+        {"type":"commit","title":"Persist structured failure codes and parameters","url":"https://github.com/ArcReel/ArcReel/commit/75e5898c460616a25d24dee674a4e036dfc2eab7"},
+        {"type":"commit","title":"Usage records support filters, keyset paging and full inputs/responses","url":"https://github.com/ArcReel/ArcReel/commit/d094d9c3f72dd6ac266ccdf70464f819c332eb3e"}
+      ],
+      "status": "高价值验证"
+    },
+    {
+      "rank": 3,
+      "name": "多参考图不再‘指空气’：完整角色/商品参考集 → 按后端上限实发 → 提示词编号同步 → 产物仍保留完整依据",
+      "source_project": "ArcReel/ArcReel",
+      "github": "https://github.com/ArcReel/ArcReel",
+      "category": ["AI视频生成", "分镜", "角色一致性", "商品内容"],
+      "score": 97,
+      "value_insight": "ArcReel 今天修复一个非常具体但会直接破坏生成一致性的问题：Vidu/OpenAI/DashScope/Kling/MiniMax 等后端有不同参考图上限，过去底层静默截断后，提示词仍可能写‘图N’，但那张图实际上没发送。现在参考图先按后端上限裁剪，再编号和渲染提示词，同时产物 basis 仍保留完整参考集，避免生成后永远被判 stale。它把‘模型不听参考图’的一部分问题从玄学变成可验证的输入契约。",
+      "problem_solved": "解决角色、商品、场景多参考生成时，提示词引用了模型实际没收到的图片，导致主体漂移、商品细节丢失，又很难从结果反推原因。",
+      "mainstream_comparison": "手工限制每次只传 1–2 张图最稳但牺牲约束；盲目把所有图塞给后端则可能静默截断。按后端能力裁剪并让提示词编号与实发集合一致，是更可复用的中间方案。",
+      "today_action": "选一个需要人物 + 商品 + 场景三类参考的真实镜头，分别用两个参考图上限不同的后端生成。检查请求实际发送的图片数量、提示词中的图号和最终结果；只验证‘引用与实发一致’，不先追求画质。",
+      "next_opportunity": "如果主体一致性明显提升，把 reference budget 做成生成前可见指标：先决定哪些参考图最关键，再选择支持足够 reference slots 的模型，而不是生成失败后才换模型。",
+      "evidence": [
+        {"type":"commit","title":"Clip reference images to backend limit before numbering","url":"https://github.com/ArcReel/ArcReel/commit/d1951f76313d9e8e20e46a8926127dd3653e6b92"},
+        {"type":"commit","title":"Keep complete reference basis while only sent subset is clipped","url":"https://github.com/ArcReel/ArcReel/commit/5e4c52d04d4725fb7cfee75cdac16759fe744d42"}
+      ],
+      "status": "值得做小样"
+    },
+    {
+      "rank": 4,
+      "name": "M1 Max 本地生成先排稳定性：ComfyUI 检测 MPS 能力 → 禁用不支持的 INT8 路径 → 再测真实短镜头",
+      "source_project": "Comfy-Org/ComfyUI",
+      "github": "https://github.com/Comfy-Org/ComfyUI",
+      "category": ["AI视频生成", "ComfyUI", "Apple Silicon", "本地推理"],
+      "score": 95,
+      "value_insight": "ComfyUI 最新修复会在设备缺少 torch._int_mm 时禁用 INT8 weight-only quantization，明确针对 MPS crash。对于 M1 Max 这类 Apple Silicon，本地视频生成当前最值得先验证的不是再追一个新模型，而是保证基础推理链不会因为错误启用量化内核直接崩溃。只有稳定性过关，后续比较生成速度和显存/内存占用才有意义。",
+      "problem_solved": "解决 Apple Silicon 上部分工作流因 INT8 weight-only quantization 走到不支持的矩阵乘路径而崩溃，导致本地补镜头测试无法形成稳定基线。",
+      "mainstream_comparison": "云端生成更省本机配置但每次测试都产生费用且受上传限制；本地强行启用所有量化优化可能更快却不稳定。先自动禁用硬件不支持路径，是最低成本的可靠性修复。",
+      "today_action": "在 M1 Max 上更新到包含该修复的 ComfyUI，复跑之前最容易崩的一个真实 2–5 秒工作流。只记录是否崩溃、峰值内存和生成耗时；稳定之前不继续加模型或 LoRA。",
+      "next_opportunity": "若稳定，再建立‘M1 Max 可运行模型白名单’，只保留能在可接受时间内产出可入片候选的工作流；跑不动的模型直接转云端，不做本地工程化。",
+      "evidence": [
+        {"type":"commit","title":"Disable int8 weight-only quantization on devices without torch._int_mm (fixes MPS crash)","url":"https://github.com/Comfy-Org/ComfyUI/commit/313a76fb8d83e0bc6538a1572efc78c41fa450c8"}
+      ],
+      "status": "本机优先验证"
+    },
+    {
+      "rank": 5,
+      "name": "评论区时效化选题证据：候选视频 → 评论正文+时间/元数据 → 新鲜痛点排序 → 再决定是否拍",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "github": "https://github.com/whiteguo233/OpenBiliClaw",
+      "category": ["内容研究", "B站", "小红书", "抖音", "选题"],
+      "score": 93,
+      "value_insight": "OpenBiliClaw 最新补齐 backend comments API 的评论时间和元数据。单看是小修，但转成机会方案后很实用：过去评论区分析容易把两年前的高赞问题和昨天刚出现的新痛点混在一起；有时间字段后，可以优先看最近 7/30 天重复出现的问题，再结合视频本身做选题判断。",
+      "problem_solved": "解决对标视频评论很多但缺少时间维度，导致旧需求、过期产品问题和当前真实痛点混在一起，AI 总结看似丰富却不够可执行。",
+      "mainstream_comparison": "直接让大模型总结所有评论最快，但会丢失时效；人工逐条看最新留言质量高却太慢。先按时间与元数据筛一遍，再让模型归纳，是最低成本的增强。",
+      "today_action": "选 3 条与你当前内容方向最接近的 B站/跨平台候选，每条只取最近 30 天评论，提取重复问题、反对点和追问。最终只保留 3 个能直接转成口播/探店选题的问题，不做大规模抓取。",
+      "next_opportunity": "如果最近评论明显比全量评论更能产出选题，把‘30 天新鲜痛点’固定成对标证据包的一部分，并与播放/收藏等表层热度分开评分。",
+      "evidence": [
+        {"type":"commit","title":"Include comment time/metadata in backend comments API","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/9adf48b13aca038612ec24e887d99bef290a4339"},
+        {"type":"commit","title":"Reuse recommendation calculations within batches and snapshots","url":"https://github.com/whiteguo233/OpenBiliClaw/commit/0ae807ceaeb3d22f36ca9b9c66a6c67af71e87a1"}
+      ],
+      "status": "低成本可测试"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "ComfyUI attention node harmonization",
+      "source_project": "Comfy-Org/ComfyUI",
+      "reason": "属于内部节点整理，暂未看到能直接降低生成成本、提高入片率或解决现有工作流阻塞的证据；不因最新提交而进 Top。"
+    },
+    {
+      "name": "ComfyUI aotriton kernel launch verification",
+      "source_project": "Comfy-Org/ComfyUI",
+      "reason": "对特定 GPU/内核环境有稳定性价值，但与当前 M1 Max 实际使用场景相比不如 MPS crash 修复直接，因此不单独进入 Top。"
+    },
+    {
+      "name": "ArcReel generation_type 内部命名重构",
+      "source_project": "ArcReel/ArcReel",
+      "reason": "明确为零行为变化的内部术语重构，不能转化为今天可执行的机会方案。"
+    },
+    {
+      "name": "XhsGrowthAgent Creator Agent execution receipts",
+      "source_project": "JameryW/XhsGrowthAgent",
+      "reason": "仍是有价值的执行闭环，但 9 月 5 日已进入近期日报逻辑，今天没有新的增量提交；不为了凑新项目重复占位。"
+    },
+    {
+      "name": "capcut-cli v0.22 口播 retake 粗剪",
+      "source_project": "capcut-cli",
+      "reason": "方案本身仍有价值，但今天未发现比前几日更强的新证据；继续保留在方案库，不作为 9 月 8 日新增 Top。"
+    },
+    {
+      "name": "OpenBiliClaw delight queue read isolation",
+      "source_project": "whiteguo233/OpenBiliClaw",
+      "reason": "主要是后端读隔离和性能工程，真实用户价值需要更明确的前台延迟改善证据；今天只采纳更直接可转成选题动作的评论时间/元数据。"
+    }
+  ]
+}
